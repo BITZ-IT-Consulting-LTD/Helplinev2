@@ -69,7 +69,7 @@ export const useCallStore = defineStore('callStore', {
     // 2. View Call
     async viewCall(uniqueid) {
       try {
-        const { data } = await axiosInstance.get(`/api-proxy/api/calls//${uniqueid}`, {
+        const { data } = await axiosInstance.get(`/api-proxy/api/calls/${uniqueid}`, {
           headers: {
             'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
           }
