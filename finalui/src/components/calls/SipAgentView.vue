@@ -1,10 +1,8 @@
 <template>
-  <div class="p-6 space-y-6">
-    <h2 class="text-2xl font-bold mb-4">SIP Call Testing</h2>
-    
+  <div class="space-y-6">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Agent 1 (Extension 101) -->
-      <div class="p-4 border-2 border-gray-300 rounded-lg">
+      <div class="p-4 border-2 border-gray-300 rounded-lg bg-white shadow">
         <h3 class="mb-3 text-lg font-semibold">Agent 1 - Extension 101</h3>
 
         <div class="space-y-2 mb-4 text-sm">
@@ -17,7 +15,7 @@
           <button 
             @click="startAgent(agent1, '101')" 
             :disabled="agent1.registered || agent1.starting"
-            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
           >
             Start (Register)
           </button>
@@ -25,7 +23,7 @@
           <button 
             @click="makeCall(agent1, '100')" 
             :disabled="!agent1.registered || agent1.inCall"
-            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
           >
             Call Extension 100
           </button>
@@ -33,7 +31,7 @@
           <button 
             @click="hangup(agent1)" 
             :disabled="!agent1.inCall"
-            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
           >
             Hang Up
           </button>
@@ -41,7 +39,7 @@
           <button 
             @click="stopAgent(agent1)" 
             :disabled="!agent1.registered || agent1.stopping"
-            class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
           >
             Stop (Unregister)
           </button>
@@ -51,7 +49,7 @@
       </div>
 
       <!-- Agent 2 (Extension 100) -->
-      <div class="p-4 border-2 border-gray-300 rounded-lg">
+      <div class="p-4 border-2 border-gray-300 rounded-lg bg-white shadow">
         <h3 class="mb-3 text-lg font-semibold">Agent 2 - Extension 100</h3>
 
         <div class="space-y-2 mb-4 text-sm">
@@ -64,7 +62,7 @@
           <button 
             @click="startAgent(agent2, '100')" 
             :disabled="agent2.registered || agent2.starting"
-            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
           >
             Start (Register)
           </button>
@@ -72,7 +70,7 @@
           <button 
             @click="makeCall(agent2, '101')" 
             :disabled="!agent2.registered || agent2.inCall"
-            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
           >
             Call Extension 101
           </button>
@@ -80,7 +78,7 @@
           <button 
             @click="hangup(agent2)" 
             :disabled="!agent2.inCall"
-            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
           >
             Hang Up
           </button>
@@ -88,7 +86,7 @@
           <button 
             @click="stopAgent(agent2)" 
             :disabled="!agent2.registered || agent2.stopping"
-            class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
           >
             Stop (Unregister)
           </button>
@@ -104,7 +102,7 @@
 import * as SIP from "sip.js";
 
 export default {
-  name: "SIPTest",
+  name: "SipAgentView",
   data() {
     return {
       agent1: {
@@ -300,13 +298,6 @@ export default {
             audioRef.srcObject = null;
           }
         });
-
-        // Set up delegate to add tracks when peer connection is ready
-        const sessionDescriptionHandlerOptionsDelegate = {
-          onTrack: (track, streams) => {
-            console.log(`[${agent.extension}] Received remote track:`, track.kind);
-          }
-        };
 
         await inviter.invite({
           sessionDescriptionHandlerOptions: {

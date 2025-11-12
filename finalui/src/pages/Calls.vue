@@ -60,6 +60,16 @@
         >
           Table View
         </button>
+
+        <button
+          @click="activeView = 'sip'"
+          :class="[
+            'px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-200',
+            activeView === 'sip' ? 'bg-amber-700' : 'bg-amber-400 hover:bg-amber-500'
+          ]"
+        >
+          SIP Agent
+        </button>
       </div>
 
       <!-- Timeline view -->
@@ -80,6 +90,11 @@
           @select-call="selectCall"
         />
       </div>
+
+      <!-- SIP Agent view -->
+      <div v-if="activeView === 'sip'">
+        <SipAgentView />
+      </div>
     </div>
 
   </div>
@@ -90,6 +105,7 @@ import { ref, computed, onMounted } from "vue"
 import Timeline from "@/components/calls/Timeline.vue"
 import Table from "@/components/calls/Table.vue"
 import CallsFilter from "@/components/calls/CallsFilter.vue"
+import SipAgentView from "@/components/calls/SipAgentView.vue"
 import { useCallStore } from "@/stores/calls"
 
 const callsStore = useCallStore()
