@@ -14,50 +14,46 @@
       <div class="space-y-2">
         <div
           v-for="message in group"
-          :key="message[messagesStore.pmessages_k.id?.[0] || 'id']"
+          :key="getValue(message, 'id')"
           :class="[
             'flex items-start space-x-3 p-2 rounded cursor-pointer hover:bg-gray-100',
-            selectedMessageId === message[messagesStore.pmessages_k.id?.[0] || 'id'] ? 'bg-blue-50' : ''
+            selectedMessageId === getValue(message, 'id') ? 'bg-blue-50' : ''
           ]"
           @click="openChatPanel(message)"
         >
           <!-- Avatar -->
           <div
             class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold"
-            :style="{ background: getAvatarColor(message[messagesStore.pmessages_k.created_by?.[0] || 'created_by'] || '') }"
+            :style="{ background: getAvatarColor(getValue(message, 'created_by') || '') }"
           >
-            {{ (message[messagesStore.pmessages_k.created_by?.[0] || 'created_by'] || '?').charAt(0) }}
+            {{ (getValue(message, 'created_by') || '?').charAt(0) }}
           </div>
 
           <!-- Chat Content -->
           <div class="flex-1">
             <div class="flex justify-between items-center">
               <span class="font-medium text-gray-800">
-                {{ message[messagesStore.pmessages_k.created_by?.[0] || 'created_by'] || 'Unknown' }}
+                {{ getValue(message, 'created_by') || 'Unknown' }}
               </span>
               <span class="text-xs text-gray-400">
-                {{
-                  message[messagesStore.pmessages_k.dth?.[0] || 'dth']
-                    ? new Date(message[messagesStore.pmessages_k.dth?.[0] || 'dth'] * 1000).toLocaleTimeString()
-                    : "N/A"
-                }}
+                {{ formatTime(getValue(message, 'dth')) }}
               </span>
             </div>
 
             <div class="flex space-x-2 mt-1 items-center">
               <span class="px-2 py-1 bg-gray-200 text-gray-700 rounded text-xs">
-                {{ message[messagesStore.pmessages_k.src?.[0] || 'src'] || 'N/A' }}
+                {{ getValue(message, 'src') || 'N/A' }}
               </span>
               <span
                 class="px-2 py-1 rounded text-white text-xs"
-                :class="statusClass(message[messagesStore.pmessages_k.src_status?.[0] || 'src_status'])"
+                :class="statusClass(getValue(message, 'src_status'))"
               >
-                {{ message[messagesStore.pmessages_k.src_status?.[0] || 'src_status'] || 'Active' }}
+                {{ getValue(message, 'src_status') || 'Active' }}
               </span>
             </div>
 
             <p class="text-gray-700 mt-1 text-sm">
-              {{ message[messagesStore.pmessages_k.src_msg?.[0] || 'src_msg'] || '' }}
+              {{ getValue(message, 'src_msg') || '' }}
             </p>
           </div>
         </div>
@@ -67,37 +63,56 @@
 </template>
 
 <script setup>
-import { useMessagesStore } from '@/stores/messages';
+import { useMessagesStore } from '@/stores/messages'
 
 const props = defineProps({
   groupedMessagesByDate: {
     type: Object,
-    default: () => ({}),
+    default: () => ({})
   },
-  selectedMessageId: [String, Number],
-});
+  selectedMessageId: [String, Number]
+})
 
-const emit = defineEmits(['open-chat']);
+const emit = defineEmits(['openChat'])
 
-const messagesStore = useMessagesStore();
+const messagesStore = useMessagesStore()
+
+// Helper to get value from message array using pmessages_k
+const getValue = (message, key) => {
+  if (!messagesStore.pmessages_k?.[key]) return null
+  const index = messagesStore.pmessages_k[key][0]
+  return message[index]
+}
+
+// Format timestamp to time
+const formatTime = (timestamp) => {
+  if (!timestamp) return 'N/A'
+  const date = new Date(timestamp * 1000)
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+}
 
 const openChatPanel = (message) => {
-  emit('open-chat', message);
-};
+  emit('openChat', message)
+}
 
 const getAvatarColor = (name) => {
-  return 'var(--color-primary)';
-};
+  const colors = [
+    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+    '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9'
+  ]
+  const index = name?.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) || 0
+  return colors[index % colors.length]
+}
 
 const statusClass = (statusRaw) => {
-  const status = String(statusRaw || 'active').toLowerCase();
+  const status = String(statusRaw || 'active').toLowerCase()
   const map = {
     active: 'bg-green-500',
     pending: 'bg-yellow-500',
     inactive: 'bg-gray-500',
     busy: 'bg-red-500',
     away: 'bg-orange-500'
-  };
-  return map[status] || map.active;
-};
+  }
+  return map[status] || map.active
+}
 </script>

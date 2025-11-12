@@ -41,10 +41,9 @@ import CaseLocations from "@/components/dashboard/CaseLocations.vue";
 import CasesBySourceDaily from "@/components/dashboard/CasesBySourceDaily.vue";
 import CaseStatusPriority from "@/components/dashboard/CaseStatusPriority.vue";
 
+// Filters now use actual backend field names
 const filters = ref({
-  dash_period: 'all',
-  dash_gbv: 'both',
-  dash_src: 'all'
+  gbv_related: '1,2' // Default to both
 })
 
 function applyFilters(updatedFilters) {
