@@ -14,6 +14,7 @@ import Users from '@/pages/Users.vue'
 import CaseCreation from '@/pages/CaseCreation.vue'
 import QaCreation from '@/pages/QaCreation.vue'
 import Activities from '../pages/Activities.vue'
+import Categories from '../pages/Categories.vue'
 
 const routes = [
   { path: '/login', name: 'Login', component: Login, meta: { layout: 'none' } },
@@ -29,6 +30,7 @@ const routes = [
   { path: '/case-creation', name: 'CaseCreation', component: CaseCreation },
   { path: '/qa-creation', name: 'QaCreation', component: QaCreation },
   { path: '/activities', name: 'Activities', component: Activities },
+  { path: '/categories', name: 'Categories', component: Categories },
 
   { path: '/demo', name: 'Demo', component: Demo },
   { path: '/:pathMatch(.*)*', redirect: '/' }
