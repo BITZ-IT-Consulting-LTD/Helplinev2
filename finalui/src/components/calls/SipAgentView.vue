@@ -1,98 +1,55 @@
 <template>
   <div class="space-y-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Agent 1 (Extension 101) -->
-      <div class="p-4 border-2 border-gray-300 rounded-lg bg-white shadow">
-        <h3 class="mb-3 text-lg font-semibold">Agent 1 - Extension 101</h3>
+    <div class="max-w-md mx-auto">
+      <!-- Single Agent (Extension 100) -->
+      <div class="p-6 border-2 border-gray-300 rounded-lg bg-white shadow">
+        <h3 class="mb-4 text-xl font-semibold text-center">SIP Agent - Extension 100</h3>
 
-        <div class="space-y-2 mb-4 text-sm">
-          <div><strong>Registered:</strong> <span :class="agent1.registered ? 'text-green-600' : 'text-red-600'">{{ agent1.registered ? 'Yes' : 'No' }}</span></div>
-          <div><strong>Connection:</strong> <span :class="agent1.connected ? 'text-green-600' : 'text-red-600'">{{ agent1.connected ? 'Connected' : 'Disconnected' }}</span></div>
-          <div v-if="agent1.callStatus"><strong>Call Status:</strong> {{ agent1.callStatus }}</div>
+        <div class="space-y-2 mb-6 text-sm">
+          <div class="flex justify-between items-center bg-gray-50 p-3 rounded">
+            <span class="text-gray-600 font-medium">Registered:</span>
+            <span :class="agent.registered ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'">
+              {{ agent.registered ? 'Yes' : 'No' }}
+            </span>
+          </div>
+          <div class="flex justify-between items-center bg-gray-50 p-3 rounded">
+            <span class="text-gray-600 font-medium">Connection:</span>
+            <span :class="agent.connected ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'">
+              {{ agent.connected ? 'Connected' : 'Disconnected' }}
+            </span>
+          </div>
+          <div v-if="agent.callStatus" class="bg-blue-50 border border-blue-200 p-3 rounded">
+            <p class="text-sm font-medium text-blue-800">{{ agent.callStatus }}</p>
+          </div>
         </div>
 
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-3">
           <button 
-            @click="startAgent(agent1, '101')" 
-            :disabled="agent1.registered || agent1.starting"
-            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+            @click="startAgent" 
+            :disabled="agent.registered || agent.starting"
+            class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition font-medium"
           >
-            Start (Register)
+            {{ agent.starting ? 'Starting...' : 'Start (Register)' }}
           </button>
           
           <button 
-            @click="makeCall(agent1, '100')" 
-            :disabled="!agent1.registered || agent1.inCall"
-            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
-          >
-            Call Extension 100
-          </button>
-          
-          <button 
-            @click="hangup(agent1)" 
-            :disabled="!agent1.inCall"
-            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+            @click="hangup" 
+            :disabled="!agent.inCall"
+            class="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition font-medium"
           >
             Hang Up
           </button>
           
           <button 
-            @click="stopAgent(agent1)" 
-            :disabled="!agent1.registered || agent1.stopping"
-            class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+            @click="stopAgent" 
+            :disabled="!agent.registered || agent.stopping"
+            class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition font-medium"
           >
-            Stop (Unregister)
+            {{ agent.stopping ? 'Stopping...' : 'Stop (Unregister)' }}
           </button>
         </div>
 
-        <audio ref="remoteAudio1" autoplay playsinline class="hidden"></audio>
-      </div>
-
-      <!-- Agent 2 (Extension 100) -->
-      <div class="p-4 border-2 border-gray-300 rounded-lg bg-white shadow">
-        <h3 class="mb-3 text-lg font-semibold">Agent 2 - Extension 100</h3>
-
-        <div class="space-y-2 mb-4 text-sm">
-          <div><strong>Registered:</strong> <span :class="agent2.registered ? 'text-green-600' : 'text-red-600'">{{ agent2.registered ? 'Yes' : 'No' }}</span></div>
-          <div><strong>Connection:</strong> <span :class="agent2.connected ? 'text-green-600' : 'text-red-600'">{{ agent2.connected ? 'Connected' : 'Disconnected' }}</span></div>
-          <div v-if="agent2.callStatus"><strong>Call Status:</strong> {{ agent2.callStatus }}</div>
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <button 
-            @click="startAgent(agent2, '100')" 
-            :disabled="agent2.registered || agent2.starting"
-            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
-          >
-            Start (Register)
-          </button>
-          
-          <button 
-            @click="makeCall(agent2, '101')" 
-            :disabled="!agent2.registered || agent2.inCall"
-            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
-          >
-            Call Extension 101
-          </button>
-          
-          <button 
-            @click="hangup(agent2)" 
-            :disabled="!agent2.inCall"
-            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
-          >
-            Hang Up
-          </button>
-          
-          <button 
-            @click="stopAgent(agent2)" 
-            :disabled="!agent2.registered || agent2.stopping"
-            class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
-          >
-            Stop (Unregister)
-          </button>
-        </div>
-
-        <audio ref="remoteAudio2" autoplay playsinline class="hidden"></audio>
+        <audio ref="remoteAudio" autoplay playsinline class="hidden"></audio>
       </div>
     </div>
   </div>
@@ -105,7 +62,7 @@ export default {
   name: "SipAgentView",
   data() {
     return {
-      agent1: {
+      agent: {
         ua: null,
         registerer: null,
         registered: false,
@@ -115,24 +72,13 @@ export default {
         session: null,
         inCall: false,
         callStatus: '',
-        localStream: null
-      },
-      agent2: {
-        ua: null,
-        registerer: null,
-        registered: false,
-        connected: false,
-        starting: false,
-        stopping: false,
-        session: null,
-        inCall: false,
-        callStatus: '',
-        localStream: null
+        localStream: null,
+        extension: '100'
       }
     };
   },
   methods: {
-    setupMediaStreams(session, agent, audioRef) {
+    setupMediaStreams(session, audioRef) {
       const pc = session.sessionDescriptionHandler.peerConnection;
 
       // Setup remote audio (incoming)
@@ -149,34 +95,34 @@ export default {
       }
 
       // Log track status
-      console.log(`[${agent.extension}] Local tracks:`, agent.localStream.getTracks().map(t => ({ kind: t.kind, enabled: t.enabled })));
-      console.log(`[${agent.extension}] Remote tracks:`, inboundStream.getTracks().map(t => ({ kind: t.kind, enabled: t.enabled })));
+      console.log(`[${this.agent.extension}] Local tracks:`, this.agent.localStream.getTracks().map(t => ({ kind: t.kind, enabled: t.enabled })));
+      console.log(`[${this.agent.extension}] Remote tracks:`, inboundStream.getTracks().map(t => ({ kind: t.kind, enabled: t.enabled })));
     },
 
-    async handleIncomingCall(agent, audioRef, invitation) {
-      console.log(`[${agent.extension}] Incoming call:`, invitation);
-      agent.callStatus = 'Incoming call...';
+    async handleIncomingCall(invitation) {
+      console.log(`[${this.agent.extension}] Incoming call:`, invitation);
+      this.agent.callStatus = 'Incoming call...';
 
       try {
-        if (!agent.localStream) {
-          agent.localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          console.log(`[${agent.extension}] Got microphone access`);
+        if (!this.agent.localStream) {
+          this.agent.localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          console.log(`[${this.agent.extension}] Got microphone access`);
         }
 
-        agent.session = invitation;
-        agent.inCall = true;
+        this.agent.session = invitation;
+        this.agent.inCall = true;
 
         invitation.stateChange.addListener((state) => {
-          console.log(`[${agent.extension}] Call state:`, state);
+          console.log(`[${this.agent.extension}] Call state:`, state);
           
           if (state === SIP.SessionState.Established) {
-            agent.callStatus = 'Connected';
-            this.setupMediaStreams(invitation, agent, audioRef);
+            this.agent.callStatus = 'Connected';
+            this.setupMediaStreams(invitation, this.$refs.remoteAudio);
           } else if (state === SIP.SessionState.Terminated) {
-            agent.inCall = false;
-            agent.session = null;
-            agent.callStatus = 'Call ended';
-            audioRef.srcObject = null;
+            this.agent.inCall = false;
+            this.agent.session = null;
+            this.agent.callStatus = 'Call ended';
+            this.$refs.remoteAudio.srcObject = null;
           }
         });
 
@@ -188,174 +134,121 @@ export default {
 
         // Manually add local stream to peer connection after accept
         const pc = invitation.sessionDescriptionHandler.peerConnection;
-        agent.localStream.getTracks().forEach(track => {
-          const sender = pc.addTrack(track, agent.localStream);
-          console.log(`[${agent.extension}] Added local track:`, track.kind, sender);
+        this.agent.localStream.getTracks().forEach(track => {
+          const sender = pc.addTrack(track, this.agent.localStream);
+          console.log(`[${this.agent.extension}] Added local track:`, track.kind, sender);
         });
 
-        agent.callStatus = 'Call in progress';
+        this.agent.callStatus = 'Call in progress';
 
       } catch (err) {
-        console.error(`[${agent.extension}] Error handling incoming call:`, err);
-        agent.callStatus = 'Error accepting call';
+        console.error(`[${this.agent.extension}] Error handling incoming call:`, err);
+        this.agent.callStatus = 'Error accepting call';
       }
     },
 
-    startAgent(agent, extension) {
-      agent.starting = true;
-      agent.extension = extension;
+    startAgent() {
+      this.agent.starting = true;
       
       try {
-        const uri = SIP.UserAgent.makeURI(`sip:${extension}@demo-openchs.bitz-itc.com`);
+        const uri = SIP.UserAgent.makeURI(`sip:${this.agent.extension}@demo-openchs.bitz-itc.com`);
         if (!uri) throw new Error("Invalid SIP URI");
-
-        const audioRef = extension === '101' ? this.$refs.remoteAudio1 : this.$refs.remoteAudio2;
 
         const config = {
           uri,
-          authorizationUsername: extension,
+          authorizationUsername: this.agent.extension,
           authorizationPassword: "23kdefrtgos09812100",
-          displayName: extension,
+          displayName: this.agent.extension,
           transportOptions: {
             server: "wss://demo-openchs.bitz-itc.com:8089/ws",
             traceSip: true,
           },
           log: { level: "log" },
           delegate: {
-            onInvite: (invitation) => this.handleIncomingCall(agent, audioRef, invitation)
+            onInvite: (invitation) => this.handleIncomingCall(invitation)
           }
         };
 
-        console.log(`[${extension}] Starting SIP agent`);
-        agent.ua = new SIP.UserAgent(config);
+        console.log(`[${this.agent.extension}] Starting SIP agent`);
+        this.agent.ua = new SIP.UserAgent(config);
 
-        agent.ua.transport.onConnect = () => {
-          console.log(`[${extension}] Transport connected`);
-          agent.connected = true;
+        this.agent.ua.transport.onConnect = () => {
+          console.log(`[${this.agent.extension}] Transport connected`);
+          this.agent.connected = true;
         };
 
-        agent.ua.transport.onDisconnect = (error) => {
-          console.warn(`[${extension}] Transport disconnected`, error);
-          agent.connected = false;
-          agent.registered = false;
+        this.agent.ua.transport.onDisconnect = (error) => {
+          console.warn(`[${this.agent.extension}] Transport disconnected`, error);
+          this.agent.connected = false;
+          this.agent.registered = false;
         };
 
-        agent.ua.start()
+        this.agent.ua.start()
           .then(() => {
-            console.log(`[${extension}] SIP Agent started`);
-            agent.registerer = new SIP.Registerer(agent.ua);
+            console.log(`[${this.agent.extension}] SIP Agent started`);
+            this.agent.registerer = new SIP.Registerer(this.agent.ua);
 
-            agent.registerer.stateChange.addListener((state) => {
+            this.agent.registerer.stateChange.addListener((state) => {
               if (state === SIP.RegistererState.Registered) {
-                console.log(`[${extension}] Registered`);
-                agent.registered = true;
+                console.log(`[${this.agent.extension}] Registered`);
+                this.agent.registered = true;
               } else if (state === SIP.RegistererState.Unregistered) {
-                console.log(`[${extension}] Unregistered`);
-                agent.registered = false;
+                console.log(`[${this.agent.extension}] Unregistered`);
+                this.agent.registered = false;
               }
             });
 
-            agent.registerer.register();
+            this.agent.registerer.register();
           })
-          .catch(err => console.error(`[${extension}] Failed to start:`, err))
-          .finally(() => agent.starting = false);
+          .catch(err => console.error(`[${this.agent.extension}] Failed to start:`, err))
+          .finally(() => this.agent.starting = false);
 
       } catch (err) {
-        console.error(`[${extension}] Error starting agent:`, err);
-        agent.starting = false;
+        console.error(`[${this.agent.extension}] Error starting agent:`, err);
+        this.agent.starting = false;
       }
     },
 
-    async makeCall(agent, targetExtension) {
-      try {
-        agent.callStatus = `Calling ${targetExtension}...`;
-        
-        if (!agent.localStream) {
-          agent.localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          console.log(`[${agent.extension}] Got microphone access for outgoing call`);
-        }
-
-        const target = SIP.UserAgent.makeURI(`sip:${targetExtension}@demo-openchs.bitz-itc.com`);
-        const inviter = new SIP.Inviter(agent.ua, target);
-        
-        agent.session = inviter;
-        agent.inCall = true;
-
-        const audioRef = agent.extension === '101' ? this.$refs.remoteAudio1 : this.$refs.remoteAudio2;
-
-        inviter.stateChange.addListener((state) => {
-          console.log(`[${agent.extension}] Outgoing call state:`, state);
-          
-          if (state === SIP.SessionState.Establishing) {
-            agent.callStatus = 'Ringing...';
-          } else if (state === SIP.SessionState.Established) {
-            agent.callStatus = 'Connected';
-            this.setupMediaStreams(inviter, agent, audioRef);
-          } else if (state === SIP.SessionState.Terminated) {
-            agent.inCall = false;
-            agent.session = null;
-            agent.callStatus = 'Call ended';
-            audioRef.srcObject = null;
-          }
-        });
-
-        await inviter.invite({
-          sessionDescriptionHandlerOptions: {
-            constraints: { audio: true, video: false }
-          }
-        });
-
-        // Add local tracks to the peer connection after invite
-        const pc = inviter.sessionDescriptionHandler.peerConnection;
-        agent.localStream.getTracks().forEach(track => {
-          const sender = pc.addTrack(track, agent.localStream);
-          console.log(`[${agent.extension}] Added local track to outgoing call:`, track.kind, sender);
-        });
-
-        console.log(`[${agent.extension}] Call initiated to ${targetExtension}`);
-
-      } catch (err) {
-        console.error(`[${agent.extension}] Error making call:`, err);
-        agent.callStatus = 'Call failed';
-        agent.inCall = false;
-        agent.session = null;
-      }
-    },
-
-    hangup(agent) {
-      if (agent.session) {
+    hangup() {
+      if (this.agent.session) {
         try {
-          agent.session.bye();
-          console.log(`[${agent.extension}] Hung up`);
+          this.agent.session.bye();
+          console.log(`[${this.agent.extension}] Hung up`);
         } catch (err) {
-          console.error(`[${agent.extension}] Error hanging up:`, err);
+          console.error(`[${this.agent.extension}] Error hanging up:`, err);
         }
       }
     },
 
-    stopAgent(agent) {
-      if (!agent.registerer || !agent.ua) return;
+    stopAgent() {
+      if (!this.agent.registerer || !this.agent.ua) return;
       
-      agent.stopping = true;
-      agent.registerer.unregister()
+      this.agent.stopping = true;
+      this.agent.registerer.unregister()
         .then(() => {
-          console.log(`[${agent.extension}] Unregistered`);
-          return agent.ua.stop();
+          console.log(`[${this.agent.extension}] Unregistered`);
+          return this.agent.ua.stop();
         })
         .then(() => {
-          agent.connected = false;
-          agent.registered = false;
-          agent.ua = null;
-          agent.registerer = null;
-          agent.callStatus = '';
+          this.agent.connected = false;
+          this.agent.registered = false;
+          this.agent.ua = null;
+          this.agent.registerer = null;
+          this.agent.callStatus = '';
           
-          if (agent.localStream) {
-            agent.localStream.getTracks().forEach(track => track.stop());
-            agent.localStream = null;
+          if (this.agent.localStream) {
+            this.agent.localStream.getTracks().forEach(track => track.stop());
+            this.agent.localStream = null;
           }
         })
-        .catch(err => console.error(`[${agent.extension}] Error stopping:`, err))
-        .finally(() => agent.stopping = false);
+        .catch(err => console.error(`[${this.agent.extension}] Error stopping:`, err))
+        .finally(() => this.agent.stopping = false);
+    }
+  },
+  beforeUnmount() {
+    // Cleanup when component is destroyed
+    if (this.agent.registered) {
+      this.stopAgent();
     }
   }
 };
