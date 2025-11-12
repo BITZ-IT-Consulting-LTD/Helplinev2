@@ -99,11 +99,13 @@ import { useMessagesStore } from '@/stores/messages'
 const messagesStore = useMessagesStore()
 
 const channelFilters = ref([
-  { id: "all", name: "All Channels" },
+  { id: "all", name: "All" },
   { id: "whatsapp", name: "WhatsApp" },
-  { id: "sms", name: "SMS" },
-  { id: "messenger", name: "Messenger" },
-  { id: "telegram", name: "Telegram" },
+  { id: "safepal", name: "SafePal" },
+  { id: "email", name: "Email" },
+  { id: "walkin", name: "Walk-In" },
+  { id: "ai", name: "AI" },
+  { id: "call", name: "Call" }
 ])
 
 const activePlatform = ref("all")

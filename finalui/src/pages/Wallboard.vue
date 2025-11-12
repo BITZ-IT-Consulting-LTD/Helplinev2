@@ -1,25 +1,20 @@
 <template>
-  <div class="container" :class="{ 'dark-mode': isDarkMode }">
+  <div class="p-4 bg-gray-50 max-w-[1260px]">
     <!-- Header Component -->
-    <WallboardHeader 
-      :connection-status="connectionClass"
-      :connection-label="connectionLabel"
-      :last-update="lastUpdate"
-      :is-dark-mode="isDarkMode"
-      @toggle-theme="toggleDarkMode"
-    />
-
-    <!-- Top Row: Call Status Cards -->
-    <CallsStatusCards 
-      :loading="callsReportLoading"
-      :error="callsReportError"
-      :cards="callsCards"
-    />
+    <div class="mb-3">
+      <WallboardHeader 
+        :connection-status="connectionClass"
+        :connection-label="connectionLabel"
+        :last-update="lastUpdate"
+        :is-dark-mode="isDarkMode"
+        @toggle-theme="toggleDarkMode"
+      />
+    </div>
 
     <!-- Main Content: Two Column Layout -->
-    <div class="main-content">
+    <div class="grid gap-4" style="grid-template-columns: 900px 320px;">
       <!-- Left Column: Tables -->
-      <div class="tables-column">
+      <div class="flex flex-col gap-3">
         <!-- Counsellors Table Component -->
         <CounsellorsTable 
           :counsellors="counsellorsWithQueueData"
@@ -34,7 +29,7 @@
       </div>
 
       <!-- Right Column: Cases Tiles -->
-      <div class="cases-column">
+      <div class="h-[532px]">
         <CasesTiles :tiles="casesTiles" />
       </div>
     </div>
@@ -45,14 +40,11 @@
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import axiosInstance from "@/utils/axios.js"
 
-// Import new components
+// Import components
 import WallboardHeader from '@/components/wallboard/WallboardHeader.vue'
 import CasesTiles from '@/components/wallboard/CasesTiles.vue'
-import CallsStatusCards from '@/components/wallboard/CallsStatusCards.vue'
-//import TopStatsRow from './components/TopStatsRow.vue'
 import CounsellorsTable from '@/components/wallboard/CounsellorsTable.vue'
 import CallersTable from '@/components/wallboard/CallersTable.vue'
-// import QueueActivityGraph from './components/QueueActivityGraph.vue'
 
 // Import utilities
 import { useWebSocketConnection } from '@/composables/useWebSocketConnection.js'
@@ -60,18 +52,16 @@ import { useCounsellorData } from '@/composables/useCounsellorData'
 import { useApiData } from '@/composables/useApiData'
 import { formatDuration, getStatusText } from '@/utils/formatters'
 
-const WSHOST = 'wss://192.168.10.12:8384/ami/sync?c=-2'
+const WSHOST = 'wss://demo-openchs.bitz-itc.com:8384/ami/sync?c=-2'
+
 
 export default {
   name: 'App',
   components: {
     WallboardHeader,
     CasesTiles,
-    CallsStatusCards,
-    //TopStatsRow,
     CounsellorsTable,
-    CallersTable,
-    //QueueActivityGraph
+    CallersTable
   },
   setup() {
     const isDarkMode = ref(false)
@@ -88,11 +78,7 @@ export default {
     // Use API data composable
     const {
       apiData,
-      callsReportData,
-      callsReportError,
-      callsReportLoading,
-      fetchCasesData,
-      fetchCallsReportData
+      fetchCasesData
     } = useApiData(axiosInstance)
     
     // Use counsellor data composable
@@ -147,59 +133,6 @@ export default {
       ]
       
       return tiles
-    })
-
-    // Calls cards data computed from API response
-    const callsCards = computed(() => {
-      if (!callsReportData.value || !callsReportData.value.calls) {
-        return []
-      }
-      
-      return callsReportData.value.calls.map((call, index) => {
-        const [status, count] = call
-        return {
-          id: `call-${index}`,
-          status: status,
-          count: parseInt(count) || 0,
-          label: status.charAt(0).toUpperCase() + status.slice(1),
-          variant: getCallStatusVariant(status)
-        }
-      })
-    })
-
-    // Helper function to assign color variants based on call status
-    const getCallStatusVariant = (status) => {
-      const statusLower = status.toLowerCase()
-      switch (statusLower) {
-        case 'answered': return 'success'
-        case 'abandoned': return 'warning'
-        case 'missed': return 'danger'
-        case 'noanswer': return 'danger'
-        case 'voicemail': return 'info'
-        case 'ivr': return 'primary'
-        case 'dump': return 'secondary'
-        default: return 'secondary'
-      }
-    }
-
-    // Calculate queue statistics from channel data
-    const queueStats = computed(() => {
-      const stats = { 
-        total: channels.value.length,
-        inQueue: 0, 
-        connected: 0, 
-        onHold: 0, 
-        hangup: 0
-      }
-      
-      channels.value.forEach(ch => {
-        if (Number(ch.CHAN_STATE_QUEUE)) stats.inQueue++
-        if (Number(ch.CHAN_STATE_CONNECT)) stats.connected++
-        if (Number(ch.CHAN_STATE_HOLD)) stats.onHold++
-        if (Number(ch.CHAN_STATE_HANGUP)) stats.hangup++
-      })
-
-      return stats
     })
 
     // Separate counsellors and callers based on CHAN_CONTEXT
@@ -289,14 +222,9 @@ export default {
     })
 
     // Theme management
-    const applyThemeClass = () => {
-      document.documentElement.classList.toggle('dark-mode', isDarkMode.value)
-    }
-
     const toggleDarkMode = () => {
       isDarkMode.value = !isDarkMode.value
       localStorage.setItem('darkMode', isDarkMode.value.toString())
-      applyThemeClass()
     }
 
     // Lifecycle
@@ -305,19 +233,20 @@ export default {
       if (savedDarkMode !== null) {
         isDarkMode.value = savedDarkMode === 'true'
       }
-      applyThemeClass()
       
       // Connect to WebSocket
       connect(channels, fetchCounsellorName, fetchCounsellorStats)
       
       // Fetch initial data
       fetchCasesData()
-      fetchCallsReportData()
+      
+      // Debug logs
+      console.log('Wallboard mounted')
+      console.log('Initial apiData:', apiData.value)
       
       // Refresh data every 5 minutes
       const dataInterval = setInterval(() => {
         fetchCasesData()
-        fetchCallsReportData()
       }, 300000)
       
       onBeforeUnmount(() => {
@@ -326,8 +255,14 @@ export default {
       })
     })
 
-    // Keep DOM class in sync
-    watch(isDarkMode, applyThemeClass)
+    // Watch for data changes
+    watch(() => apiData.value, (newVal) => {
+      console.log('apiData changed:', newVal)
+    })
+    
+    watch(() => channels.value, (newVal) => {
+      console.log('channels changed, count:', newVal.length)
+    })
 
     return {
       // State
@@ -337,9 +272,6 @@ export default {
       casesTiles,
       counsellorsWithQueueData,
       onlineCounsellorsCount,
-      callsReportError,
-      callsReportLoading,
-      callsCards,
       callersData,
       onlineCallersCount,
       
@@ -347,9 +279,6 @@ export default {
       connectionClass,
       connectionLabel,
       lastUpdate,
-      
-      // Axios instance for child components
-      axiosInstance,
       
       // Methods
       toggleDarkMode
@@ -359,139 +288,5 @@ export default {
 </script>
 
 <style>
-/* TV-Optimized Global Styles */
-.container {
-  max-width: 100vw;
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-  padding: 5px 8px;
-  background-color: #f8fafc;
-  transition: background-color 0.3s ease;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.dark-mode .container {
-  background-color: #1a202c;
-  color: #e2e8f0;
-}
-
-/* Header - TV optimized */
-.container > :first-child {
-  flex-shrink: 0;
-  margin-bottom: 6px;
-}
-
-/* Call status cards - TV optimized */
-.container > :nth-child(2) {
-  flex-shrink: 0;
-  margin-bottom: 8px;
-}
-
-/* Main content - TV optimized layout with wider cases column */
-.main-content {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 12px;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-}
-
-/* Left column for tables - TV optimized */
-.tables-column {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  overflow: hidden;
-  min-height: 0;
-}
-
-/* Right column for cases tiles - TV optimized */
-.cases-column {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  min-height: 0;
-}
-
-/* TV Screen specific optimizations */
-@media screen and (min-width: 1920px) {
-  .container {
-    padding: 6px 10px;
-  }
-  
-  .main-content {
-    grid-template-columns: 1fr 400px;
-    gap: 15px;
-  }
-}
-
-@media screen and (max-width: 1600px) {
-  .container {
-    padding: 4px 6px;
-  }
-  
-  .main-content {
-    grid-template-columns: 1fr 300px;
-    gap: 10px;
-  }
-}
-
-/* 4K TV optimization */
-@media screen and (min-width: 3840px) {
-  .container {
-    padding: 12px 20px;
-  }
-  
-  .main-content {
-    grid-template-columns: 1fr 500px;
-    gap: 20px;
-  }
-}
-
-/* Disable text selection for wallboard display */
-.container {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-/* Optimize font rendering for TV displays */
-.container {
-  font-smooth: antialiased;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-display: swap;
-}
-
-/* Global scrollbar styling for TV */
-::-webkit-scrollbar {
-  width: 2px;
-  height: 2px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(203, 213, 225, 0.3);
-  border-radius: 1px;
-}
-
-.dark-mode ::-webkit-scrollbar-thumb {
-  background: rgba(107, 114, 128, 0.3);
-}
-
-/* Remove all animations for better TV performance if needed */
-@media (prefers-reduced-motion: reduce) {
-  .container * {
-    animation: none !important;
-    transition: none !important;
-  }
-}
+/* Component-specific styles only */
 </style>
