@@ -1,13 +1,13 @@
 <template>
-  <div class="flex space-x-2 mb-4">
+  <div class="flex flex-wrap gap-3 mb-6">
     <button
       v-for="platform in channelFilters"
       :key="platform.id"
       :class="[
-        'px-4 py-2 rounded-full border transition',
+        'px-5 py-2.5 rounded-full font-medium transition-all duration-200 text-sm',
         activePlatform === platform.id 
-          ? 'bg-blue-500 text-white border-blue-500' 
-          : 'bg-white text-gray-700 border-gray-300 hover:border-blue-300'
+          ? 'bg-[#0284C7] text-white shadow-sm' 
+          : 'bg-white text-gray-700 border-2 border-gray-300 hover:border-[#0891B2] hover:text-[#0891B2]'
       ]"
       @click="$emit('update:activePlatform', platform.id)"
     >

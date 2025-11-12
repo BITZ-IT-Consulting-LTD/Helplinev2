@@ -20,7 +20,9 @@
               v-model="username"
               type="text"
               placeholder="Enter username"
-              class="w-full p-2 rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              class="w-full p-2 rounded bg-gray-200 text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              :disabled="auth.loading"
+              required
             />
           </div>
 
@@ -30,14 +32,16 @@
               v-model="password"
               type="password"
               placeholder="Enter password"
-              class="w-full p-2 rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              class="w-full p-2 rounded bg-gray-200 text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              :disabled="auth.loading"
+              required
             />
           </div>
 
           <button
             type="submit"
-            class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 rounded transition"
-            :disabled="auth.loading"
+            class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 rounded transition disabled:opacity-50 disabled:cursor-not-allowed"
+            :disabled="auth.loading || !username || !password"
           >
             {{ auth.loading ? 'Logging in...' : 'Login' }}
           </button>
@@ -62,6 +66,11 @@ const router = useRouter()
 const auth = useAuthStore()
 
 const handleLogin = async () => {
+  if (!username.value || !password.value) {
+    auth.error = 'Please enter both username and password'
+    return
+  }
+
   const success = await auth.login(username.value, password.value)
   if (success) {
     router.push('/')
