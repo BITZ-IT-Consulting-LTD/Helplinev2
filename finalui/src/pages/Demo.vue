@@ -1,251 +1,356 @@
 <template>
-  <div class="analytics-card">
-    <div class="card-header">
-      <div class="section-title">Case Analytics</div>
-      <select class="time-filter" v-model="selectedTimeframe">
-        <option value="h">Hourly</option>
-        <option value="dt">Daily</option>
-        <option value="wk">Weekly</option>
-        <option value="mn">Monthly</option>
-        <option value="yr">Yearly</option>
-      </select>
-    </div>
+  <div class="p-6 space-y-6">
+    <h2 class="text-2xl font-bold mb-4">SIP Call Testing</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Agent 1 (Extension 101) -->
+      <div class="p-4 border-2 border-gray-300 rounded-lg">
+        <h3 class="mb-3 text-lg font-semibold">Agent 1 - Extension 101</h3>
 
-    <div class="chart-container">
-      <div class="chart-scroll">
-        <svg :width="svgWidth" :height="svgHeight">
-          <!-- Horizontal gridlines -->
-          <g v-for="tick in yTicks" :key="'grid-' + tick">
-            <line
-              :x1="margin.left"
-              :x2="svgWidth - margin.right"
-              :y1="yScale(tick)"
-              :y2="yScale(tick)"
-              stroke="#ddd"
-              stroke-width="1"
-            />
-          </g>
+        <div class="space-y-2 mb-4 text-sm">
+          <div><strong>Registered:</strong> <span :class="agent1.registered ? 'text-green-600' : 'text-red-600'">{{ agent1.registered ? 'Yes' : 'No' }}</span></div>
+          <div><strong>Connection:</strong> <span :class="agent1.connected ? 'text-green-600' : 'text-red-600'">{{ agent1.connected ? 'Connected' : 'Disconnected' }}</span></div>
+          <div v-if="agent1.callStatus"><strong>Call Status:</strong> {{ agent1.callStatus }}</div>
+        </div>
 
-          <!-- Bars -->
-          <g v-for="(bar, index) in chartData" :key="'bar-' + index">
-            <rect
-              :x="margin.left + index * (barWidth + barSpacing)"
-              :y="yScale(bar.rawValue)"
-              :width="barWidth"
-              :height="svgHeight - margin.bottom - yScale(bar.rawValue)"
-              fill="url(#barGradient)"
-            />
-            <!-- X-axis labels (timestamps) -->
-            <text
-              :x="margin.left + index * (barWidth + barSpacing) + barWidth / 2"
-              :y="svgHeight - margin.bottom + 15"
-              text-anchor="middle"
-              font-size="10"
-            >
-              {{ formatLabel(bar.label) }}
-            </text>
-          </g>
+        <div class="flex flex-col gap-2">
+          <button 
+            @click="startAgent(agent1, '101')" 
+            :disabled="agent1.registered || agent1.starting"
+            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            Start (Register)
+          </button>
+          
+          <button 
+            @click="makeCall(agent1, '102')" 
+            :disabled="!agent1.registered || agent1.inCall"
+            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            Call Extension 102
+          </button>
+          
+          <button 
+            @click="hangup(agent1)" 
+            :disabled="!agent1.inCall"
+            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            Hang Up
+          </button>
+          
+          <button 
+            @click="stopAgent(agent1)" 
+            :disabled="!agent1.registered || agent1.stopping"
+            class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            Stop (Unregister)
+          </button>
+        </div>
 
-          <!-- Y-axis labels -->
-          <g v-for="tick in yTicks" :key="'label-' + tick">
-            <text
-              :x="margin.left - 5"
-              :y="yScale(tick) + 3"
-              text-anchor="end"
-              font-size="10"
-            >
-              {{ tick }}
-            </text>
-          </g>
+        <audio ref="remoteAudio1" autoplay playsinline class="hidden"></audio>
+      </div>
 
-          <!-- X-axis line -->
-          <line
-            :x1="margin.left"
-            :x2="svgWidth - margin.right"
-            :y1="svgHeight - margin.bottom"
-            :y2="svgHeight - margin.bottom"
-            stroke="#333"
-            stroke-width="1.2"
-          />
+      <!-- Agent 2 (Extension 102) -->
+      <div class="p-4 border-2 border-gray-300 rounded-lg">
+        <h3 class="mb-3 text-lg font-semibold">Agent 2 - Extension 102</h3>
 
-          <!-- Y-axis line -->
-          <line
-            :x1="margin.left"
-            :x2="margin.left"
-            :y1="margin.top"
-            :y2="svgHeight - margin.bottom"
-            stroke="#333"
-            stroke-width="1.2"
-          />
+        <div class="space-y-2 mb-4 text-sm">
+          <div><strong>Registered:</strong> <span :class="agent2.registered ? 'text-green-600' : 'text-red-600'">{{ agent2.registered ? 'Yes' : 'No' }}</span></div>
+          <div><strong>Connection:</strong> <span :class="agent2.connected ? 'text-green-600' : 'text-red-600'">{{ agent2.connected ? 'Connected' : 'Disconnected' }}</span></div>
+          <div v-if="agent2.callStatus"><strong>Call Status:</strong> {{ agent2.callStatus }}</div>
+        </div>
 
-          <!-- Gradient for bars -->
-          <defs>
-            <linearGradient id="barGradient" x1="0" y1="1" x2="0" y2="0">
-              <stop offset="0%" stop-color="var(--accent-color)" />
-              <stop offset="100%" stop-color="#ff7700" />
-            </linearGradient>
-          </defs>
-        </svg>
+        <div class="flex flex-col gap-2">
+          <button 
+            @click="startAgent(agent2, '102')" 
+            :disabled="agent2.registered || agent2.starting"
+            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            Start (Register)
+          </button>
+          
+          <button 
+            @click="makeCall(agent2, '101')" 
+            :disabled="!agent2.registered || agent2.inCall"
+            class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            Call Extension 101
+          </button>
+          
+          <button 
+            @click="hangup(agent2)" 
+            :disabled="!agent2.inCall"
+            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            Hang Up
+          </button>
+          
+          <button 
+            @click="stopAgent(agent2)" 
+            :disabled="!agent2.registered || agent2.stopping"
+            class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            Stop (Unregister)
+          </button>
+        </div>
+
+        <audio ref="remoteAudio2" autoplay playsinline class="hidden"></audio>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref, watch, onMounted, computed } from 'vue'
-import { useCaseStore } from '@/stores/cases'
+<script>
+import * as SIP from "sip.js";
 
-const casesStore = useCaseStore()
-const selectedTimeframe = ref('dt') // default daily
-const chartData = ref([])
+export default {
+  name: "SIPTest",
+  data() {
+    return {
+      agent1: {
+        ua: null,
+        registerer: null,
+        registered: false,
+        connected: false,
+        starting: false,
+        stopping: false,
+        session: null,
+        inCall: false,
+        callStatus: '',
+        localStream: null
+      },
+      agent2: {
+        ua: null,
+        registerer: null,
+        registered: false,
+        connected: false,
+        starting: false,
+        stopping: false,
+        session: null,
+        inCall: false,
+        callStatus: '',
+        localStream: null
+      }
+    };
+  },
+  methods: {
+    async handleIncomingCall(agent, audioRef, invitation) {
+      console.log(`[${agent.extension}] Incoming call:`, invitation);
+      agent.callStatus = 'Incoming call...';
 
-// Chart dimensions & spacing
-const margin = { top: 20, right: 20, bottom: 40, left: 40 }
-const barWidth = 30
-const barSpacing = 15
-const svgHeight = 300
+      try {
+        if (!agent.localStream) {
+          agent.localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        }
 
-// Dynamic width based on data count
-const svgWidth = computed(() =>
-  Math.max(chartData.value.length * (barWidth + barSpacing) + margin.left + margin.right, 400)
-)
+        await invitation.accept({
+          sessionDescriptionHandlerOptions: {
+            constraints: { audio: true, video: false },
+            localStream: agent.localStream
+          }
+        });
 
-// Fetch data
-async function fetchCases() {
-  console.log('[Analytics] fetching cases with xaxis=', selectedTimeframe.value)
-  try {
-    await casesStore.listCases({
-      xaxis: selectedTimeframe.value,
-      yaxis: 'status',
-      metrics: 'case_count'
-    })
-    processCases(casesStore.cases)
-  } catch (err) {
-    console.error('[Analytics] fetchCases error', err)
-    chartData.value = []
-  }
-}
+        agent.session = invitation;
+        agent.inCall = true;
+        agent.callStatus = 'Call in progress';
 
-// Process data
-function processCases(rawRows = []) {
-  const grouped = {}
-  rawRows.forEach(row => {
-    if (!Array.isArray(row)) return
-    let xVal, count
-    if (row.length === 3) {
-      xVal = String(row[0])
-      count = Number(row[2]) || 0
-    } else if (row.length === 2) {
-      xVal = String(row[0])
-      count = Number(row[1]) || 0
-    } else {
-      xVal = String(row[0])
-      count = Number(row[row.length - 1]) || 0
+        invitation.stateChange.addListener((state) => {
+          console.log(`[${agent.extension}] Call state:`, state);
+          
+          if (state === SIP.SessionState.Established) {
+            const pc = invitation.sessionDescriptionHandler.peerConnection;
+
+            agent.localStream.getTracks().forEach(track => {
+              pc.addTrack(track, agent.localStream);
+            });
+
+            const inboundStream = new MediaStream();
+            pc.getReceivers().forEach((receiver) => {
+              if (receiver.track && receiver.track.kind === "audio") {
+                inboundStream.addTrack(receiver.track);
+              }
+            });
+            
+            audioRef.srcObject = inboundStream;
+            audioRef.play().catch(err => console.error("Play failed:", err));
+            agent.callStatus = 'Connected';
+          } else if (state === SIP.SessionState.Terminated) {
+            agent.inCall = false;
+            agent.session = null;
+            agent.callStatus = 'Call ended';
+            audioRef.srcObject = null;
+          }
+        });
+
+      } catch (err) {
+        console.error(`[${agent.extension}] Error handling incoming call:`, err);
+        agent.callStatus = 'Error accepting call';
+      }
+    },
+
+    startAgent(agent, extension) {
+      agent.starting = true;
+      agent.extension = extension;
+      
+      try {
+        const uri = SIP.UserAgent.makeURI(`sip:${extension}@demo-openchs.bitz-itc.com`);
+        if (!uri) throw new Error("Invalid SIP URI");
+
+        const audioRef = extension === '101' ? this.$refs.remoteAudio1 : this.$refs.remoteAudio2;
+
+        const config = {
+          uri,
+          authorizationUsername: extension,
+          authorizationPassword: "23kdefrtgos09812100",
+          displayName: extension,
+          transportOptions: {
+            server: "wss://demo-openchs.bitz-itc.com:8089/ws",
+            traceSip: true,
+          },
+          log: { level: "log" },
+          delegate: {
+            onInvite: (invitation) => this.handleIncomingCall(agent, audioRef, invitation)
+          }
+        };
+
+        console.log(`[${extension}] Starting SIP agent`);
+        agent.ua = new SIP.UserAgent(config);
+
+        agent.ua.transport.onConnect = () => {
+          console.log(`[${extension}] Transport connected`);
+          agent.connected = true;
+        };
+
+        agent.ua.transport.onDisconnect = (error) => {
+          console.warn(`[${extension}] Transport disconnected`, error);
+          agent.connected = false;
+          agent.registered = false;
+        };
+
+        agent.ua.start()
+          .then(() => {
+            console.log(`[${extension}] SIP Agent started`);
+            agent.registerer = new SIP.Registerer(agent.ua);
+
+            agent.registerer.stateChange.addListener((state) => {
+              if (state === SIP.RegistererState.Registered) {
+                console.log(`[${extension}] Registered`);
+                agent.registered = true;
+              } else if (state === SIP.RegistererState.Unregistered) {
+                console.log(`[${extension}] Unregistered`);
+                agent.registered = false;
+              }
+            });
+
+            agent.registerer.register();
+          })
+          .catch(err => console.error(`[${extension}] Failed to start:`, err))
+          .finally(() => agent.starting = false);
+
+      } catch (err) {
+        console.error(`[${extension}] Error starting agent:`, err);
+        agent.starting = false;
+      }
+    },
+
+    async makeCall(agent, targetExtension) {
+      try {
+        agent.callStatus = `Calling ${targetExtension}...`;
+        
+        if (!agent.localStream) {
+          agent.localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        }
+
+        const target = SIP.UserAgent.makeURI(`sip:${targetExtension}@demo-openchs.bitz-itc.com`);
+        const inviter = new SIP.Inviter(agent.ua, target);
+        
+        agent.session = inviter;
+        agent.inCall = true;
+
+        const audioRef = agent.extension === '101' ? this.$refs.remoteAudio1 : this.$refs.remoteAudio2;
+
+        inviter.stateChange.addListener((state) => {
+          console.log(`[${agent.extension}] Outgoing call state:`, state);
+          
+          if (state === SIP.SessionState.Establishing) {
+            agent.callStatus = 'Ringing...';
+          } else if (state === SIP.SessionState.Established) {
+            const pc = inviter.sessionDescriptionHandler.peerConnection;
+
+            agent.localStream.getTracks().forEach(track => {
+              pc.addTrack(track, agent.localStream);
+            });
+
+            const inboundStream = new MediaStream();
+            pc.getReceivers().forEach((receiver) => {
+              if (receiver.track && receiver.track.kind === "audio") {
+                inboundStream.addTrack(receiver.track);
+              }
+            });
+            
+            audioRef.srcObject = inboundStream;
+            audioRef.play().catch(err => console.error("Play failed:", err));
+            agent.callStatus = 'Connected';
+          } else if (state === SIP.SessionState.Terminated) {
+            agent.inCall = false;
+            agent.session = null;
+            agent.callStatus = 'Call ended';
+            audioRef.srcObject = null;
+          }
+        });
+
+        await inviter.invite({
+          sessionDescriptionHandlerOptions: {
+            constraints: { audio: true, video: false },
+            localStream: agent.localStream
+          }
+        });
+
+        console.log(`[${agent.extension}] Call initiated to ${targetExtension}`);
+
+      } catch (err) {
+        console.error(`[${agent.extension}] Error making call:`, err);
+        agent.callStatus = 'Call failed';
+        agent.inCall = false;
+        agent.session = null;
+      }
+    },
+
+    hangup(agent) {
+      if (agent.session) {
+        try {
+          agent.session.bye();
+          console.log(`[${agent.extension}] Hung up`);
+        } catch (err) {
+          console.error(`[${agent.extension}] Error hanging up:`, err);
+        }
+      }
+    },
+
+    stopAgent(agent) {
+      if (!agent.registerer || !agent.ua) return;
+      
+      agent.stopping = true;
+      agent.registerer.unregister()
+        .then(() => {
+          console.log(`[${agent.extension}] Unregistered`);
+          return agent.ua.stop();
+        })
+        .then(() => {
+          agent.connected = false;
+          agent.registered = false;
+          agent.ua = null;
+          agent.registerer = null;
+          agent.callStatus = '';
+          
+          if (agent.localStream) {
+            agent.localStream.getTracks().forEach(track => track.stop());
+            agent.localStream = null;
+          }
+        })
+        .catch(err => console.error(`[${agent.extension}] Error stopping:`, err))
+        .finally(() => agent.stopping = false);
     }
-    grouped[xVal] = (grouped[xVal] || 0) + count
-  })
-
-  const entries = Object.entries(grouped)
-    .map(([label, value]) => ({ label, value }))
-    .sort((a, b) => {
-      const na = Number(a.label), nb = Number(b.label)
-      if (!isNaN(na) && !isNaN(nb)) return na - nb
-      return String(a.label).localeCompare(String(b.label))
-    })
-
-  chartData.value = entries.map(e => ({
-    label: e.label,
-    rawValue: e.value
-  }))
-}
-
-// Y scale & ticks
-const maxValue = computed(() => Math.max(...chartData.value.map(d => d.rawValue), 1))
-const yScale = (value) =>
-  svgHeight - margin.bottom - (value / maxValue.value) * (svgHeight - margin.top - margin.bottom)
-
-// Generate 5 ticks including 0
-const yTicks = computed(() => {
-  const steps = 5
-  const stepValue = Math.ceil(maxValue.value / steps)
-  return Array.from({ length: steps + 1 }, (_, i) => i * stepValue)
-})
-
-// Format label based on timeframe
-function formatLabel(label) {
-  const timestamp = Number(label) * 1000 // convert seconds → milliseconds
-  const date = new Date(timestamp)
-
-  switch (selectedTimeframe.value) {
-    case 'h': // Hourly
-      return `${date.getHours()}:00`
-
-    case 'dt': // Daily
-      return date.toLocaleDateString('en-US', {
-        day: '2-digit', month: 'short', year: 'numeric'
-      })
-
-    case 'wk': // Weekly
-      // Show starting week date (or use ISO week)
-      const weekStart = new Date(date)
-      weekStart.setDate(date.getDate() - date.getDay()) // Sunday start
-      return `W${getWeekNumber(date)} (${weekStart.toLocaleDateString('en-US', {
-        month: 'short', day: '2-digit'
-      })})`
-
-    case 'mn': // Monthly
-      return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
-
-    case 'yr': // Yearly
-      return date.getFullYear()
-
-    default:
-      return label
   }
-}
-
-// Helper: ISO Week number
-function getWeekNumber(d) {
-  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()))
-  const dayNum = date.getUTCDay() || 7
-  date.setUTCDate(date.getUTCDate() + 4 - dayNum)
-  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1))
-  return Math.ceil((((date - yearStart) / 86400000) + 1) / 7)
-}
-
-
-onMounted(fetchCases)
-watch(selectedTimeframe, fetchCases)
+};
 </script>
-
-<style scoped>
-.analytics-card {
-  background-color: var(--card-bg);
-  border-radius: 30px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s;
-}
-
-.time-filter {
-  padding: 8px 12px;
-  background: var(--background-color);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-color);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.chart-container {
-  margin-top: 20px;
-  overflow-x: auto;
-}
-
-.chart-scroll {
-  display: inline-block;
-  min-width: 100%;
-}
-</style>

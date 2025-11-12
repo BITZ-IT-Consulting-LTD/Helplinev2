@@ -27,6 +27,28 @@ export const useQAStore = defineStore('qa', {
         this.qaCount = data.qa_nb ? data.qa_nb[0][1] : this.qas.length
       } catch (err) {
         this.error = err.message || 'Failed to fetch QA list'
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async createQA(payload) {
+      try {
+        this.loading = true
+        this.error = null
+        
+        const { data } = await axiosInstance.post('api/qas', payload, {
+          headers: {
+            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe',
+            'Content-Type': 'application/json'
+          }
+        })
+        
+        return data
+      } catch (err) {
+        this.error = err.message || 'Failed to create QA'
+        throw err
       } finally {
         this.loading = false
       }

@@ -14,64 +14,57 @@
       <tbody class="divide-y divide-gray-200">
         <tr
           v-for="message in messages"
-          :key="message[messagesStore.pmessages_k.id?.[0] || 'id']"
+          :key="getValue(message, 'id')"
           :class="{
-            'bg-blue-50': selectedMessageId === message[messagesStore.pmessages_k.id?.[0] || 'id']
+            'bg-blue-50': selectedMessageId === getValue(message, 'id')
           }"
+          class="hover:bg-gray-50 cursor-pointer"
           @click="openChatPanel(message)"
         >
           <!-- Contact -->
-          <td class="px-4 py-2 flex items-center space-x-2">
-            <div
-              class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold"
-              :style="{ background: getAvatarColor(message[messagesStore.pmessages_k.created_by?.[0] || 'created_by'] || '') }"
-            >
-              {{
-                (message[messagesStore.pmessages_k.created_by?.[0] || 'created_by'] || '?').charAt(0)
-              }}
+          <td class="px-4 py-2">
+            <div class="flex items-center space-x-2">
+              <div
+                class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold"
+                :style="{ background: getAvatarColor(getValue(message, 'created_by') || '') }"
+              >
+                {{ (getValue(message, 'created_by') || '?').charAt(0) }}
+              </div>
+              <span>{{ getValue(message, 'created_by') || 'Unknown' }}</span>
             </div>
-            <span>
-              {{ message[messagesStore.pmessages_k.created_by?.[0] || 'created_by'] || "Unknown" }}
-            </span>
           </td>
 
           <!-- Platform -->
           <td class="px-4 py-2">
             <span class="px-2 py-1 rounded bg-gray-200 text-gray-700 text-xs">
-              {{ message[messagesStore.pmessages_k.src?.[0] || 'src'] || "N/A" }}
+              {{ getValue(message, 'src') || 'N/A' }}
             </span>
           </td>
 
           <!-- Message -->
-          <td class="px-4 py-2">
-            {{ message[messagesStore.pmessages_k.src_msg?.[0] || 'src_msg'] || "" }}
+          <td class="px-4 py-2 max-w-xs truncate">
+            {{ getValue(message, 'src_msg') || '' }}
           </td>
 
           <!-- Time -->
           <td class="px-4 py-2 text-sm text-gray-500">
-            {{
-              message[messagesStore.pmessages_k.dth?.[0] || 'dth']
-                ? new Date(
-                    message[messagesStore.pmessages_k.dth?.[0] || 'dth'] * 1000
-                  ).toLocaleString()
-                : "N/A"
-            }}
+            {{ formatDateTime(getValue(message, 'dth')) }}
           </td>
 
           <!-- Status -->
           <td class="px-4 py-2">
             <span
               class="px-2 py-1 rounded text-white text-xs"
-              :class="statusClass(message[messagesStore.pmessages_k.src_status?.[0] || 'src_status'], true)"
+              :class="statusClass(getValue(message, 'src_status'))"
             >
-              {{ message[messagesStore.pmessages_k.src_status?.[0] || 'src_status'] || "Active" }}
+              {{ getValue(message, 'src_status') || 'Active' }}
             </span>
           </td>
 
           <!-- Actions -->
           <td class="px-4 py-2">
             <button
-              class="p-2 rounded bg-blue-500 text-white hover:bg-blue-600"
+              class="p-2 rounded bg-blue-500 text-white hover:bg-blue-600 text-sm"
               @click.stop="openChatPanel(message)"
               title="Open Chat"
             >
@@ -91,39 +84,63 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { useMessagesStore } from '@/stores/messages';
+import { useMessagesStore } from '@/stores/messages'
 
 const props = defineProps({
   messages: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
-  selectedMessageId: [String, Number],
-});
+  selectedMessageId: [String, Number]
+})
 
-const emit = defineEmits(['open-chat']);
+const emit = defineEmits(['openChat'])
 
-const messagesStore = useMessagesStore();
+const messagesStore = useMessagesStore()
+
+// Helper to get value from message array using pmessages_k
+const getValue = (message, key) => {
+  if (!messagesStore.pmessages_k?.[key]) return null
+  const index = messagesStore.pmessages_k[key][0]
+  return message[index]
+}
+
+// Format timestamp to date and time
+const formatDateTime = (timestamp) => {
+  if (!timestamp) return 'N/A'
+  const date = new Date(timestamp * 1000)
+  return date.toLocaleString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
 
 const openChatPanel = (message) => {
-  emit('open-chat', message);
-};
+  emit('openChat', message)
+}
 
 const getAvatarColor = (name) => {
-  return 'var(--color-primary)'; // you can customize colors
-};
+  const colors = [
+    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+    '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9'
+  ]
+  const index = name?.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) || 0
+  return colors[index % colors.length]
+}
 
 // Status mapping for Tailwind
-const statusClass = (statusRaw, isTable = false) => {
-  const status = String(statusRaw || 'active').toLowerCase();
+const statusClass = (statusRaw) => {
+  const status = String(statusRaw || 'active').toLowerCase()
   const map = {
     active: 'bg-green-500',
     pending: 'bg-yellow-500',
     inactive: 'bg-gray-500',
     busy: 'bg-red-500',
     away: 'bg-orange-500'
-  };
-  return map[status] || map.active;
-};
+  }
+  return map[status] || map.active
+}
 </script>
