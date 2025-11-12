@@ -23,11 +23,11 @@
           </button>
           
           <button 
-            @click="makeCall(agent1, '102')" 
+            @click="makeCall(agent1, '100')" 
             :disabled="!agent1.registered || agent1.inCall"
             class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            Call Extension 102
+            Call Extension 100
           </button>
           
           <button 
@@ -50,9 +50,9 @@
         <audio ref="remoteAudio1" autoplay playsinline class="hidden"></audio>
       </div>
 
-      <!-- Agent 2 (Extension 102) -->
+      <!-- Agent 2 (Extension 100) -->
       <div class="p-4 border-2 border-gray-300 rounded-lg">
-        <h3 class="mb-3 text-lg font-semibold">Agent 2 - Extension 102</h3>
+        <h3 class="mb-3 text-lg font-semibold">Agent 2 - Extension 100</h3>
 
         <div class="space-y-2 mb-4 text-sm">
           <div><strong>Registered:</strong> <span :class="agent2.registered ? 'text-green-600' : 'text-red-600'">{{ agent2.registered ? 'Yes' : 'No' }}</span></div>
@@ -62,7 +62,7 @@
 
         <div class="flex flex-col gap-2">
           <button 
-            @click="startAgent(agent2, '102')" 
+            @click="startAgent(agent2, '100')" 
             :disabled="agent2.registered || agent2.starting"
             class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
