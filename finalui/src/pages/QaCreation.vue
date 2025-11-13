@@ -1,22 +1,21 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-6 px-4">
+  <div class="min-h-screen bg-gray-900 py-6 px-4">
     <div class="max-w-[1800px] mx-auto flex flex-col gap-6">
-      <!-- ROW 1: Page Header -->
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 border-l-4 border-blue-500">
+      <!-- Page Header -->
+      <div class="bg-gray-800 rounded-lg shadow-xl p-6 border-l-4 border-blue-500">
         <div class="flex items-center gap-4 mb-2">
           <button 
             @click="goBack"
-            class="p-2 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-all"
+            class="p-2 hover:bg-blue-900/30 rounded-lg transition-all"
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-blue-600 dark:text-blue-400">
-              <path d="M19 12H5M12 19l-7-7 7-7"/>
-            </svg>
+            <i-mdi-arrow-left class="w-6 h-6 text-blue-400" />
           </button>
           <div>
-            <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <h1 class="text-3xl font-bold text-blue-400 flex items-center gap-3">
+              <i-mdi-clipboard-check class="w-8 h-8" />
               Quality Assurance Evaluation
             </h1>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            <p class="text-sm text-gray-400 mt-1">
               Review and evaluate call quality based on established criteria
             </p>
           </div>
@@ -25,31 +24,34 @@
 
       <!-- Loading State -->
       <div v-if="loading" class="flex items-center justify-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div class="flex flex-col items-center gap-4">
+          <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-900/30 border-t-blue-500"></div>
+          <div class="text-gray-400">Loading call data...</div>
+        </div>
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error" class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
-        <p class="text-red-600 dark:text-red-400">{{ error }}</p>
+      <div v-else-if="error" class="bg-red-600/20 border border-red-600/50 rounded-lg p-6">
+        <p class="text-red-400">{{ error }}</p>
       </div>
 
-      <!-- ROW 2: Main Content (Two Columns) -->
+      <!-- Main Content -->
       <div v-else class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- LEFT COLUMN: Call Details (Sticky) -->
+        <!-- Left Column: Call Details -->
         <div class="lg:col-span-4 xl:col-span-3">
           <CallDetailsCard :call-data="callData" />
         </div>
 
-        <!-- RIGHT COLUMN: Two Rows -->
+        <!-- Right Column -->
         <div class="lg:col-span-8 xl:col-span-9 flex flex-col gap-6">
-          <!-- RIGHT COLUMN - ROW 1: Section Navigation -->
+          <!-- Section Navigation -->
           <QASectionNav 
             :sections="sectionsWithScores"
             :active-section="activeSection"
             @change-section="changeSection"
           />
 
-          <!-- RIGHT COLUMN - ROW 2: Active Form Section -->
+          <!-- Active Form Section -->
           <CreateQA 
             ref="createQARef"
             :active-section="activeSection"
@@ -78,21 +80,13 @@ const route = useRoute()
 const callStore = useCallStore()
 const createQARef = ref(null)
 
-// Loading and error states
 const loading = ref(false)
 const error = ref(null)
-
-// Active section state
 const activeSection = ref(0)
-
-// Section scores (updated from CreateQA component)
 const sectionScores = ref([0, 0, 0, 0, 0, 0, 0])
 
-// Get chanUniqueid from route params/query
-// TODO: Remove hardcoded fallback after testing
 const chanUniqueid = route.params.chanUniqueid || route.query.chanUniqueid || '1761627874.2'
 
-// Call data (will be populated from API)
 const callData = reactive({
   chanUniqueid: chanUniqueid,
   callDateTime: '',
@@ -115,31 +109,25 @@ onMounted(async () => {
   error.value = null
 
   try {
-    // Fetch calls list
-await callStore.listCalls()
+    await callStore.listCalls()
+    const call = callStore.getCallById(chanUniqueid)
 
-// Get the call by uniqueid using getter
-const call = callStore.getCallById(chanUniqueid)
+    if (!call) {
+      error.value = 'Call not found'
+      return
+    }
 
-if (!call) {
-  error.value = 'Call not found'
-  return
-}
+    const k = callStore.calls_k
 
-// Use calls_k from store
-const k = callStore.calls_k
+    const chanTsIndex = parseInt(k.chan_ts[0])
+    const usrNameIndex = parseInt(k.usr_name[0])
+    const vectorIndex = parseInt(k.vector[0])
+    const phoneIndex = parseInt(k.phone[0])
+    const usrIndex = parseInt(k.usr[0])
+    const waitTimeTotIndex = parseInt(k.wait_time_tot[0])
+    const hangupStatusIndex = parseInt(k.hangup_status[0])
+    const talkTimeIndex = parseInt(k.talk_time[0])
 
-    // Get indexes from call_k (first element in array is the index)
-    const chanTsIndex = parseInt(k.chan_ts[0])        // index 1 - Date
-    const usrNameIndex = parseInt(k.usr_name[0])      // index 6 - Extension CID Name (reporter)
-    const vectorIndex = parseInt(k.vector[0])         // index 25 - Direction
-    const phoneIndex = parseInt(k.phone[0])           // index 4 - Phone
-    const usrIndex = parseInt(k.usr[0])               // index 5 - Extension
-    const waitTimeTotIndex = parseInt(k.wait_time_tot[0]) // index 10 - Wait Time
-    const hangupStatusIndex = parseInt(k.hangup_status[0]) // index 14 - Hangup Status
-    const talkTimeIndex = parseInt(k.talk_time[0])    // index 11 - Talk Time
-
-    // Populate callData with mapped values from call array
     callData.chanUniqueid = chanUniqueid
     callData.callDateTime = call[chanTsIndex] || ''
     callData.reporter = call[usrNameIndex] || ''
@@ -158,7 +146,6 @@ const k = callStore.calls_k
   }
 })
 
-// Format time (seconds to mm:ss or hh:mm:ss)
 const formatTime = (seconds) => {
   if (!seconds || seconds === '0') return '00:00'
   
@@ -173,7 +160,6 @@ const formatTime = (seconds) => {
   return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
 }
 
-// Sections with scores for navigation
 const sectionsWithScores = computed(() => [
   { name: 'Opening Phrase', score: sectionScores.value[0] },
   { name: 'Listening Skills', score: sectionScores.value[1] },
@@ -185,7 +171,6 @@ const sectionsWithScores = computed(() => [
   { name: 'Submit', score: 0 }
 ])
 
-// Navigation methods
 const changeSection = (index) => {
   activeSection.value = index
   window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -205,12 +190,10 @@ const previousSection = () => {
   }
 }
 
-// Update section scores from CreateQA
 const updateSectionScores = (scores) => {
   sectionScores.value = scores
 }
 
-// Handle QA submission
 const handleQASubmitted = (result) => {
   console.log('QA Submitted:', result)
   
@@ -221,7 +204,6 @@ const handleQASubmitted = (result) => {
   }
 }
 
-// Go back
 const goBack = () => {
   router.push('/qa')
 }

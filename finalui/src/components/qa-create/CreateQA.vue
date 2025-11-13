@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6">
+  <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
     <form @submit.prevent="handleSubmit">
       <!-- Active Section Display -->
       <div v-if="activeSection < qaData.sections.length" class="animate-fadeIn">
@@ -15,7 +15,7 @@
             />
           </div>
 
-          <!-- Comment field if section has one -->
+          <!-- Comment field -->
           <QACommentField
             v-if="qaData.sections[activeSection].commentKey"
             v-model="formData[qaData.sections[activeSection].commentKey]"
@@ -24,7 +24,7 @@
         </QASection>
       </div>
 
-      <!-- Submit Section (Feedback Only) -->
+      <!-- Submit Section -->
       <div v-else class="animate-fadeIn">
         <QASection title="Overall Feedback & Submit">
           <QACommentField
@@ -38,16 +38,14 @@
       </div>
 
       <!-- Navigation Buttons -->
-      <div class="flex items-center justify-between pt-6 border-t-2 border-gray-200 dark:border-gray-700 mt-6">
+      <div class="flex items-center justify-between pt-6 border-t border-gray-700 mt-6">
         <button
           v-if="activeSection > 0"
           type="button"
           @click="previousSection"
-          class="px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg font-semibold hover:from-gray-600 hover:to-gray-700 transition-all shadow-lg flex items-center gap-2"
+          class="px-6 py-3 bg-gray-700 text-gray-300 border border-gray-600 rounded-lg font-semibold hover:bg-gray-600 transition-all flex items-center gap-2"
         >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M11 1l-7 7 7 7" stroke="currentColor" stroke-width="2" fill="none"/>
-          </svg>
+          <i-mdi-chevron-left class="w-5 h-5" />
           Previous
         </button>
         
@@ -57,43 +55,35 @@
           v-if="activeSection < qaData.sections.length"
           type="button"
           @click="nextSection"
-          class="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-indigo-600 transition-all shadow-lg flex items-center gap-2"
+          class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all shadow-lg flex items-center gap-2"
         >
           Next
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M5 1l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none"/>
-          </svg>
+          <i-mdi-chevron-right class="w-5 h-5" />
         </button>
         
         <button
           v-else
           type="submit"
           :disabled="qaStore.loading || !isFormValid"
-          class="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-bold hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
         >
           <span v-if="qaStore.loading" class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-          <svg v-else width="18" height="18" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-          </svg>
+          <i-mdi-check v-else class="w-5 h-5" />
           <span>{{ qaStore.loading ? 'Submitting...' : 'Submit QA' }}</span>
         </button>
       </div>
 
       <!-- Success/Error Messages -->
-      <div v-if="successMessage" class="mt-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-500 rounded-lg">
-        <p class="text-sm font-semibold text-green-700 dark:text-green-400 flex items-center gap-2">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-          </svg>
+      <div v-if="successMessage" class="mt-6 p-4 bg-green-600/20 border border-green-600/50 rounded-lg">
+        <p class="text-sm font-semibold text-green-400 flex items-center gap-2">
+          <i-mdi-check-circle class="w-5 h-5" />
           {{ successMessage }}
         </p>
       </div>
 
-      <div v-if="qaStore.error" class="mt-6 p-4 bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 border-2 border-red-500 rounded-lg">
-        <p class="text-sm font-semibold text-red-700 dark:text-red-400 flex items-center gap-2">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-          </svg>
+      <div v-if="qaStore.error" class="mt-6 p-4 bg-red-600/20 border border-red-600/50 rounded-lg">
+        <p class="text-sm font-semibold text-red-400 flex items-center gap-2">
+          <i-mdi-alert-circle class="w-5 h-5" />
           {{ qaStore.error }}
         </p>
       </div>
@@ -120,7 +110,6 @@ const emit = defineEmits(['qa-submitted', 'section-scores-updated'])
 const qaStore = useQAStore()
 const successMessage = ref('')
 
-// QA Data Structure with all sections
 const qaData = reactive({
   sections: [
     {
@@ -188,9 +177,8 @@ const qaData = reactive({
   ]
 })
 
-// Form data - empty by default
 const formData = reactive({
-  chan_uniqueid: '1761627874.2', // Hardcoded for now
+  chan_uniqueid: '1761627874.2',
   opening_phrase: '',
   opening_phrase_comments: '',
   non_interrupting: '',
@@ -217,7 +205,6 @@ const formData = reactive({
   feedback: ''
 })
 
-// Calculate score for a section (Yes=1, Partially=0.5, No=0)
 const calculateSectionScore = (sectionIndex) => {
   const section = qaData.sections[sectionIndex]
   const fields = section.fields
@@ -227,37 +214,29 @@ const calculateSectionScore = (sectionIndex) => {
   
   fields.forEach(field => {
     const value = formData[field.key]
-    if (value === '2') totalPoints += 1 // Yes
-    else if (value === '1') totalPoints += 0.5 // Partially
-    // No (0) adds 0 points
+    if (value === '2') totalPoints += 1
+    else if (value === '1') totalPoints += 0.5
   })
   
   return maxPoints > 0 ? Math.round((totalPoints / maxPoints) * 100) : 0
 }
 
-// Calculate all section scores
 const sectionScores = computed(() => {
   return qaData.sections.map((_, index) => calculateSectionScore(index))
 })
 
-// Watch scores and emit updates
 watch(sectionScores, (newScores) => {
   emit('section-scores-updated', newScores)
 }, { deep: true })
 
-// Form validation
 const isFormValid = computed(() => {
-  // Check all rating fields are filled
   const ratingFields = qaData.sections.flatMap(s => s.fields.map(f => f.key))
   const allRatingsFilled = ratingFields.every(key => formData[key] !== '')
-  
-  // Check feedback is filled
   const feedbackFilled = formData.feedback.trim() !== ''
   
   return allRatingsFilled && feedbackFilled
 })
 
-// Navigation
 const nextSection = () => {
   emit('next-section')
 }
@@ -266,7 +245,6 @@ const previousSection = () => {
   emit('previous-section')
 }
 
-// Submit handler
 const handleSubmit = async () => {
   if (!isFormValid.value) {
     alert('Please fill in all required fields (all ratings and feedback)')
@@ -289,7 +267,6 @@ const handleSubmit = async () => {
   }
 }
 
-// Expose section scores for parent component
 defineExpose({
   sectionScores
 })
