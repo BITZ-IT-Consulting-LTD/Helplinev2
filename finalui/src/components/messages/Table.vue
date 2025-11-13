@@ -1,61 +1,61 @@
 <template>
-  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+  <div class="bg-gray-800 rounded-lg shadow-xl border border-gray-700 overflow-hidden">
     <table class="w-full">
       <thead>
-        <tr class="bg-[#0284C7] text-white">
-          <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Contact</th>
-          <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Platform</th>
-          <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Message</th>
-          <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Time</th>
-          <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Status</th>
-          <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Actions</th>
+        <tr class="bg-gray-900/60 border-b border-gray-700">
+          <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Contact</th>
+          <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Platform</th>
+          <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Message</th>
+          <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Time</th>
+          <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Status</th>
+          <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Actions</th>
         </tr>
       </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
+      <tbody class="divide-y divide-gray-700">
         <tr
           v-for="message in messages"
           :key="getValue(message, 'id')"
           :class="{
-            'bg-cyan-50': selectedMessageId === getValue(message, 'id')
+            'bg-blue-600/10 border-l-4 border-l-blue-500': selectedMessageId === getValue(message, 'id')
           }"
-          class="hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
+          class="hover:bg-gray-700/30 transition-all duration-200 cursor-pointer"
           @click="openChatPanel(message)"
         >
           <!-- Contact -->
           <td class="px-6 py-4 whitespace-nowrap">
             <div class="flex items-center gap-3">
               <div
-                class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold"
+                class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm"
                 :style="{ background: getAvatarColor(getValue(message, 'created_by') || '') }"
               >
                 {{ (getValue(message, 'created_by') || '?').charAt(0).toUpperCase() }}
               </div>
-              <span class="text-sm font-medium text-gray-900">{{ getValue(message, 'created_by') || 'Unknown' }}</span>
+              <span class="text-sm font-medium text-gray-200">{{ getValue(message, 'created_by') || 'Unknown' }}</span>
             </div>
           </td>
 
           <!-- Platform -->
           <td class="px-6 py-4 whitespace-nowrap">
-            <span class="px-2.5 py-1 rounded text-[#0284C7] bg-cyan-100 text-xs font-medium uppercase">
+            <span class="px-3 py-1 rounded-full bg-blue-600/20 text-blue-400 text-xs font-medium uppercase border border-blue-600/30">
               {{ getValue(message, 'src') || 'All' }}
             </span>
           </td>
 
           <!-- Message -->
           <td class="px-6 py-4">
-            <div class="text-sm text-gray-900 max-w-md truncate">
+            <div class="text-sm text-gray-300 max-w-md truncate">
               {{ getValue(message, 'src_msg') || '' }}
             </div>
           </td>
 
           <!-- Time -->
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
             {{ formatDateTime(getValue(message, 'dth')) }}
           </td>
 
           <!-- Status -->
           <td class="px-6 py-4 whitespace-nowrap">
-            <span class="px-3 py-1 rounded text-white bg-[#0891B2] text-xs font-semibold uppercase">
+            <span class="px-3 py-1 rounded-full bg-green-600/20 text-green-400 text-xs font-semibold uppercase border border-green-600/30">
               {{ getValue(message, 'src_status') || 'Active' }}
             </span>
           </td>
@@ -63,7 +63,7 @@
           <!-- Actions -->
           <td class="px-6 py-4 whitespace-nowrap text-sm">
             <button
-              class="p-2 rounded bg-[#0284C7] text-white hover:bg-[#0369A1] transition-all duration-200"
+              class="p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-all duration-200"
               @click.stop="openChatPanel(message)"
               title="Open Chat"
             >
@@ -76,7 +76,7 @@
         </tr>
 
         <tr v-if="!messages || messages.length === 0">
-          <td colspan="6" class="text-center py-8 text-gray-500">
+          <td colspan="6" class="text-center py-12 text-gray-500">
             No messages to display
           </td>
         </tr>
@@ -123,7 +123,7 @@ const openChatPanel = (message) => {
 }
 
 const getAvatarColor = (name) => {
-  const colors = ['#0284C7', '#0891B2', '#06B6D4', '#0369A1', '#0E7490']
+  const colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
   const index = name?.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) || 0
   return colors[index % colors.length]
 }

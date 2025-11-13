@@ -1,100 +1,205 @@
 <template>
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col border-2 border-[#0284C7]">
-      <!-- Chat Header -->
-      <div class="bg-[#0284C7] text-white p-5 rounded-t-lg flex justify-between items-center">
-        <div class="flex items-center gap-3">
-          <div
-            class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg bg-[#0891B2]"
-          >
-            {{ getInitial() }}
-          </div>
-          <div>
-            <h3 class="font-bold text-lg">{{ getContactName() }}</h3>
-            <p class="text-sm text-cyan-200">{{ getPlatform() }}</p>
-          </div>
-        </div>
-        <button
-          @click="$emit('close')"
-          class="p-2 hover:bg-[#0369A1] rounded-lg transition-colors duration-200"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
+  <div class="p-6 bg-gray-900 min-h-screen">
+    <h1 class="text-2xl font-bold mb-2 text-gray-100">Chats</h1>
+    <p class="text-gray-400 mb-6">Manage conversations and communications across all channels</p>
 
-      <!-- Chat Messages -->
-      <div class="flex-1 overflow-y-auto p-6 bg-gray-50">
-        <div class="space-y-4">
-          <div class="flex justify-start">
-            <div class="bg-white rounded-lg p-4 max-w-xs shadow-sm border border-gray-200">
-              <p class="text-gray-800">{{ getMessage() }}</p>
-              <span class="text-xs text-gray-500 mt-2 block">{{ getTime() }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- Channel Filter Pills -->
+    <Filter 
+      :channelFilters="channelFilters" 
+      :activePlatform="activePlatform" 
+      @update:activePlatform="handlePlatformChange"
+    />
 
-      <!-- Message Input -->
-      <ChatInput 
-        :modelValue="newMessage"
-        @send-message="handleSendMessage"
-      />
+    <!-- Loading State -->
+    <div v-if="messagesStore.loading" class="text-center py-12 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
+      <div class="text-gray-400">Loading messages...</div>
     </div>
+
+    <!-- Error State -->
+    <div v-else-if="messagesStore.error" class="bg-red-600/20 border border-red-600/50 text-red-400 px-4 py-3 rounded-lg">
+      {{ messagesStore.error }}
+    </div>
+
+    <!-- Content -->
+    <template v-else>
+      <!-- View Buttons and Total Count -->
+      <div class="flex justify-between items-center mb-6">
+        <!-- Total Count -->
+        <div class="flex items-center gap-2 text-gray-300">
+          <i-mdi-message-text-outline class="w-5 h-5 text-blue-400" />
+          <span class="text-sm">Total Messages:</span>
+          <span class="text-lg font-bold text-blue-400">{{ messagesStore.messageCount }}</span>
+        </div>
+
+        <!-- View Toggle Buttons -->
+        <div class="flex gap-3">
+          <button 
+            class="px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm" 
+            :class="activeView==='timeline' 
+              ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
+              : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'" 
+            @click="activeView='timeline'"
+          >
+            <i-mdi-timeline-text-outline class="w-5 h-5" />
+            Timeline
+          </button>
+          <button 
+            class="px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm" 
+            :class="activeView==='table' 
+              ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
+              : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'" 
+            @click="activeView='table'"
+          >
+            <i-mdi-table class="w-5 h-5" />
+            Table
+          </button>
+          <button 
+            @click="refreshMessages"
+            :disabled="messagesStore.loading"
+            class="px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm bg-gray-800 text-gray-300 border border-gray-700 hover:border-green-500 hover:text-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <i-mdi-refresh class="w-5 h-5" />
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- Views -->
+      <Timeline
+        v-if="activeView==='timeline'" 
+        :groupedMessagesByDate="groupedMessagesByDate" 
+        :selectedMessageId="selectedMessageId"
+        @openChat="openChatPanel"
+      />
+      <Table
+        v-else
+        :messages="messagesStore.pmessages"
+        :selectedMessageId="selectedMessageId"
+        @openChat="openChatPanel"
+      />
+    </template>
+
+    <!-- Chat Panel -->
+    <ChatPanel
+      v-if="showChatPanel"
+      :selectedMessage="selectedMessage"
+      :newMessage="newMessage"
+      @close="closeChatPanel"
+      @sendMessage="sendMessage"
+    />
   </div>
 </template>
 
 <script setup>
+import { ref, computed, onMounted } from 'vue'
+import Filter from '@/components/messages/Filter.vue'
+import Timeline from '@/components/messages/Timeline.vue'
+import Table from '@/components/messages/Table.vue'
+import ChatPanel from '@/components/messages/ChatPanel.vue'
+
 import { useMessagesStore } from '@/stores/messages'
-import ChatInput from './ChatInput.vue'
-
-const props = defineProps({
-  selectedMessage: {
-    type: [Array, Object],
-    default: null
-  },
-  newMessage: {
-    type: String,
-    default: ''
-  }
-})
-
-const emit = defineEmits(['close', 'sendMessage'])
 
 const messagesStore = useMessagesStore()
 
-const getValue = (key) => {
-  if (!props.selectedMessage || !messagesStore.pmessages_k?.[key]) return null
-  const index = messagesStore.pmessages_k[key][0]
-  return props.selectedMessage[index]
+const channelFilters = ref([
+  { id: "all", name: "All", icon: "i-mdi-apps" },
+  { id: "whatsapp", name: "WhatsApp", icon: "i-mdi-whatsapp" },
+  { id: "safepal", name: "SafePal", icon: "i-mdi-shield-check" },
+  { id: "email", name: "Email", icon: "i-mdi-email-outline" },
+  { id: "walkin", name: "Walk-In", icon: "i-mdi-walk" },
+  { id: "ai", name: "AI", icon: "i-mdi-robot-outline" },
+  { id: "call", name: "Call", icon: "i-mdi-phone-outline" }
+])
+
+const activePlatform = ref("all")
+const activeView = ref("table")
+const showChatPanel = ref(false)
+const selectedMessage = ref(null)
+const selectedMessageId = ref(null)
+const newMessage = ref("")
+
+// Group messages by date for timeline view
+const groupedMessagesByDate = computed(() => {
+  const groups = {}
+  const today = new Date()
+  const yesterday = new Date(today)
+  yesterday.setDate(today.getDate() - 1)
+
+  const messages = messagesStore.pmessages || []
+  const dthIndex = messagesStore.pmessages_k?.dth?.[0]
+  
+  if (dthIndex === undefined) return groups
+
+  for (const msg of messages) {
+    const timestamp = msg[dthIndex]
+    if (!timestamp) continue
+    
+    const date = new Date(timestamp * 1000)
+    let label = date.toDateString() === today.toDateString() 
+      ? 'Today' 
+      : date.toDateString() === yesterday.toDateString() 
+        ? 'Yesterday' 
+        : date.toLocaleDateString()
+    
+    if (!groups[label]) groups[label] = []
+    groups[label].push(msg)
+  }
+  return groups
+})
+
+// Handle platform change from pills
+function handlePlatformChange(platformId) {
+  activePlatform.value = platformId
+  
+  console.log('Platform changed to:', platformId)
+  
+  // Store handles server-side filtering
+  if (platformId === 'all') {
+    messagesStore.fetchAllMessages()
+  } else {
+    messagesStore.fetchMessagesBySource(platformId)
+  }
+  
+  // Log data after fetch
+  setTimeout(() => {
+    console.log('Messages after filter:', messagesStore.pmessages?.length || 0)
+    console.log('Messages_k:', messagesStore.pmessages_k)
+  }, 500)
 }
 
-const getContactName = () => {
-  return getValue('created_by') || 'Unknown'
+// Refresh messages
+async function refreshMessages() {
+  if (activePlatform.value === 'all') {
+    await messagesStore.fetchAllMessages()
+  } else {
+    await messagesStore.fetchMessagesBySource(activePlatform.value)
+  }
 }
 
-const getPlatform = () => {
-  return getValue('src') || 'Chat'
+const openChatPanel = (msg) => {
+  selectedMessage.value = msg
+  const idIndex = messagesStore.pmessages_k?.id?.[0]
+  selectedMessageId.value = idIndex !== undefined ? msg[idIndex] : null
+  showChatPanel.value = true
 }
 
-const getMessage = () => {
-  return getValue('src_msg') || ''
+const closeChatPanel = () => {
+  showChatPanel.value = false
+  selectedMessage.value = null
+  selectedMessageId.value = null
+  newMessage.value = ''
 }
 
-const getTime = () => {
-  const timestamp = getValue('dth')
-  if (!timestamp) return 'N/A'
-  const date = new Date(timestamp * 1000)
-  return date.toLocaleString()
+const sendMessage = (msg) => {
+  console.log("Send message:", msg)
+  newMessage.value = ''
 }
 
-const getInitial = () => {
-  const name = getContactName()
-  return name.charAt(0).toUpperCase()
-}
-
-const handleSendMessage = (message) => {
-  emit('sendMessage', message)
-}
+onMounted(async () => {
+  try {
+    await messagesStore.fetchAllMessages()
+  } catch (err) {
+    console.log('Failed to fetch messages:', err)
+  }
+})
 </script>

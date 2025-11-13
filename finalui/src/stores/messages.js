@@ -11,6 +11,10 @@ export const useMessagesStore = defineStore('messages', {
     error: null
   }),
 
+  getters: {
+    messageCount: (state) => state.pmessages?.length || 0
+  },
+
   actions: {
     async fetchAllMessages(params = {}) {
       this.loading = true

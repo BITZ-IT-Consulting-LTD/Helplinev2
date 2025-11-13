@@ -2,24 +2,24 @@
   <div class="space-y-6">
     <div class="max-w-md mx-auto">
       <!-- Single Agent (Extension 100) -->
-      <div class="p-6 border-2 border-gray-300 rounded-lg bg-white shadow">
-        <h3 class="mb-4 text-xl font-semibold text-center">SIP Agent - Extension 100</h3>
+      <div class="p-6 border border-gray-700 rounded-lg bg-gray-800 shadow-xl">
+        <h3 class="mb-4 text-xl font-semibold text-center text-gray-100">SIP Agent - Extension 100</h3>
 
         <div class="space-y-2 mb-6 text-sm">
-          <div class="flex justify-between items-center bg-gray-50 p-3 rounded">
-            <span class="text-gray-600 font-medium">Registered:</span>
-            <span :class="agent.registered ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'">
+          <div class="flex justify-between items-center bg-gray-900/40 p-3 rounded border border-gray-700">
+            <span class="text-gray-400 font-medium">Registered:</span>
+            <span :class="agent.registered ? 'text-green-400 font-semibold' : 'text-red-400 font-semibold'">
               {{ agent.registered ? 'Yes' : 'No' }}
             </span>
           </div>
-          <div class="flex justify-between items-center bg-gray-50 p-3 rounded">
-            <span class="text-gray-600 font-medium">Connection:</span>
-            <span :class="agent.connected ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'">
+          <div class="flex justify-between items-center bg-gray-900/40 p-3 rounded border border-gray-700">
+            <span class="text-gray-400 font-medium">Connection:</span>
+            <span :class="agent.connected ? 'text-green-400 font-semibold' : 'text-red-400 font-semibold'">
               {{ agent.connected ? 'Connected' : 'Disconnected' }}
             </span>
           </div>
-          <div v-if="agent.callStatus" class="bg-blue-50 border border-blue-200 p-3 rounded">
-            <p class="text-sm font-medium text-blue-800">{{ agent.callStatus }}</p>
+          <div v-if="agent.callStatus" class="bg-blue-600/20 border border-blue-600/50 p-3 rounded">
+            <p class="text-sm font-medium text-blue-400">{{ agent.callStatus }}</p>
           </div>
         </div>
 
@@ -27,24 +27,27 @@
           <button 
             @click="startAgent" 
             :disabled="agent.registered || agent.starting"
-            class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition font-medium"
+            class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-700 disabled:cursor-not-allowed transition font-medium flex items-center justify-center gap-2"
           >
+            <i-mdi-play class="w-5 h-5" />
             {{ agent.starting ? 'Starting...' : 'Start (Register)' }}
           </button>
           
           <button 
             @click="hangup" 
             :disabled="!agent.inCall"
-            class="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition font-medium"
+            class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-gray-700 disabled:cursor-not-allowed transition font-medium flex items-center justify-center gap-2"
           >
+            <i-mdi-phone-hangup class="w-5 h-5" />
             Hang Up
           </button>
           
           <button 
             @click="stopAgent" 
             :disabled="!agent.registered || agent.stopping"
-            class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition font-medium"
+            class="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:bg-gray-700 disabled:cursor-not-allowed transition font-medium flex items-center justify-center gap-2"
           >
+            <i-mdi-stop class="w-5 h-5" />
             {{ agent.stopping ? 'Stopping...' : 'Stop (Unregister)' }}
           </button>
         </div>
