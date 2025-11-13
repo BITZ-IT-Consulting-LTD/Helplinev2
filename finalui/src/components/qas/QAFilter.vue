@@ -1,79 +1,79 @@
 <template>
-  <div class="w-full bg-white rounded-lg p-4 shadow-sm border mb-4">
+  <div class="w-full bg-gray-800 rounded-lg p-4 shadow-xl border border-gray-700 mb-4">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
       <!-- Call Date From -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1">Call Date From</label>
+        <label class="text-sm font-medium mb-1 text-gray-300">Call Date From</label>
         <input 
           type="date" 
           v-model="filters.callDateFrom" 
-          class="border rounded px-3 py-2 text-sm"
+          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       <!-- Call Date To -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1">Call Date To</label>
+        <label class="text-sm font-medium mb-1 text-gray-300">Call Date To</label>
         <input 
           type="date" 
           v-model="filters.callDateTo" 
-          class="border rounded px-3 py-2 text-sm"
+          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       <!-- User -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1">User</label>
+        <label class="text-sm font-medium mb-1 text-gray-300">User</label>
         <input 
           type="text" 
           v-model="filters.user" 
           placeholder="Enter user name"
-          class="border rounded px-3 py-2 text-sm"
+          class="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
 
       <!-- Supervisor -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1">Supervisor</label>
+        <label class="text-sm font-medium mb-1 text-gray-300">Supervisor</label>
         <input 
           type="text" 
           v-model="filters.supervisor" 
           placeholder="Enter supervisor name"
-          class="border rounded px-3 py-2 text-sm"
+          class="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
 
       <!-- Minimum Total Score -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1">Min Total Score (%)</label>
+        <label class="text-sm font-medium mb-1 text-gray-300">Min Total Score (%)</label>
         <input 
           type="number" 
           v-model="filters.minScore" 
           placeholder="0-100"
           min="0"
           max="100"
-          class="border rounded px-3 py-2 text-sm"
+          class="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
 
       <!-- Created Date From -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1">Created Date From</label>
+        <label class="text-sm font-medium mb-1 text-gray-300">Created Date From</label>
         <input 
           type="date" 
           v-model="filters.createdDateFrom" 
-          class="border rounded px-3 py-2 text-sm"
+          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       <!-- Created Date To -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1">Created Date To</label>
+        <label class="text-sm font-medium mb-1 text-gray-300">Created Date To</label>
         <input 
           type="date" 
           v-model="filters.createdDateTo" 
-          class="border rounded px-3 py-2 text-sm"
+          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
@@ -83,14 +83,15 @@
     <div class="flex gap-2 mt-4">
       <button
         @click="applyFilters"
-        class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition text-sm font-medium"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-all duration-200 font-medium flex items-center gap-2"
       >
+        <i-mdi-filter class="w-4 h-4" />
         Apply Filters
       </button>
       
       <button
         @click="resetFilters"
-        class="bg-gray-200 text-gray-700 px-6 py-2 rounded hover:bg-gray-300 transition text-sm font-medium"
+        class="bg-gray-700 text-gray-300 px-6 py-2 rounded-lg hover:bg-gray-600 transition-all duration-200 font-medium border border-gray-600"
       >
         Reset
       </button>

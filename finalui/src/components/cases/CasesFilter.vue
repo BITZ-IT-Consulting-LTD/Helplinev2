@@ -1,53 +1,53 @@
 <template>
-  <div class="w-full bg-white rounded-lg p-4 shadow-sm border mb-4">
+  <div class="w-full bg-gray-800 rounded-lg p-4 shadow-xl border border-gray-700 mb-4">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
       <!-- Case ID -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1">Case ID</label>
+        <label class="text-sm font-medium mb-1 text-gray-300">Case ID</label>
         <input 
           type="text" 
           v-model="filters.caseId" 
           placeholder="Enter case ID"
-          class="border rounded px-3 py-2 text-sm"
+          class="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
 
       <!-- Date Range From -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1">From Date</label>
+        <label class="text-sm font-medium mb-1 text-gray-300">From Date</label>
         <input 
           type="date" 
           v-model="filters.dateFrom" 
-          class="border rounded px-3 py-2 text-sm"
+          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       <!-- Date Range To -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1">To Date</label>
+        <label class="text-sm font-medium mb-1 text-gray-300">To Date</label>
         <input 
           type="date" 
           v-model="filters.dateTo" 
-          class="border rounded px-3 py-2 text-sm"
+          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       <!-- Created By -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1">Created By</label>
+        <label class="text-sm font-medium mb-1 text-gray-300">Created By</label>
         <input 
           type="text" 
           v-model="filters.createdBy" 
           placeholder="Enter name"
-          class="border rounded px-3 py-2 text-sm"
+          class="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
 
       <!-- Source -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1">Source</label>
-        <select v-model="filters.source" class="border rounded px-3 py-2 text-sm">
+        <label class="text-sm font-medium mb-1 text-gray-300">Source</label>
+        <select v-model="filters.source" class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="">All</option>
           <option value="walkin">walkin</option>
           <option value="call">call</option>
@@ -66,8 +66,8 @@
 
       <!-- Priority -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1">Priority</label>
-        <select v-model="filters.priority" class="border rounded px-3 py-2 text-sm">
+        <label class="text-sm font-medium mb-1 text-gray-300">Priority</label>
+        <select v-model="filters.priority" class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="">All</option>
           <option value="1">Low</option>
           <option value="2">Medium</option>
@@ -77,8 +77,8 @@
 
       <!-- Status -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1">Status</label>
-        <select v-model="filters.status" class="border rounded px-3 py-2 text-sm">
+        <label class="text-sm font-medium mb-1 text-gray-300">Status</label>
+        <select v-model="filters.status" class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="">All</option>
           <option value="1">Open</option>
           <option value="2">Closed</option>
@@ -91,14 +91,15 @@
     <div class="flex gap-2 mt-4">
       <button
         @click="applyFilters"
-        class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition text-sm font-medium"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-all duration-200 font-medium flex items-center gap-2"
       >
+        <i-mdi-filter class="w-4 h-4" />
         Apply Filters
       </button>
       
       <button
         @click="resetFilters"
-        class="bg-gray-200 text-gray-700 px-6 py-2 rounded hover:bg-gray-300 transition text-sm font-medium"
+        class="bg-gray-700 text-gray-300 px-6 py-2 rounded-lg hover:bg-gray-600 transition-all duration-200 font-medium border border-gray-600"
       >
         Reset
       </button>

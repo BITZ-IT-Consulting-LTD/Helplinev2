@@ -1,47 +1,40 @@
 <template>
-  <div class="p-6 space-y-4">
+  <div class="p-6 bg-gray-900 min-h-screen space-y-6">
     <div class="flex justify-between items-center">
-      <h1 class="text-xl font-semibold text-gray-700">QA Results</h1>
+      <h1 class="text-2xl font-bold text-gray-100">QA Results</h1>
     </div>
 
     <!-- Filters -->
     <QAFilter @update:filters="applyFilters" />
 
     <!-- Stats Summary -->
-    <div class="bg-white rounded-lg shadow p-4">
+    <div class="bg-gray-800 rounded-lg shadow-xl p-4 border border-gray-700">
       <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-gray-600">
-            Total QA Records: <span class="font-semibold text-lg">{{ qaStore.qaCount }}</span>
-          </p>
+        <div class="flex items-center gap-2 text-gray-300">
+          <i-mdi-clipboard-check class="w-5 h-5 text-blue-400" />
+          <span class="text-sm">Total QA Records:</span>
+          <span class="text-lg font-bold text-blue-400">{{ qaStore.qaCount }}</span>
         </div>
         
         <div class="flex gap-2">
           <button
             @click="fetchQA"
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg transition-all duration-200 font-medium flex items-center gap-2"
           >
+            <i-mdi-refresh class="w-5 h-5" />
             Refresh
-          </button>
-          
-          <button 
-            @click="downloadCSV"
-            :disabled="qaStore.loading"
-            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition text-sm font-medium disabled:opacity-50"
-          >
-            Download CSV
           </button>
         </div>
       </div>
     </div>
 
     <!-- Loading State -->
-    <div v-if="qaStore.loading" class="text-center py-12 bg-white rounded-lg shadow">
-      <div class="text-gray-500">Loading QA records...</div>
+    <div v-if="qaStore.loading" class="text-center py-12 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
+      <div class="text-gray-400">Loading QA records...</div>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="qaStore.error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+    <div v-else-if="qaStore.error" class="bg-red-600/20 border border-red-600/50 text-red-400 px-5 py-4 rounded-lg font-medium">
       {{ qaStore.error }}
     </div>
 
@@ -53,9 +46,9 @@
     />
 
     <!-- Empty State -->
-    <p v-else class="text-center py-12 text-gray-400 italic bg-white rounded-lg shadow">
-      No QA results found.
-    </p>
+    <div v-else class="text-center py-12 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
+      <p class="text-gray-500">No QA results found</p>
+    </div>
   </div>
 </template>
 
@@ -84,27 +77,6 @@ async function applyFilters(filters) {
     console.log('Filtered QA records fetched:', qaStore.qas)
   } catch (err) {
     console.error('Error fetching filtered QA records:', err)
-  }
-}
-
-// Download CSV with current filters
-async function downloadCSV() {
-  try {
-    const blob = await qaStore.downloadCSV(currentFilters.value)
-    
-    // Create download link
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `qa_results_${new Date().toISOString().split('T')[0]}.csv`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    window.URL.revokeObjectURL(url)
-    
-  } catch (error) {
-    console.error('Failed to download CSV:', error)
-    alert('Failed to download CSV. Please try again.')
   }
 }
 </script>

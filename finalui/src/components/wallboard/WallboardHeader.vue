@@ -1,28 +1,35 @@
 <template>
-  <div class="flex justify-between items-center pt-2 pb-1.5 border-b border-gray-200 h-[60px]">
-    <div class="flex-1 min-w-0">
-      <h1 class="text-2xl font-bold text-gray-800 m-0 mb-0.5 leading-tight tracking-tight">
-        Helpline Wallboard
-      </h1>
-      <p class="text-gray-500 m-0 text-xs leading-tight font-normal">
-        Real-time counselling and support
-      </p>
-    </div>
-    <div class="flex items-center gap-3 flex-shrink-0">
-      <div class="flex items-center gap-1.5 text-xs text-gray-700 px-2 py-1 bg-gray-50 rounded-lg min-w-[120px] h-7">
-        <span :class="['w-1.5 h-1.5 rounded-full flex-shrink-0', dotClass]"></span>
-        <span class="font-semibold whitespace-nowrap">{{ connectionLabel }}</span>
-        <small v-if="lastUpdate" class="text-gray-400 text-[0.65rem] whitespace-nowrap ml-auto">
-          {{ lastUpdate }}
-        </small>
+  <div class="bg-gray-800 rounded-lg shadow-xl border border-gray-700 px-6 py-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <!-- Title Section -->
+      <div class="flex-1">
+        <h1 class="text-2xl font-bold text-gray-100 mb-1 flex items-center gap-2">
+          <i-mdi-monitor-dashboard class="w-7 h-7 text-blue-400" />
+          Helpline Wallboard
+        </h1>
+        <p class="text-gray-400 text-sm">Real-time counselling and support monitoring</p>
       </div>
-      <button 
-        class="p-1.5 bg-gray-100 rounded-md cursor-pointer flex items-center justify-center w-8 h-8 border border-gray-200 hover:bg-gray-200"
-        @click="$emit('toggle-theme')" 
-        :title="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
-      >
-        <span class="text-sm">{{ isDarkMode ? '☀️' : '🌙' }}</span>
-      </button>
+      
+      <!-- Status & Controls -->
+      <div class="flex items-center gap-3">
+        <!-- Connection Status -->
+        <div class="flex items-center gap-2 px-3 py-2 bg-gray-900/60 rounded-lg border border-gray-700">
+          <span :class="['w-2 h-2 rounded-full flex-shrink-0', dotClass]"></span>
+          <div class="flex flex-col">
+            <span class="text-xs font-semibold text-gray-300">{{ connectionLabel }}</span>
+            <span v-if="lastUpdate" class="text-[0.65rem] text-gray-500">{{ lastUpdate }}</span>
+          </div>
+        </div>
+        
+        <!-- Theme Toggle -->
+        <button 
+          class="p-2 bg-gray-700 rounded-lg border border-gray-600 hover:bg-gray-600 transition-all duration-200 flex items-center justify-center"
+          @click="$emit('toggle-theme')" 
+          :title="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+        >
+          <span class="text-lg">{{ isDarkMode ? '☀️' : '🌙' }}</span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -68,7 +75,7 @@ export default {
   }
   50% {
     opacity: 0.7;
-    transform: scale(1.1);
+    transform: scale(1.2);
   }
 }
 
@@ -79,15 +86,15 @@ export default {
 
 .animate-pulse-dot {
   animation: pulse-dot 2s infinite;
-  box-shadow: 0 0 4px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
 }
 
 .animate-blink-dot {
   animation: blink-dot 1s infinite;
-  box-shadow: 0 0 4px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.5);
 }
 
 .bg-red-500 {
-  box-shadow: 0 0 4px rgba(239, 68, 68, 0.4);
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
 }
 </style>

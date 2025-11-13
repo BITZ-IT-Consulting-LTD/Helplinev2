@@ -1,37 +1,46 @@
 <template>
-  <div class="p-6">
+  <div class="p-6 bg-gray-900 min-h-screen space-y-6">
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
-      <h1 class="text-2xl font-bold text-gray-800">System Users</h1>
+      <h1 class="text-2xl font-bold text-gray-100">System Users</h1>
 
       <div class="flex gap-3">
         <button
           @click="view = 'table'"
           :class="[
-            'px-4 py-2 rounded transition',
-            view === 'table' ? 'bg-blue-700 text-white' : 'bg-blue-600 text-white hover:bg-blue-700'
+            'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2',
+            view === 'table' 
+              ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
+              : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
           ]"
         >
+          <i-mdi-table class="w-5 h-5" />
           Table
         </button>
 
         <button
           @click="view = 'timeline'"
           :class="[
-            'px-4 py-2 rounded transition',
-            view === 'timeline' ? 'bg-green-700 text-white' : 'bg-green-600 text-white hover:bg-green-700'
+            'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2',
+            view === 'timeline' 
+              ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
+              : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
           ]"
         >
+          <i-mdi-timeline class="w-5 h-5" />
           Timeline
         </button>
 
         <button
           @click="view = 'create'"
           :class="[
-            'px-4 py-2 rounded transition',
-            view === 'create' ? 'bg-amber-700 text-white' : 'bg-amber-600 text-white hover:bg-amber-700'
+            'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2',
+            view === 'create' 
+              ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
+              : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
           ]"
         >
+          <i-mdi-plus class="w-5 h-5" />
           Create User
         </button>
       </div>
@@ -44,41 +53,34 @@
     />
 
     <!-- Stats Summary (only show for table and timeline views) -->
-    <div v-if="view !== 'create'" class="bg-white rounded-lg shadow p-4 mb-6">
+    <div v-if="view !== 'create'" class="bg-gray-800 rounded-lg shadow-xl p-4 border border-gray-700">
       <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-gray-600">
-            Total Users: <span class="font-semibold text-lg">{{ store.userCount }}</span>
-          </p>
+        <div class="flex items-center gap-2 text-gray-300">
+          <i-mdi-account-multiple class="w-5 h-5 text-blue-400" />
+          <span class="text-sm">Total Users:</span>
+          <span class="text-lg font-bold text-blue-400">{{ store.userCount }}</span>
         </div>
         
         <div class="flex gap-2">
           <button 
             @click="refreshUsers"
             :disabled="store.loading"
-            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-sm font-medium disabled:opacity-50"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg transition-all duration-200 font-medium flex items-center gap-2 disabled:opacity-50"
           >
+            <i-mdi-refresh class="w-5 h-5" />
             Refresh
-          </button>
-          
-          <button 
-            @click="downloadCSV"
-            :disabled="store.loading"
-            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition text-sm font-medium disabled:opacity-50"
-          >
-            Download CSV
           </button>
         </div>
       </div>
     </div>
 
     <!-- Loading State -->
-    <div v-if="store.loading && view !== 'create'" class="text-center py-12 bg-white rounded-lg shadow">
-      <div class="text-gray-500">Loading users...</div>
+    <div v-if="store.loading && view !== 'create'" class="text-center py-12 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
+      <div class="text-gray-400">Loading users...</div>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="store.error && view !== 'create'" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+    <div v-else-if="store.error && view !== 'create'" class="bg-red-600/20 border border-red-600/50 text-red-400 px-5 py-4 rounded-lg font-medium">
       {{ store.error }}
     </div>
 
@@ -122,27 +124,6 @@ async function applyFilters(filters) {
 // Refresh users with current filters
 async function refreshUsers() {
   await store.listUsers(currentFilters.value)
-}
-
-// Download CSV with current filters
-async function downloadCSV() {
-  try {
-    const blob = await store.downloadCSV(currentFilters.value)
-    
-    // Create download link
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `users_${new Date().toISOString().split('T')[0]}.csv`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    window.URL.revokeObjectURL(url)
-    
-  } catch (error) {
-    console.error('Failed to download CSV:', error)
-    alert('Failed to download CSV. Please try again.')
-  }
 }
 
 const handleSaved = () => {

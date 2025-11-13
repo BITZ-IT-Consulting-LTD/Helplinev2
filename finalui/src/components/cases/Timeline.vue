@@ -1,46 +1,44 @@
 <template>
-  <div class="relative border-l-2 border-gray-200 pl-6 space-y-6">
+  <div class="relative border-l-2 border-gray-700 pl-6 space-y-6">
     <div
       v-for="caseItem in cases"
       :key="cases_k.id ? caseItem[cases_k.id[0]] : caseItem.id"
-      class="relative bg-white shadow rounded-lg p-4"
+      class="relative bg-gray-800 shadow-xl rounded-lg p-6 border border-gray-700"
     >
       <!-- Timeline Dot -->
-      <div class="absolute -left-3 top-4 w-6 h-6 bg-blue-500 rounded-full border-4 border-white"></div>
+      <div class="absolute -left-[1.875rem] top-6 w-6 h-6 bg-blue-500 rounded-full border-4 border-gray-900"></div>
 
       <!-- Case Info -->
-      <h3 class="text-lg font-semibold text-gray-800">
+      <h3 class="text-lg font-semibold text-gray-100">
         Case #{{ getValue(caseItem, 'id') }}
       </h3>
-      <p class="text-sm text-gray-500">
+      <p class="text-sm text-gray-400 mt-1">
         Created on: {{ formatDate(getValue(caseItem, 'dt')) }}
       </p>
-      <p class="text-sm text-gray-600">
+      <p class="text-sm text-gray-300 mt-1">
         Created by: {{ getValue(caseItem, 'created_by') || 'N/A' }}
       </p>
 
       <!-- Labels -->
-      <div class="flex flex-wrap gap-2 mt-3">
+      <div class="flex flex-wrap gap-2 mt-4">
         <!-- Priority -->
         <span
           :class="[
-            'px-3 py-1 rounded-full text-xs font-medium',
+            'px-3 py-1 rounded-full text-xs font-semibold uppercase border',
             getPriorityClass(getValue(caseItem, 'priority'))
           ]"
         >
-          Priority:
-          {{ getPriorityText(getValue(caseItem, 'priority')) }}
+          Priority: {{ getPriorityText(getValue(caseItem, 'priority')) }}
         </span>
 
         <!-- Status -->
         <span
           :class="[
-            'px-3 py-1 rounded-full text-xs font-medium',
+            'px-3 py-1 rounded-full text-xs font-semibold uppercase border',
             getStatusClass(getValue(caseItem, 'status'))
           ]"
         >
-          Status:
-          {{ getStatusText(getValue(caseItem, 'status')) }}
+          Status: {{ getStatusText(getValue(caseItem, 'status')) }}
         </span>
       </div>
     </div>
@@ -71,12 +69,12 @@ const formatDate = (timestamp) => {
 const getPriorityClass = (priority) => {
   switch (String(priority)) {
     case '3':
-      return 'bg-red-100 text-red-700'; // High
+      return 'bg-red-600/20 text-red-400 border-red-600/30'; // High
     case '2':
-      return 'bg-yellow-100 text-yellow-700'; // Medium
+      return 'bg-amber-600/20 text-amber-400 border-amber-600/30'; // Medium
     case '1':
     default:
-      return 'bg-green-100 text-green-700'; // Low
+      return 'bg-green-600/20 text-green-400 border-green-600/30'; // Low
   }
 };
 
@@ -97,10 +95,10 @@ const getPriorityText = (priority) => {
 const getStatusClass = (status) => {
   switch (String(status)) {
     case '2':
-      return 'bg-green-100 text-green-700'; // Closed
+      return 'bg-green-600/20 text-green-400 border-green-600/30'; // Closed
     case '1':
     default:
-      return 'bg-yellow-100 text-yellow-700'; // Open
+      return 'bg-amber-600/20 text-amber-400 border-amber-600/30'; // Open
   }
 };
 

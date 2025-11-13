@@ -1,37 +1,35 @@
 <template>
-  <div class="p-4 bg-gray-50 max-w-[1260px]">
-    <!-- Header Component -->
-    <div class="mb-3">
-      <WallboardHeader 
-        :connection-status="connectionClass"
-        :connection-label="connectionLabel"
-        :last-update="lastUpdate"
-        :is-dark-mode="isDarkMode"
-        @toggle-theme="toggleDarkMode"
-      />
-    </div>
+  <div class="min-h-screen bg-gray-900 p-4">
+    <!-- Header -->
+    <WallboardHeader 
+      :connection-status="connectionClass"
+      :connection-label="connectionLabel"
+      :last-update="lastUpdate"
+      :is-dark-mode="isDarkMode"
+      @toggle-theme="toggleDarkMode"
+    />
 
-    <!-- Main Content: Two Column Layout -->
-    <div class="grid gap-4" style="grid-template-columns: 900px 320px;">
-      <!-- Left Column: Tables -->
-      <div class="flex flex-col gap-3">
-        <!-- Counsellors Table Component -->
+    <!-- Main Dashboard Grid -->
+    <div class="mt-4 grid grid-cols-1 xl:grid-cols-12 gap-4">
+      
+      <!-- Left Section: Stats Tiles (Full width on mobile, 4 cols on XL) -->
+      <div class="xl:col-span-4">
+        <CasesTiles :tiles="casesTiles" />
+      </div>
+
+      <!-- Right Section: Tables (Full width on mobile, 8 cols on XL) -->
+      <div class="xl:col-span-8 space-y-4">
         <CounsellorsTable 
           :counsellors="counsellorsWithQueueData"
           :online-count="onlineCounsellorsCount"
         />
-
-        <!-- Callers Table Component -->
+        
         <CallersTable 
           :callers="callersData"
           :online-count="onlineCallersCount"
         />
       </div>
 
-      <!-- Right Column: Cases Tiles -->
-      <div class="h-[532px]">
-        <CasesTiles :tiles="casesTiles" />
-      </div>
     </div>
   </div>
 </template>
@@ -54,7 +52,6 @@ import { formatDuration, getStatusText } from '@/utils/formatters'
 
 const WSHOST = 'wss://demo-openchs.bitz-itc.com:8384/ami/sync?c=-2'
 
-
 export default {
   name: 'App',
   components: {
@@ -64,7 +61,7 @@ export default {
     CallersTable
   },
   setup() {
-    const isDarkMode = ref(false)
+    const isDarkMode = ref(true)
     
     // Use WebSocket composable
     const {
@@ -96,39 +93,45 @@ export default {
       const tiles = [
         { 
           id: 'ct1', 
-          label: "TODAY'S ANSWERED CALLS", 
-          value: stats.calls_today || '--', 
-          variant: 'c-blue' 
+          label: "Today's Answered", 
+          value: stats.calls_today || '0', 
+          variant: 'blue',
+          icon: 'phone'
         },
         { 
           id: 'ct2', 
-          label: "TODAY'S CASES", 
-          value: stats.cases_today || '--', 
-          variant: 'c-amber' 
+          label: "Today's Cases", 
+          value: stats.cases_today || '0', 
+          variant: 'amber',
+          icon: 'folder'
         },
         { 
           id: 'ct3', 
-          label: 'ONGOING CASES', 
-          value: stats.cases_ongoing_total || '--', 
-          variant: 'c-red' 
+          label: 'Ongoing Cases', 
+          value: stats.cases_ongoing_total || '0', 
+          variant: 'red',
+          icon: 'alert'
         },
         { 
           id: 'ct4', 
-          label: 'MONTH CLOSED CASES', 
-          value: stats.cases_closed_this_month || '--', 
-          variant: 'c-green' 
+          label: 'Month Closed', 
+          value: stats.cases_closed_this_month || '0', 
+          variant: 'green',
+          icon: 'check'
         },
         { 
           id: 'ct5', 
-          label: 'TOTAL CALLS', 
-          value: stats.calls_total || '--', 
-          variant: 'c-black' 
+          label: 'Total Calls', 
+          value: stats.calls_total || '0', 
+          variant: 'purple',
+          icon: 'chart'
         },
         { 
           id: 'ct6', 
-          label: 'TOTAL CASES', 
-          value: stats.cases_total || '--', 
-          variant: 'c-black' 
+          label: 'Total Cases', 
+          value: stats.cases_total || '0', 
+          variant: 'indigo',
+          icon: 'database'
         }
       ]
       
@@ -240,10 +243,6 @@ export default {
       // Fetch initial data
       fetchCasesData()
       
-      // Debug logs
-      console.log('Wallboard mounted')
-      console.log('Initial apiData:', apiData.value)
-      
       // Refresh data every 5 minutes
       const dataInterval = setInterval(() => {
         fetchCasesData()
@@ -286,7 +285,3 @@ export default {
   }
 }
 </script>
-
-<style>
-/* Component-specific styles only */
-</style>

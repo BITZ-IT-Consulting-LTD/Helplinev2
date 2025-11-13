@@ -1,23 +1,26 @@
 <template>
-  <div class="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
+  <div class="min-h-screen bg-gray-900 p-6">
     <div class="max-w-7xl mx-auto">
       <!-- Page Header -->
       <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Reports & Analytics</h1>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">Visualize and analyze your data</p>
+        <h1 class="text-3xl font-bold text-gray-100 flex items-center gap-3">
+          <i-mdi-chart-bar class="w-8 h-8 text-blue-400" />
+          Reports & Analytics
+        </h1>
+        <p class="mt-2 text-gray-400">Visualize and analyze your data</p>
       </div>
 
       <!-- Controls Section -->
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
+      <div class="bg-gray-800 rounded-lg shadow-xl p-6 mb-6 border border-gray-700">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- Endpoint Selection -->
           <div>
-            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+            <label class="block text-sm font-semibold text-gray-300 mb-3">
               Data Source
             </label>
             <select 
               v-model="selectedEndpoint" 
-              class="w-full px-4 py-3 bg-white dark:bg-gray-900 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-sm font-medium text-gray-800 dark:text-gray-100 cursor-pointer transition-all duration-300 hover:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-sm font-medium text-gray-100 cursor-pointer transition-all duration-300 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="qa">QA Results</option>
               <option value="cases">Cases</option>
@@ -28,7 +31,7 @@
 
           <!-- X-Axis (Time Duration) -->
           <div>
-            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+            <label class="block text-sm font-semibold text-gray-300 mb-3">
               Time Period (X-Axis)
             </label>
             <div class="flex gap-2">
@@ -37,10 +40,10 @@
                 :key="period.value"
                 @click="selectTimePeriod(period.value)"
                 :class="[
-                  'flex-1 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200',
+                  'flex-1 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200',
                   xAxis === period.value
-                    ? 'bg-orange-500 text-white shadow-md'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50'
+                    : 'bg-gray-700 text-gray-300 border border-gray-600 hover:border-blue-500 hover:text-blue-400'
                 ]"
               >
                 {{ period.label }}
@@ -51,12 +54,12 @@
 
         <!-- Y-Axis Filter Selection -->
         <div class="mt-6">
-          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+          <label class="block text-sm font-semibold text-gray-300 mb-3">
             Filter By (Y-Axis)
           </label>
           
           <!-- Available Options -->
-          <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 mb-4 border-2 border-gray-200 dark:border-gray-700">
+          <div class="bg-gray-900/60 rounded-lg p-4 mb-4 border border-gray-700">
             <div class="flex flex-wrap gap-2">
               <button
                 v-for="field in availableYAxisFields"
@@ -66,8 +69,8 @@
                 :class="[
                   'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
                   selectedYAxis.includes(field)
-                    ? 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed'
-                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:border-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 cursor-pointer'
+                    ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                    : 'bg-gray-800 text-gray-300 border border-gray-600 hover:border-blue-500 hover:bg-blue-900/20 cursor-pointer'
                 ]"
               >
                 {{ formatFieldName(field) }}
@@ -76,13 +79,14 @@
           </div>
 
           <!-- Selected Filters -->
-          <div v-if="selectedYAxis.length > 0" class="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 border-2 border-orange-200 dark:border-orange-800">
+          <div v-if="selectedYAxis.length > 0" class="bg-blue-900/20 rounded-lg p-4 border border-blue-600/30">
             <div class="flex items-center justify-between mb-2">
-              <span class="text-sm font-semibold text-orange-800 dark:text-orange-200">Selected Filters</span>
+              <span class="text-sm font-semibold text-blue-400">Selected Filters</span>
               <button
                 @click="clearAllFilters"
-                class="text-xs text-orange-600 dark:text-orange-400 hover:text-orange-800 dark:hover:text-orange-200 font-medium"
+                class="text-xs text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1"
               >
+                <i-mdi-close class="w-3 h-3" />
                 Clear All
               </button>
             </div>
@@ -90,55 +94,52 @@
               <div
                 v-for="(field, index) in selectedYAxis"
                 :key="field"
-                class="flex items-center gap-2 px-3 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium shadow-sm"
+                class="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium shadow-sm"
               >
                 <span>{{ formatFieldName(field) }}</span>
                 <button
                   @click="removeYAxis(index)"
-                  class="hover:bg-orange-600 rounded p-0.5 transition-colors"
+                  class="hover:bg-blue-700 rounded p-0.5 transition-colors"
                 >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  <i-mdi-close class="w-4 h-4" />
                 </button>
               </div>
             </div>
           </div>
 
-          <p v-else class="text-sm text-gray-500 dark:text-gray-400 italic">No filters selected. Click on options above to add filters.</p>
+          <p v-else class="text-sm text-gray-500 italic">No filters selected. Click on options above to add filters.</p>
         </div>
       </div>
 
       <!-- Graph Section -->
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
+      <div class="bg-gray-800 rounded-lg shadow-xl p-6 mb-6 border border-gray-700">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
+          <h2 class="text-2xl font-bold text-gray-100 flex items-center gap-2">
+            <i-mdi-chart-line class="w-6 h-6 text-blue-400" />
             {{ formatFieldName(selectedEndpoint) }} Analytics
           </h2>
-          <div class="px-4 py-2 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-lg text-sm font-medium">
+          <div class="px-4 py-2 bg-blue-600/20 text-blue-400 rounded-lg text-sm font-medium border border-blue-600/30">
             {{ formatFieldName(currentMetric) }}
           </div>
         </div>
 
         <div v-if="loading" class="flex items-center justify-center h-96">
           <div class="flex flex-col items-center gap-4">
-            <div class="animate-spin rounded-full h-12 w-12 border-4 border-orange-200 border-t-orange-500"></div>
-            <div class="text-gray-500 dark:text-gray-400 font-medium">Loading data...</div>
+            <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-900/30 border-t-blue-500"></div>
+            <div class="text-gray-400 font-medium">Loading data...</div>
           </div>
         </div>
 
         <div v-else-if="chartData.length === 0" class="flex items-center justify-center h-96">
           <div class="text-center">
-            <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-            <p class="mt-4 text-gray-500 dark:text-gray-400 font-medium">No data available</p>
-            <p class="mt-2 text-sm text-gray-400 dark:text-gray-500">Select time period and filters to view analytics</p>
+            <i-mdi-chart-bar class="mx-auto h-16 w-16 text-gray-600" />
+            <p class="mt-4 text-gray-400 font-medium">No data available</p>
+            <p class="mt-2 text-sm text-gray-500">Select time period and filters to view analytics</p>
           </div>
         </div>
 
         <!-- Bar Chart -->
-        <div v-else class="overflow-x-auto">
+        <div v-else class="overflow-x-auto rounded-lg bg-gray-900/40 p-4 border border-gray-700">
           <div class="inline-block min-w-full">
             <svg :width="svgWidth" :height="svgHeight">
               <!-- Horizontal gridlines -->
@@ -148,7 +149,7 @@
                   :x2="svgWidth - margin.right"
                   :y1="yScale(tick)"
                   :y2="yScale(tick)"
-                  stroke="#e5e7eb"
+                  stroke="#374151"
                   stroke-width="1"
                   stroke-dasharray="4"
                 />
@@ -165,13 +166,23 @@
                   class="cursor-pointer hover:opacity-80 transition-opacity"
                   rx="4"
                 />
+                <!-- Value labels on bars -->
+                <text
+                  :x="margin.left + index * (barWidth + barSpacing) + barWidth / 2"
+                  :y="yScale(bar.value) - 8"
+                  text-anchor="middle"
+                  font-size="11"
+                  class="fill-blue-400 font-semibold"
+                >
+                  {{ bar.value }}
+                </text>
                 <!-- X-axis labels -->
                 <text
                   :x="margin.left + index * (barWidth + barSpacing) + barWidth / 2"
                   :y="svgHeight - margin.bottom + 20"
                   text-anchor="middle"
                   font-size="11"
-                  class="fill-gray-600 dark:fill-gray-400 font-medium"
+                  class="fill-gray-400 font-medium"
                 >
                   {{ bar.label }}
                 </text>
@@ -184,7 +195,7 @@
                   :y="yScale(tick) + 4"
                   text-anchor="end"
                   font-size="11"
-                  class="fill-gray-600 dark:fill-gray-400 font-medium"
+                  class="fill-gray-400 font-medium"
                 >
                   {{ tick }}
                 </text>
@@ -196,7 +207,7 @@
                 :x2="svgWidth - margin.right"
                 :y1="svgHeight - margin.bottom"
                 :y2="svgHeight - margin.bottom"
-                stroke="#9ca3af"
+                stroke="#6b7280"
                 stroke-width="2"
               />
 
@@ -206,15 +217,15 @@
                 :x2="margin.left"
                 :y1="margin.top"
                 :y2="svgHeight - margin.bottom"
-                stroke="#9ca3af"
+                stroke="#6b7280"
                 stroke-width="2"
               />
 
               <!-- Gradient for bars -->
               <defs>
                 <linearGradient id="barGradient" x1="0" y1="1" x2="0" y2="0">
-                  <stop offset="0%" stop-color="#f97316" />
-                  <stop offset="100%" stop-color="#fb923c" />
+                  <stop offset="0%" stop-color="#2563eb" />
+                  <stop offset="100%" stop-color="#60a5fa" />
                 </linearGradient>
               </defs>
             </svg>
@@ -223,35 +234,36 @@
       </div>
 
       <!-- Table Section -->
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">Data Table</h2>
+      <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
+        <h2 class="text-2xl font-bold text-gray-100 mb-6 flex items-center gap-2">
+          <i-mdi-table class="w-6 h-6 text-blue-400" />
+          Data Table
+        </h2>
         
         <div v-if="loading" class="flex items-center justify-center h-64">
           <div class="flex flex-col items-center gap-4">
-            <div class="animate-spin rounded-full h-12 w-12 border-4 border-orange-200 border-t-orange-500"></div>
-            <div class="text-gray-500 dark:text-gray-400 font-medium">Loading data...</div>
+            <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-900/30 border-t-blue-500"></div>
+            <div class="text-gray-400 font-medium">Loading data...</div>
           </div>
         </div>
 
         <div v-else-if="tableData.length === 0" class="flex items-center justify-center h-64">
           <div class="text-center">
-            <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
-            <p class="mt-4 text-gray-500 dark:text-gray-400 font-medium">No data available</p>
-            <p class="mt-2 text-sm text-gray-400 dark:text-gray-500">Select time period and filters to view data</p>
+            <i-mdi-table class="mx-auto h-16 w-16 text-gray-600" />
+            <p class="mt-4 text-gray-400 font-medium">No data available</p>
+            <p class="mt-2 text-sm text-gray-500">Select time period and filters to view data</p>
           </div>
         </div>
 
-        <div v-else class="overflow-x-auto rounded-xl border-2 border-gray-200 dark:border-gray-700">
-          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead class="bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-900 dark:to-gray-800">
+        <div v-else class="overflow-x-auto rounded-lg border border-gray-700">
+          <table class="min-w-full divide-y divide-gray-700">
+            <thead class="bg-gray-900/60">
               <tr>
                 <!-- Dynamic filter columns -->
                 <th 
                   v-for="(filter, idx) in selectedYAxis" 
                   :key="'filter-' + idx"
-                  class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
+                  class="px-6 py-4 text-left text-xs font-bold text-gray-300 uppercase tracking-wider"
                 >
                   {{ formatFieldName(filter) }}
                 </th>
@@ -259,24 +271,24 @@
                 <th 
                   v-for="period in tableTimePeriods" 
                   :key="'period-' + period"
-                  class="px-6 py-4 text-center text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider bg-orange-50 dark:bg-orange-900/20"
+                  class="px-6 py-4 text-center text-xs font-bold text-gray-300 uppercase tracking-wider bg-blue-900/20"
                 >
                   {{ period }}
                 </th>
-                <th class="px-6 py-4 text-center text-xs font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider bg-orange-100 dark:bg-orange-900/30">
+                <th class="px-6 py-4 text-center text-xs font-bold text-blue-400 uppercase tracking-wider bg-blue-900/30">
                   Total
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              <tr v-for="(row, rowIdx) in tableData" :key="'row-' + rowIdx" class="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+            <tbody class="bg-gray-800 divide-y divide-gray-700">
+              <tr v-for="(row, rowIdx) in tableData" :key="'row-' + rowIdx" class="hover:bg-gray-700/30 transition-colors">
                 <!-- Filter value cells -->
                 <td 
                   v-for="(filter, filterIdx) in selectedYAxis" 
                   :key="'cell-filter-' + filterIdx"
-                  class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100"
+                  class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100"
                 >
-                  <span class="inline-flex items-center px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-700">
+                  <span class="inline-flex items-center px-3 py-1 rounded-lg bg-gray-700 text-gray-300">
                     {{ row.filters[filterIdx] || '-' }}
                   </span>
                 </td>
@@ -284,31 +296,31 @@
                 <td 
                   v-for="(count, periodIdx) in row.counts" 
                   :key="'cell-count-' + periodIdx"
-                  class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-900 dark:text-gray-100 font-medium"
+                  class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-300 font-medium"
                 >
                   {{ count }}
                 </td>
                 <!-- Total cell -->
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-bold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-bold text-blue-400 bg-blue-900/20">
                   {{ row.total }}
                 </td>
               </tr>
               <!-- Total row -->
-              <tr class="bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-900 dark:to-gray-800 font-bold">
+              <tr class="bg-gray-900/60 font-bold">
                 <td 
                   :colspan="selectedYAxis.length"
-                  class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100 uppercase"
+                  class="px-6 py-4 whitespace-nowrap text-sm text-gray-100 uppercase"
                 >
                   Total
                 </td>
                 <td 
                   v-for="(total, idx) in columnTotals" 
                   :key="'total-' + idx"
-                  class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-900 dark:text-gray-100"
+                  class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-100"
                 >
                   {{ total }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-blue-400 bg-blue-900/30">
                   {{ grandTotal }}
                 </td>
               </tr>
