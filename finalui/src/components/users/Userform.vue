@@ -1,31 +1,50 @@
 <template>
-  <div class="max-w-xl bg-white p-6 rounded-lg shadow">
-    <h2 class="text-xl font-bold mb-4 text-gray-800">Create User</h2>
+  <div class="max-w-xl bg-gray-800 p-6 rounded-lg shadow-xl border border-gray-700">
+    <h2 class="text-xl font-bold mb-6 text-gray-100">Create User</h2>
 
     <form @submit.prevent="submitForm" class="space-y-4">
 
       <!-- Username -->
       <div>
-        <label class="block text-gray-700 mb-1">Username *</label>
-        <input v-model="form.usn" type="text" required class="w-full border px-3 py-2 rounded" />
+        <label class="block text-gray-300 mb-1 text-sm font-medium">Username *</label>
+        <input 
+          v-model="form.usn" 
+          type="text" 
+          required 
+          class="w-full bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
       </div>
 
       <!-- First Name -->
       <div>
-        <label class="block text-gray-700 mb-1">First Name *</label>
-        <input v-model="form.fname" type="text" required class="w-full border px-3 py-2 rounded" />
+        <label class="block text-gray-300 mb-1 text-sm font-medium">First Name *</label>
+        <input 
+          v-model="form.fname" 
+          type="text" 
+          required 
+          class="w-full bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
       </div>
 
       <!-- Last Name -->
       <div>
-        <label class="block text-gray-700 mb-1">Last Name *</label>
-        <input v-model="form.lname" type="text" required class="w-full border px-3 py-2 rounded" />
+        <label class="block text-gray-300 mb-1 text-sm font-medium">Last Name *</label>
+        <input 
+          v-model="form.lname" 
+          type="text" 
+          required 
+          class="w-full bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
       </div>
 
       <!-- Role (Dropdown) -->
       <div>
-        <label class="block text-gray-700 mb-1">Role *</label>
-        <select v-model="form.role" required class="w-full border px-3 py-2 rounded">
+        <label class="block text-gray-300 mb-1 text-sm font-medium">Role *</label>
+        <select 
+          v-model="form.role" 
+          required 
+          class="w-full bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
           <option disabled value="">Select Role</option>
           <option v-for="r in roles" :key="r.id" :value="r.id">
             {{ r.name }}
@@ -35,26 +54,35 @@
 
       <!-- Phone -->
       <div>
-        <label class="block text-gray-700 mb-1">Phone</label>
-        <input v-model="form.phone" type="text" class="w-full border px-3 py-2 rounded" />
+        <label class="block text-gray-300 mb-1 text-sm font-medium">Phone</label>
+        <input 
+          v-model="form.phone" 
+          type="text" 
+          class="w-full bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
       </div>
 
       <!-- Email -->
       <div>
-        <label class="block text-gray-700 mb-1">Email</label>
-        <input v-model="form.email" type="email" class="w-full border px-3 py-2 rounded" />
+        <label class="block text-gray-300 mb-1 text-sm font-medium">Email</label>
+        <input 
+          v-model="form.email" 
+          type="email" 
+          class="w-full bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
       </div>
 
       <!-- Is Active -->
       <div class="flex items-center gap-2">
-        <input type="checkbox" v-model="isActive" class="h-4 w-4" />
-        <label class="text-gray-700">Active User</label>
+        <input type="checkbox" v-model="isActive" class="h-4 w-4 rounded border-gray-600 bg-gray-700 text-blue-600 focus:ring-blue-500" />
+        <label class="text-gray-300 text-sm">Active User</label>
       </div>
 
       <button
         type="submit"
-        class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-all duration-200 font-medium flex items-center justify-center gap-2"
       >
+        <i-mdi-content-save class="w-5 h-5" />
         Save User
       </button>
 

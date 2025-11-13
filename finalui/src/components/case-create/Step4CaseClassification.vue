@@ -2,35 +2,35 @@
   <div class="min-h-96">
     <form class="flex flex-col gap-3.5" @submit.prevent="handleFormSubmit">
       <div>
-        <div class="text-xl font-semibold text-gray-900 mb-2">Case Classification & Assignment</div>
-        <p class="text-sm text-gray-600 mb-5">
+        <div class="text-xl font-semibold text-gray-100 mb-2">Case Classification & Assignment</div>
+        <p class="text-sm text-gray-400 mb-5">
           Classify the case and set priority levels for proper handling.
         </p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
           <div class="mb-5">
-            <label class="block font-semibold mb-2 text-gray-900">Department*</label>
+            <label class="block font-semibold mb-2 text-gray-100">Department*</label>
             <div class="flex gap-4 mt-2">
               <label class="flex items-center gap-1.5 cursor-pointer">
                 <input v-model="localForm.department" type="radio" value="116" required @change="handleDepartmentChange" class="w-4 h-4 text-blue-600" />
-                <span class="text-sm">116</span>
+                <span class="text-sm text-gray-300">116</span>
               </label>
               <label class="flex items-center gap-1.5 cursor-pointer">
                 <input v-model="localForm.department" type="radio" value="labor" required @change="handleDepartmentChange" class="w-4 h-4 text-blue-600" />
-                <span class="text-sm">Labor</span>
+                <span class="text-sm text-gray-300">Labor</span>
               </label>
             </div>
             
-            <div v-if="showPassportField" class="mt-4 p-4 bg-gray-50 border border-gray-300 rounded-lg animate-fadeIn">
-              <label for="client-passport" class="block font-semibold mb-2 text-gray-900">Client's Passport Number</label>
-              <input id="client-passport" v-model="localForm.clientPassportNumber" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white text-gray-900 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" placeholder="Enter client's passport number" @input="updateForm" />
+            <div v-if="showPassportField" class="mt-4 p-4 bg-gray-800 border border-gray-600 rounded-lg animate-fadeIn">
+              <label for="client-passport" class="block font-semibold mb-2 text-gray-100">Client's Passport Number</label>
+              <input id="client-passport" v-model="localForm.clientPassportNumber" type="text" class="w-full px-3 py-2 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50" placeholder="Enter client's passport number" @input="updateForm" />
             </div>
           </div>
 
           <div class="mb-5">
             <BaseSelect
               id="case-category"
-              label="case category"
+              label="Case Category"
               v-model="localForm.categories"
               placeholder="Select case category"
               :category-id="362557"
@@ -43,7 +43,7 @@
           <div class="mb-5">
             <BaseSelect
               id="priority"
-              label="priority"
+              label="Priority"
               v-model="localForm.priority"
               placeholder="Select priority"
               :category-id="236683"
@@ -54,7 +54,7 @@
           <div class="mb-5">
             <BaseSelect
               id="status"
-              label="status"
+              label="Status"
               v-model="localForm.status"
               placeholder="Select status"
               :category-id="236696"
@@ -65,8 +65,8 @@
         </div>
 
         <div class="mb-5">
-          <label for="escalated-to" class="block font-semibold mb-2 text-gray-900">Escalated To</label>
-          <select v-model="localForm.escalatedTo" id="escalated-to" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white text-gray-900 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" @change="updateForm">
+          <label for="escalated-to" class="block font-semibold mb-2 text-gray-100">Escalated To</label>
+          <select v-model="localForm.escalatedTo" id="escalated-to" class="w-full px-3 py-2 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50" @change="updateForm">
             <option value="0">None</option>
             <option value="1">Supervisor</option>
             <option value="2">Manager</option>
@@ -111,7 +111,7 @@
             @selection-change="handleServicesChange"
           />
 
-          <div v-if="showReferralsField" class="mt-4 p-4 bg-gray-50 border border-gray-300 rounded-lg animate-fadeIn">
+          <div v-if="showReferralsField" class="mt-4 p-4 bg-gray-800 border border-gray-600 rounded-lg animate-fadeIn">
             <BaseOptions
               id="referrals-type"
               label="Referral Types"
@@ -122,14 +122,14 @@
             />
           </div>
 
-          <div v-if="showPoliceField" class="mt-4 p-4 bg-gray-50 border border-gray-300 rounded-lg animate-fadeIn">
-            <label for="police-details" class="block font-semibold mb-2 text-gray-900">Police Report Details</label>
-            <textarea id="police-details" v-model="localForm.policeDetails" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white text-gray-900 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 resize-vertical" placeholder="Enter police report details, case number, station, etc." rows="3" @input="updateForm"></textarea>
+          <div v-if="showPoliceField" class="mt-4 p-4 bg-gray-800 border border-gray-600 rounded-lg animate-fadeIn">
+            <label for="police-details" class="block font-semibold mb-2 text-gray-100">Police Report Details</label>
+            <textarea id="police-details" v-model="localForm.policeDetails" class="w-full px-3 py-2 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 resize-vertical" placeholder="Enter police report details, case number, station, etc." rows="3" @input="updateForm"></textarea>
           </div>
 
-          <div v-if="showOthersField" class="mt-4 p-4 bg-gray-50 border border-gray-300 rounded-lg animate-fadeIn">
-            <label for="other-services" class="block font-semibold mb-2 text-gray-900">Other Services Details</label>
-            <textarea id="other-services" v-model="localForm.otherServicesDetails" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white text-gray-900 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 resize-vertical" placeholder="Please specify the other services provided" rows="3" @input="updateForm"></textarea>
+          <div v-if="showOthersField" class="mt-4 p-4 bg-gray-800 border border-gray-600 rounded-lg animate-fadeIn">
+            <label for="other-services" class="block font-semibold mb-2 text-gray-100">Other Services Details</label>
+            <textarea id="other-services" v-model="localForm.otherServicesDetails" class="w-full px-3 py-2 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 resize-vertical" placeholder="Please specify the other services provided" rows="3" @input="updateForm"></textarea>
           </div>
         </div>
 
@@ -157,11 +157,11 @@
         </div>
       </div>
 
-      <div class="flex gap-3 justify-between mt-6 pt-5 border-t border-gray-200">
-        <button type="button" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors" @click="goToStep(3)">Back</button>
+      <div class="flex gap-3 justify-between mt-6 pt-5 border-t border-gray-700">
+        <button type="button" class="px-4 py-2 bg-gray-700 text-gray-300 border border-gray-600 rounded-lg hover:bg-gray-600 transition-colors" @click="goToStep(3)">Back</button>
         <div class="flex gap-3">
-          <button type="button" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors" @click="handleSkipStep">Skip</button>
-          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">Next</button>
+          <button type="button" class="px-4 py-2 bg-gray-700 text-gray-300 border border-gray-600 rounded-lg hover:bg-gray-600 transition-colors" @click="handleSkipStep">Skip</button>
+          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Next</button>
         </div>
       </div>
     </form>

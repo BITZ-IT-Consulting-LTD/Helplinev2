@@ -1,10 +1,10 @@
 <template>
-  <div class="w-full bg-white rounded-lg p-4 shadow-sm border mb-4 flex flex-wrap gap-4">
+  <div class="w-full bg-gray-800 rounded-lg p-4 shadow-xl border border-gray-700 mb-4 flex flex-wrap gap-4">
 
     <!-- Duration Filter -->
     <div class="flex flex-col">
-      <label class="text-sm font-medium mb-1">Duration</label>
-      <select v-model="filters.period" class="border rounded px-3 py-2 text-sm">
+      <label class="text-sm font-medium mb-1 text-gray-300">Duration</label>
+      <select v-model="filters.period" class="bg-gray-700 border border-gray-600 text-gray-100 rounded px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
         <option value="all">All</option>
         <option value="today">Today</option>
         <option value="this_week">This Week</option>
@@ -18,8 +18,8 @@
 
     <!-- GBV Filter -->
     <div class="flex flex-col">
-      <label class="text-sm font-medium mb-1">GBV</label>
-      <select v-model="filters.gbv" class="border rounded px-3 py-2 text-sm">
+      <label class="text-sm font-medium mb-1 text-gray-300">GBV</label>
+      <select v-model="filters.gbv" class="bg-gray-700 border border-gray-600 text-gray-100 rounded px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
         <option value="both">Both</option>
         <option value="vac">VAC</option>
         <option value="gbv">GBV</option>
@@ -28,8 +28,8 @@
 
     <!-- Source Filter -->
     <div class="flex flex-col">
-      <label class="text-sm font-medium mb-1">Source</label>
-      <select v-model="filters.source" class="border rounded px-3 py-2 text-sm">
+      <label class="text-sm font-medium mb-1 text-gray-300">Source</label>
+      <select v-model="filters.source" class="bg-gray-700 border border-gray-600 text-gray-100 rounded px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
         <option value="all">All</option>
         <option value="call">Call</option>
         <option value="sms">SMS</option>
@@ -43,7 +43,7 @@
     <div class="flex items-end">
       <button
         @click="emitFilters"
-        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-sm"
+        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-sm shadow-lg"
       >
         Apply
       </button>

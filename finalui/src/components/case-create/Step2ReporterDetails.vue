@@ -2,10 +2,10 @@
   <div class="min-h-96">
     <form class="flex flex-col gap-3.5" @submit.prevent="handleFormSubmit">
       <div>
-        <div class="text-xl font-semibold text-gray-900 mb-2">
+        <div class="text-xl font-semibold text-gray-100 mb-2">
           {{ selectedReporter ? "Reporter Details" : "New Reporter Information" }}
         </div>
-        <p class="text-sm text-gray-600 mb-5">
+        <p class="text-sm text-gray-400 mb-5">
           Enter the reporter's contact information and details.
         </p>
 
@@ -138,75 +138,83 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
           <div class="mb-5">
-            <label class="block font-semibold mb-2 text-gray-900">Is Reporter also a Client?</label>
+            <label class="block font-semibold mb-2 text-gray-100">Is Reporter also a Client?</label>
             <div class="flex gap-4">
               <label class="flex items-center gap-1.5 cursor-pointer">
                 <input v-model="formData.isClient" type="radio" :value="true" @change="handleClientSelection" class="w-4 h-4 text-blue-600" />
-                <span class="text-sm">Yes</span>
+                <span class="text-sm text-gray-300">Yes</span>
               </label>
               <label class="flex items-center gap-1.5 cursor-pointer">
                 <input v-model="formData.isClient" type="radio" :value="false" @change="handleClientSelection" class="w-4 h-4 text-blue-600" />
-                <span class="text-sm">No</span>
+                <span class="text-sm text-gray-300">No</span>
               </label>
             </div>
           </div>
 
           <div class="mb-5">
-            <label class="block font-semibold mb-2 text-gray-900">Perpetrators</label>
+            <label class="block font-semibold mb-2 text-gray-100">Perpetrators</label>
             <div class="flex flex-col gap-3">
               <div v-if="formData.perpetrators && formData.perpetrators.length" class="flex flex-col gap-2">
-                <div v-for="(perpetrator, index) in formData.perpetrators" :key="index" class="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                <div v-for="(perpetrator, index) in formData.perpetrators" :key="index" class="flex items-center justify-between p-3 bg-gray-700 border border-gray-600 rounded-lg">
                   <div>
-                    <div class="font-semibold text-gray-900 text-sm">{{ perpetrator.name || 'Unnamed' }}</div>
-                    <div class="text-xs text-gray-600">{{ perpetrator.age || 'Unknown age' }} {{ perpetrator.sex || 'Unknown gender' }} - {{ perpetrator.location || 'Unknown location' }}</div>
+                    <div class="font-semibold text-gray-100 text-sm">{{ perpetrator.name || 'Unnamed' }}</div>
+                    <div class="text-xs text-gray-400">{{ perpetrator.age || 'Unknown age' }} {{ perpetrator.sex || 'Unknown gender' }} - {{ perpetrator.location || 'Unknown location' }}</div>
                   </div>
-                  <button type="button" class="w-6 h-6 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 text-sm transition-all hover:scale-110" @click="removePerpetrator(index)">×</button>
+                  <button type="button" class="w-6 h-6 flex items-center justify-center bg-red-600 text-white rounded-full hover:bg-red-700 text-sm transition-all hover:scale-110" @click="removePerpetrator(index)">
+                    <i-mdi-close class="w-4 h-4" />
+                  </button>
                 </div>
               </div>
-              <div v-else class="p-5 text-center text-gray-500 italic bg-gray-50 border border-dashed border-gray-300 rounded-lg">
+              <div v-else class="p-5 text-center text-gray-500 italic bg-gray-800 border border-dashed border-gray-600 rounded-lg">
                 <p class="text-sm m-0">No perpetrators added yet</p>
               </div>
-              <button type="button" class="self-start mt-2 px-3 py-1.5 bg-blue-600 text-white rounded text-sm font-medium hover:bg-blue-700 transition-colors" @click="openPerpetratorModal">+ Add Perpetrator</button>
+              <button type="button" class="self-start mt-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-2" @click="openPerpetratorModal">
+                <i-mdi-plus class="w-4 h-4" />
+                Add Perpetrator
+              </button>
             </div>
           </div>
         </div>
 
         <div class="mb-5">
-          <label class="block font-semibold mb-2 text-gray-900">Clients</label>
+          <label class="block font-semibold mb-2 text-gray-100">Clients</label>
           <div class="flex flex-col gap-3">
             <div v-if="formData.clients && formData.clients.length > 0" class="flex flex-col gap-2">
-              <div v-for="(client, index) in formData.clients" :key="`client-${index}`" class="flex items-center justify-between p-3 bg-gray-50 border rounded-lg" :class="client.isReporter ? 'border-blue-500 bg-blue-50' : 'border-gray-200'">
+              <div v-for="(client, index) in formData.clients" :key="`client-${index}`" class="flex items-center justify-between p-3 rounded-lg" :class="client.isReporter ? 'border-2 border-blue-500 bg-blue-900/20' : 'bg-gray-700 border border-gray-600'">
                 <div>
-                  <div class="font-semibold text-gray-900 text-sm">
+                  <div class="font-semibold text-gray-100 text-sm flex items-center gap-2">
                     {{ client.name || 'Unnamed Client' }}
-                    <span v-if="client.isReporter" class="inline-block bg-blue-600 text-white px-2 py-0.5 rounded-xl text-xs font-medium ml-2 align-top">Reporter</span>
+                    <span v-if="client.isReporter" class="inline-block bg-blue-600 text-white px-2 py-0.5 rounded-full text-xs font-medium">Reporter</span>
                   </div>
-                  <div class="text-xs text-gray-600">{{ client.age ? client.age + ' years' : 'Age unknown' }} • {{ client.sex || 'Gender unknown' }} • {{ client.phone || "No phone" }}</div>
+                  <div class="text-xs text-gray-400">{{ client.age ? client.age + ' years' : 'Age unknown' }} • {{ client.sex || 'Gender unknown' }} • {{ client.phone || "No phone" }}</div>
                 </div>
-                <button v-if="!client.isReporter" type="button" class="w-6 h-6 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 text-sm transition-all hover:scale-110" @click="removeClient(index)" title="Remove client">×</button>
+                <button v-if="!client.isReporter" type="button" class="w-6 h-6 flex items-center justify-center bg-red-600 text-white rounded-full hover:bg-red-700 text-sm transition-all hover:scale-110" @click="removeClient(index)" title="Remove client">
+                  <i-mdi-close class="w-4 h-4" />
+                </button>
                 <span v-else class="text-xs text-gray-500 italic px-2 py-1">Auto-added</span>
               </div>
             </div>
 
-            <div v-else class="text-center p-5 text-gray-500 bg-gray-50 border border-dashed border-gray-300 rounded-lg">
-              <div class="text-3xl mb-2 opacity-50">👥</div>
+            <div v-else class="text-center p-5 text-gray-500 bg-gray-800 border border-dashed border-gray-600 rounded-lg">
+              <i-mdi-account-group class="mx-auto text-3xl mb-2 opacity-50" />
               <p class="text-sm font-medium m-0">No clients added yet</p>
               <p class="text-xs mt-1 opacity-70">{{ formData.isClient === true ? 'Reporter will be added as client automatically' : 'Click below to add a client' }}</p>
             </div>
 
-            <button type="button" class="self-start mt-2 px-3 py-1.5 bg-gray-600 text-white rounded text-sm font-medium hover:bg-gray-700 transition-colors" @click="handleAddClient">
-              <span class="mr-1">+</span>{{ formData.clients.length > 0 ? 'Add Another Client' : 'Add Client' }}
+            <button type="button" class="self-start mt-2 px-3 py-1.5 bg-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors flex items-center gap-2" @click="handleAddClient">
+              <i-mdi-plus class="w-4 h-4" />
+              {{ formData.clients.length > 0 ? 'Add Another Client' : 'Add Client' }}
             </button>
           </div>
         </div>
 
       </div>
 
-      <div class="flex gap-3 justify-between mt-6 pt-5 border-t border-gray-200">
-        <button type="button" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors" @click="goToStep(1)">Back</button>
+      <div class="flex gap-3 justify-between mt-6 pt-5 border-t border-gray-700">
+        <button type="button" class="px-4 py-2 bg-gray-700 text-gray-300 border border-gray-600 rounded-lg hover:bg-gray-600 transition-colors" @click="goToStep(1)">Back</button>
         <div class="flex gap-3">
-          <button type="button" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors" @click="handleSkipStep">Skip</button>
-          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">Next</button>
+          <button type="button" class="px-4 py-2 bg-gray-700 text-gray-300 border border-gray-600 rounded-lg hover:bg-gray-600 transition-colors" @click="handleSkipStep">Skip</button>
+          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Next</button>
         </div>
       </div>
     </form>

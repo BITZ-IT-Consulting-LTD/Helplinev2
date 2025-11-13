@@ -1,41 +1,29 @@
 <template>
-  <div class="p-6 bg-gray-50 min-h-screen">
+  <div class="p-6 bg-gray-900 min-h-screen space-y-6">
     <!-- Header -->
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-bold text-gray-800">Cases</h1>
+    <div class="flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-gray-100">Cases</h1>
     </div>
 
     <!-- Filters -->
     <CasesFilter @update:filters="applyFilters" />
 
     <!-- Stats Summary -->
-    <div class="bg-white rounded-lg shadow p-4 mb-6">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-gray-600">
-            Total Cases: <span class="font-semibold text-lg">{{ casesStore.caseCount }}</span>
-          </p>
-        </div>
-        
-        <div class="flex gap-2">
-          <button 
-            @click="downloadCSV"
-            :disabled="casesStore.loading"
-            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition text-sm font-medium disabled:opacity-50"
-          >
-            Download CSV
-          </button>
-        </div>
+    <div class="bg-gray-800 rounded-lg shadow-xl p-4 border border-gray-700">
+      <div class="flex items-center gap-2">
+        <i-mdi-folder-multiple class="w-5 h-5 text-blue-400" />
+        <span class="text-sm text-gray-300">Total Cases:</span>
+        <span class="text-lg font-bold text-blue-400">{{ casesStore.caseCount }}</span>
       </div>
     </div>
 
     <!-- Loader -->
-    <div v-if="casesStore.loading" class="text-center py-20 text-gray-600 bg-white rounded-lg shadow">
-      Loading cases...
+    <div v-if="casesStore.loading" class="text-center py-20 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
+      <div class="text-gray-400">Loading cases...</div>
     </div>
 
     <!-- Error -->
-    <div v-else-if="casesStore.error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+    <div v-else-if="casesStore.error" class="bg-red-600/20 border border-red-600/50 text-red-400 px-5 py-4 rounded-lg font-medium">
       {{ casesStore.error }}
     </div>
 
@@ -45,24 +33,26 @@
       <div class="flex justify-end gap-2 mb-4">
         <button
           :class="[
-            'px-4 py-2 rounded-md font-medium',
+            'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2',
             currentView === 'table'
-              ? 'bg-blue-600 text-white'
-              : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'
+              ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50'
+              : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
           ]"
           @click="currentView = 'table'"
         >
+          <i-mdi-table class="w-5 h-5" />
           Table View
         </button>
         <button
           :class="[
-            'px-4 py-2 rounded-md font-medium',
+            'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2',
             currentView === 'timeline'
-              ? 'bg-blue-600 text-white'
-              : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'
+              ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50'
+              : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
           ]"
           @click="currentView = 'timeline'"
         >
+          <i-mdi-timeline class="w-5 h-5" />
           Timeline View
         </button>
       </div>
@@ -112,27 +102,6 @@ async function applyFilters(filters) {
     console.log('Filtered cases fetched:', casesStore.cases)
   } catch (err) {
     console.error('Error fetching filtered cases:', err)
-  }
-}
-
-// Download CSV with current filters
-async function downloadCSV() {
-  try {
-    const blob = await casesStore.downloadCSV(currentFilters.value)
-    
-    // Create download link
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `cases_${new Date().toISOString().split('T')[0]}.csv`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    window.URL.revokeObjectURL(url)
-    
-  } catch (error) {
-    console.error('Failed to download CSV:', error)
-    alert('Failed to download CSV. Please try again.')
   }
 }
 </script>

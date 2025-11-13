@@ -1,7 +1,7 @@
 <template>
-  <div class="p-6 space-y-6">
+  <div class="p-6 space-y-6 bg-gray-900 min-h-screen">
 
-    <h1 class="text-2xl font-bold text-gray-800 mb-4">Dashboard</h1>
+    <h1 class="text-2xl font-bold text-gray-100 mb-4">Dashboard</h1>
 
     <!-- 🔥 Shared Filters Bar -->
     <CasesFilters @update:filters="applyFilters" />
@@ -10,22 +10,22 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
       <!-- Case Categories -->
-      <div class="bg-white shadow rounded-lg p-4">
+      <div class="bg-gray-800 shadow-xl rounded-lg p-4 border border-gray-700">
         <CaseCategories :filters="filters" />
       </div>
 
       <!-- Case Locations -->
-      <div class="bg-white shadow rounded-lg p-4">
+      <div class="bg-gray-800 shadow-xl rounded-lg p-4 border border-gray-700">
         <CaseLocations :filters="filters" />
       </div>
 
       <!-- Daily Cases by Source -->
-      <div class="bg-white shadow rounded-lg p-4 md:col-span-2">
+      <div class="bg-gray-800 shadow-xl rounded-lg p-4 md:col-span-2 border border-gray-700">
         <CasesBySourceDaily :filters="filters" />
       </div>
 
       <!-- Case Status + Priority -->
-      <div class="bg-white shadow rounded-lg p-4 md:col-span-2">
+      <div class="bg-gray-800 shadow-xl rounded-lg p-4 md:col-span-2 border border-gray-700">
         <CaseStatusPriority :filters="filters" />
       </div>
 

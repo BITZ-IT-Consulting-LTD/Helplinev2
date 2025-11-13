@@ -85,30 +85,30 @@ watch(() => props.filters, () => {
 
 <template>
   <div>
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="font-bold text-lg">Case Status & Priority</h2>
-      <div class="text-2xl font-bold text-blue-600">
-        {{ totalCases }} <span class="text-sm text-gray-500">Total</span>
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="font-semibold text-base text-gray-200">Case Status & Priority</h2>
+      <div class="text-3xl font-bold text-blue-400">
+        {{ totalCases }} <span class="text-sm text-gray-500 font-normal">Total</span>
       </div>
     </div>
 
-    <div v-if="!localData || localData.length === 0" class="text-gray-500 text-center py-8">
+    <div v-if="!localData || localData.length === 0" class="text-gray-500 text-center py-12">
       No data available
     </div>
 
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <!-- Status Section -->
-      <div class="space-y-3">
-        <h3 class="font-semibold text-gray-700 text-sm">By Status</h3>
+      <div class="space-y-4">
+        <h3 class="font-medium text-gray-300 text-sm uppercase tracking-wide">By Status</h3>
         
-        <div v-for="item in processedData.status" :key="item.label" class="space-y-1">
+        <div v-for="item in processedData.status" :key="item.label" class="space-y-2">
           <div class="flex justify-between text-sm">
-            <span class="font-medium">{{ item.label }}</span>
-            <span class="text-gray-600">{{ item.value }} ({{ ((item.value / statusTotal) * 100).toFixed(1) }}%)</span>
+            <span class="font-medium text-gray-300">{{ item.label }}</span>
+            <span class="text-gray-500">{{ item.value }} <span class="text-gray-600">({{ ((item.value / statusTotal) * 100).toFixed(1) }}%)</span></span>
           </div>
-          <div class="w-full bg-gray-200 rounded-full h-6 relative overflow-hidden">
+          <div class="w-full bg-gray-900/60 rounded-full h-7 relative overflow-hidden border border-gray-800">
             <div 
-              class="h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2"
+              class="h-full rounded-full transition-all duration-500 flex items-center justify-end pr-3"
               :style="{ 
                 width: `${(item.value / statusTotal) * 100}%`,
                 backgroundColor: item.color
@@ -121,17 +121,17 @@ watch(() => props.filters, () => {
       </div>
 
       <!-- Priority Section -->
-      <div class="space-y-3">
-        <h3 class="font-semibold text-gray-700 text-sm">By Priority</h3>
+      <div class="space-y-4">
+        <h3 class="font-medium text-gray-300 text-sm uppercase tracking-wide">By Priority</h3>
         
-        <div v-for="item in processedData.priority" :key="item.label" class="space-y-1">
+        <div v-for="item in processedData.priority" :key="item.label" class="space-y-2">
           <div class="flex justify-between text-sm">
-            <span class="font-medium">{{ item.label }}</span>
-            <span class="text-gray-600">{{ item.value }} ({{ ((item.value / priorityTotal) * 100).toFixed(1) }}%)</span>
+            <span class="font-medium text-gray-300">{{ item.label }}</span>
+            <span class="text-gray-500">{{ item.value }} <span class="text-gray-600">({{ ((item.value / priorityTotal) * 100).toFixed(1) }}%)</span></span>
           </div>
-          <div class="w-full bg-gray-200 rounded-full h-6 relative overflow-hidden">
+          <div class="w-full bg-gray-900/60 rounded-full h-7 relative overflow-hidden border border-gray-800">
             <div 
-              class="h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2"
+              class="h-full rounded-full transition-all duration-500 flex items-center justify-end pr-3"
               :style="{ 
                 width: `${(item.value / priorityTotal) * 100}%`,
                 backgroundColor: item.color

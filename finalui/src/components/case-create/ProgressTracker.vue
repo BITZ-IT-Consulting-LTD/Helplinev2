@@ -2,7 +2,7 @@
   <div class="py-2 pb-4">
     <div class="relative flex justify-between items-start gap-6 pt-7">
       <!-- Connecting Line -->
-      <div class="absolute top-10 left-0 right-0 h-0.5 bg-gray-200 -z-10" 
+      <div class="absolute top-10 left-0 right-0 h-0.5 bg-gray-700 -z-10" 
            style="top: 2.75rem;">
         <div 
           class="h-full bg-green-500 transition-all duration-300"
@@ -24,12 +24,12 @@
       >
         <!-- Step Circle -->
         <div
-          class="relative flex items-center justify-center w-9 h-9 text-sm font-extrabold leading-none transition-all rounded-full bg-white border-2"
+          class="relative flex items-center justify-center w-9 h-9 text-sm font-extrabold leading-none transition-all rounded-full bg-gray-900 border-2"
           :class="{
-            'border-gray-300 text-gray-400': stepStatus[step] === 'pending' && currentStep !== step,
-            'border-blue-600 text-blue-600 ring-4 ring-blue-100': currentStep === step && stepStatus[step] !== 'completed',
+            'border-gray-600 text-gray-500': stepStatus[step] === 'pending' && currentStep !== step,
+            'border-blue-600 text-blue-400 ring-4 ring-blue-900/50': currentStep === step && stepStatus[step] !== 'completed',
             'border-green-500 bg-green-500 text-white': stepStatus[step] === 'completed',
-            'border-red-600 text-red-600': stepStatus[step] === 'error'
+            'border-red-600 text-red-400': stepStatus[step] === 'error'
           }"
         >
           <span v-if="stepStatus[step] === 'completed'">✓</span>
@@ -40,10 +40,10 @@
         <div
           class="text-xs font-bold text-center transition-colors max-w-[100px]"
           :class="{
-            'text-gray-400': stepStatus[step] === 'pending' && currentStep !== step,
-            'text-blue-600': currentStep === step && stepStatus[step] !== 'completed',
-            'text-green-600': stepStatus[step] === 'completed',
-            'text-red-600': stepStatus[step] === 'error'
+            'text-gray-500': stepStatus[step] === 'pending' && currentStep !== step,
+            'text-blue-400': currentStep === step && stepStatus[step] !== 'completed',
+            'text-green-400': stepStatus[step] === 'completed',
+            'text-red-400': stepStatus[step] === 'error'
           }"
         >
           {{ stepLabels[step - 1] }}

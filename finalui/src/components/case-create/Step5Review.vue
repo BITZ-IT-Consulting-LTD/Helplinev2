@@ -1,34 +1,35 @@
 <template>
   <div class="min-h-96">
     <div class="flex flex-col gap-3">
-      <div class="border border-gray-200 rounded-xl bg-white">
-        <div class="flex items-center justify-between p-2.5 px-3 border-b border-gray-200">
-          <div class="text-xl font-semibold text-gray-900">Reporter Information</div>
-          <button class="flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md text-sm hover:bg-gray-200 transition-colors" @click="goToStep(2)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+      <!-- Reporter Information -->
+      <div class="border border-gray-700 rounded-lg bg-gray-800">
+        <div class="flex items-center justify-between p-3 px-4 border-b border-gray-700">
+          <div class="text-xl font-semibold text-gray-100 flex items-center gap-2">
+            <i-mdi-account class="w-5 h-5 text-blue-400" />
+            Reporter Information
+          </div>
+          <button class="flex items-center gap-2 px-3 py-1.5 bg-gray-700 text-gray-300 border border-gray-600 rounded-lg text-sm hover:bg-gray-600 transition-colors" @click="goToStep(2)">
+            <i-mdi-pencil class="w-4 h-4" />
             Edit
           </button>
         </div>
-        <div class="p-2.5 px-3 grid grid-cols-2 gap-2.5">
+        <div class="p-3 px-4 grid grid-cols-2 gap-3">
           <div>
-            <div class="font-semibold text-gray-500 text-sm">Name</div>
-            <div class="text-gray-900">{{ formData.step2.name || "N/A" }}</div>
+            <div class="font-semibold text-gray-400 text-sm">Name</div>
+            <div class="text-gray-100">{{ formData.step2.name || "N/A" }}</div>
           </div>
           <div>
-            <div class="font-semibold text-gray-500 text-sm">Phone</div>
-            <div class="text-gray-900">{{ formData.step2.phone || "N/A" }}</div>
+            <div class="font-semibold text-gray-400 text-sm">Phone</div>
+            <div class="text-gray-100">{{ formData.step2.phone || "N/A" }}</div>
           </div>
           <div>
-            <div class="font-semibold text-gray-500 text-sm">Location</div>
-            <div class="text-gray-900">{{ formData.step2.location || "N/A" }}</div>
+            <div class="font-semibold text-gray-400 text-sm">Location</div>
+            <div class="text-gray-100">{{ formData.step2.location || "N/A" }}</div>
           </div>
           <div>
-            <div class="font-semibold text-gray-500 text-sm">Is Client</div>
+            <div class="font-semibold text-gray-400 text-sm">Is Client</div>
             <div>
-              <span class="inline-block px-2 py-0.5 rounded text-xs font-medium" :class="formData.step2.isClient ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
+              <span class="inline-block px-2 py-0.5 rounded text-xs font-medium" :class="formData.step2.isClient ? 'bg-green-600/20 text-green-400 border border-green-600/30' : 'bg-gray-600/20 text-gray-400 border border-gray-600/30'">
                 {{ formData.step2.isClient ? "Yes" : "No" }}
               </span>
             </div>
@@ -36,109 +37,114 @@
         </div>
       </div>
 
-      <div class="border border-gray-200 rounded-xl bg-white">
-        <div class="flex items-center justify-between p-2.5 px-3 border-b border-gray-200">
-          <div class="text-xl font-semibold text-gray-900">Case Details</div>
-          <button class="flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md text-sm hover:bg-gray-200 transition-colors" @click="goToStep(3)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+      <!-- Case Details -->
+      <div class="border border-gray-700 rounded-lg bg-gray-800">
+        <div class="flex items-center justify-between p-3 px-4 border-b border-gray-700">
+          <div class="text-xl font-semibold text-gray-100 flex items-center gap-2">
+            <i-mdi-folder class="w-5 h-5 text-blue-400" />
+            Case Details
+          </div>
+          <button class="flex items-center gap-2 px-3 py-1.5 bg-gray-700 text-gray-300 border border-gray-600 rounded-lg text-sm hover:bg-gray-600 transition-colors" @click="goToStep(3)">
+            <i-mdi-pencil class="w-4 h-4" />
             Edit
           </button>
         </div>
-        <div class="p-2.5 px-3 grid grid-cols-2 gap-2.5">
+        <div class="p-3 px-4 grid grid-cols-2 gap-3">
           <div class="col-span-2">
-            <div class="font-semibold text-gray-500 text-sm">Case Narrative</div>
-            <div class="text-gray-900">{{ formData.step3.narrative || "N/A" }}</div>
+            <div class="font-semibold text-gray-400 text-sm">Case Narrative</div>
+            <div class="text-gray-100">{{ formData.step3.narrative || "N/A" }}</div>
           </div>
           <div>
-            <div class="font-semibold text-gray-500 text-sm">GBV Related</div>
+            <div class="font-semibold text-gray-400 text-sm">GBV Related</div>
             <div>
-              <span class="inline-block px-2 py-0.5 rounded text-xs font-medium" :class="formData.step3.isGBVRelated ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'">
+              <span class="inline-block px-2 py-0.5 rounded text-xs font-medium" :class="formData.step3.isGBVRelated ? 'bg-amber-600/20 text-amber-400 border border-amber-600/30' : 'bg-blue-600/20 text-blue-400 border border-blue-600/30'">
                 {{ formData.step3.isGBVRelated ? "Yes" : "No" }}
               </span>
             </div>
           </div>
           <div>
-            <div class="font-semibold text-gray-500 text-sm">Incident Date</div>
-            <div class="text-gray-900">{{ formData.step3.incidentDate || "N/A" }}</div>
+            <div class="font-semibold text-gray-400 text-sm">Incident Date</div>
+            <div class="text-gray-100">{{ formData.step3.incidentDate || "N/A" }}</div>
           </div>
           <div>
-            <div class="font-semibold text-gray-500 text-sm">Location</div>
-            <div class="text-gray-900">{{ formData.step3.location || "N/A" }}</div>
+            <div class="font-semibold text-gray-400 text-sm">Location</div>
+            <div class="text-gray-100">{{ formData.step3.location || "N/A" }}</div>
           </div>
         </div>
       </div>
 
-      <div class="border border-gray-200 rounded-xl bg-white">
-        <div class="flex items-center justify-between p-2.5 px-3 border-b border-gray-200">
-          <div class="text-xl font-semibold text-gray-900">Classification</div>
-          <button class="flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md text-sm hover:bg-gray-200 transition-colors" @click="goToStep(4)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+      <!-- Classification -->
+      <div class="border border-gray-700 rounded-lg bg-gray-800">
+        <div class="flex items-center justify-between p-3 px-4 border-b border-gray-700">
+          <div class="text-xl font-semibold text-gray-100 flex items-center gap-2">
+            <i-mdi-tag class="w-5 h-5 text-blue-400" />
+            Classification
+          </div>
+          <button class="flex items-center gap-2 px-3 py-1.5 bg-gray-700 text-gray-300 border border-gray-600 rounded-lg text-sm hover:bg-gray-600 transition-colors" @click="goToStep(4)">
+            <i-mdi-pencil class="w-4 h-4" />
             Edit
           </button>
         </div>
-        <div class="p-2.5 px-3 grid grid-cols-2 gap-2.5">
+        <div class="p-3 px-4 grid grid-cols-2 gap-3">
           <div>
-            <div class="font-semibold text-gray-500 text-sm">Department</div>
-            <div class="text-gray-900">{{ formatDepartment(formData.step4.department) || "N/A" }}</div>
+            <div class="font-semibold text-gray-400 text-sm">Department</div>
+            <div class="text-gray-100">{{ formatDepartment(formData.step4.department) || "N/A" }}</div>
           </div>
           <div class="col-span-2">
-            <div class="font-semibold text-gray-500 text-sm">Categories</div>
+            <div class="font-semibold text-gray-400 text-sm">Categories</div>
             <div>
               <div v-if="formData.step4.categories.length > 0" class="flex flex-wrap gap-1.5 min-h-8 p-1">
-                <span v-for="category in formData.step4.categories" :key="category" class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-blue-600 text-white rounded-xl text-xs font-medium">
+                <span v-for="category in formData.step4.categories" :key="category" class="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-600/20 text-blue-400 rounded-full text-xs font-medium border border-blue-600/30">
                   {{ category }}
                 </span>
               </div>
-              <span v-else class="text-gray-900">N/A</span>
+              <span v-else class="text-gray-100">N/A</span>
             </div>
           </div>
           <div>
-            <div class="font-semibold text-gray-500 text-sm">Priority</div>
+            <div class="font-semibold text-gray-400 text-sm">Priority</div>
             <div>
-              <span v-if="formData.step4.priority" class="inline-block px-2 py-0.5 rounded text-xs font-medium" :class="`priority-${formData.step4.priority}`">
+              <span v-if="formData.step4.priority" class="inline-block px-2 py-0.5 rounded text-xs font-medium" :class="getPriorityClass(formData.step4.priority)">
                 {{ formatPriority(formData.step4.priority) }}
               </span>
-              <span v-else class="text-gray-900">N/A</span>
+              <span v-else class="text-gray-100">N/A</span>
             </div>
           </div>
           <div>
-            <div class="font-semibold text-gray-500 text-sm">Status</div>
+            <div class="font-semibold text-gray-400 text-sm">Status</div>
             <div>
-              <span v-if="formData.step4.status" class="inline-block px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+              <span v-if="formData.step4.status" class="inline-block px-2 py-0.5 rounded text-xs font-medium bg-blue-600/20 text-blue-400 border border-blue-600/30">
                 {{ formatStatus(formData.step4.status) }}
               </span>
-              <span v-else class="text-gray-900">N/A</span>
+              <span v-else class="text-gray-100">N/A</span>
             </div>
           </div>
           <div>
-            <div class="font-semibold text-gray-500 text-sm">Justice System State</div>
-            <div class="text-gray-900">{{ formData.step4.justiceSystemState || "N/A" }}</div>
+            <div class="font-semibold text-gray-400 text-sm">Justice System State</div>
+            <div class="text-gray-100">{{ formData.step4.justiceSystemState || "N/A" }}</div>
           </div>
           <div>
-            <div class="font-semibold text-gray-500 text-sm">General Assessment</div>
-            <div class="text-gray-900">{{ formData.step4.generalAssessment || "N/A" }}</div>
+            <div class="font-semibold text-gray-400 text-sm">General Assessment</div>
+            <div class="text-gray-100">{{ formData.step4.generalAssessment || "N/A" }}</div>
           </div>
           <div>
-            <div class="font-semibold text-gray-500 text-sm">Services Offered</div>
-            <div class="text-gray-900">{{ formData.step4.servicesOffered || "N/A" }}</div>
+            <div class="font-semibold text-gray-400 text-sm">Services Offered</div>
+            <div class="text-gray-100">{{ formData.step4.servicesOffered || "N/A" }}</div>
           </div>
           <div>
-            <div class="font-semibold text-gray-500 text-sm">Referral Source</div>
-            <div class="text-gray-900">{{ formData.step4.referralSource || "N/A" }}</div>
+            <div class="font-semibold text-gray-400 text-sm">Referral Source</div>
+            <div class="text-gray-100">{{ formData.step4.referralSource || "N/A" }}</div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="flex gap-3 justify-end mt-6 pt-5 border-t border-gray-200">
-      <button type="button" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors" @click="goToStep(4)">Back</button>
-      <button type="button" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors" @click="submitCase">Create Case</button>
+    <div class="flex gap-3 justify-end mt-6 pt-5 border-t border-gray-700">
+      <button type="button" class="px-4 py-2 bg-gray-700 text-gray-300 border border-gray-600 rounded-lg hover:bg-gray-600 transition-colors" @click="goToStep(4)">Back</button>
+      <button type="button" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2" @click="submitCase">
+        <i-mdi-check class="w-5 h-5" />
+        Create Case
+      </button>
     </div>
   </div>
 </template>
@@ -162,6 +168,8 @@ function submitCase() {
 function formatDepartment(value) {
   if (!value) return "";
   const map = {
+    "116": "116",
+    "labor": "Labor",
     health: "Health",
     police: "Police",
     legal: "Legal",
@@ -188,5 +196,15 @@ function formatStatus(value) {
     closed: "Closed"
   };
   return map[value] || value;
+}
+
+function getPriorityClass(value) {
+  if (!value) return "";
+  const map = {
+    high: "bg-red-600/20 text-red-400 border border-red-600/30",
+    medium: "bg-amber-600/20 text-amber-400 border border-amber-600/30",
+    low: "bg-green-600/20 text-green-400 border border-green-600/30"
+  };
+  return map[value] || "bg-gray-600/20 text-gray-400 border border-gray-600/30";
 }
 </script>

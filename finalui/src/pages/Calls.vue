@@ -1,65 +1,75 @@
 <template>
-  <div class="p-6 space-y-6">
+  <div class="p-6 space-y-6 bg-gray-900 min-h-screen">
     
-    <h1 class="text-2xl font-bold text-gray-800 mb-4">Call History</h1>
+    <h1 class="text-2xl font-bold text-gray-100 mb-4">Call History</h1>
 
     <!-- Filters -->
     <CallsFilter @update:filters="applyFilters" />
 
-    <!-- Stats Summary -->
-    <div class="bg-white rounded-lg shadow p-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-gray-600">
-            Total Calls: <span class="font-semibold text-lg">{{ callsStore.callCount }}</span>
-          </p>
-        </div>
-        
-        <div class="flex gap-2">
-          <button 
-            @click="downloadCSV"
-            :disabled="callsStore.loading"
-            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition text-sm font-medium disabled:opacity-50"
-          >
-            Download CSV
-          </button>
-        </div>
-      </div>
-    </div>
-
     <!-- Loading State -->
-    <div v-if="callsStore.loading" class="flex justify-center items-center py-12 bg-white rounded-lg shadow">
-      <div class="text-gray-500">Loading calls...</div>
+    <div v-if="callsStore.loading" class="flex justify-center items-center py-12 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
+      <div class="text-gray-400">Loading calls...</div>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="callsStore.error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+    <div v-else-if="callsStore.error" class="bg-red-600/20 border border-red-600/50 text-red-400 px-4 py-3 rounded-lg">
       {{ callsStore.error }}
     </div>
 
     <!-- Content when loaded -->
     <div v-else>
-      <!-- View Toggle Buttons -->
-      <div class="flex justify-end space-x-3 mb-4">
-        <button
-          @click="activeView = 'timeline'"
-          :class="[
-            'px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-200',
-            activeView === 'timeline' ? 'bg-amber-700' : 'bg-amber-400 hover:bg-amber-500'
-          ]"
-        >
-          Timeline View
-        </button>
+      <!-- View Toggle Buttons and Stats -->
+      <div class="flex justify-between items-center mb-6">
+        <!-- Total Count -->
+        <div class="flex items-center gap-2 text-gray-300">
+          <i-mdi-phone-outline class="w-5 h-5 text-blue-400" />
+          <span class="text-sm">Total Calls:</span>
+          <span class="text-lg font-bold text-blue-400">{{ callsStore.callCount }}</span>
+        </div>
 
-        <button
-          @click="activeView = 'table'"
-          :class="[
-            'px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-200',
-            activeView === 'table' ? 'bg-amber-700' : 'bg-amber-400 hover:bg-amber-500'
-          ]"
-        >
-          Table View
-        </button>
+        <!-- View Toggle Buttons -->
+        <div class="flex gap-3">
+          <button
+            @click="activeView = 'timeline'"
+            :class="[
+              'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm',
+              activeView === 'timeline' 
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
+                : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
+            ]"
+          >
+            <i-mdi-timeline-text-outline class="w-5 h-5" />
+            Timeline
+          </button>
+
+          <button
+            @click="activeView = 'table'"
+            :class="[
+              'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm',
+              activeView === 'table' 
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
+                : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
+            ]"
+          >
+            <i-mdi-table class="w-5 h-5" />
+            Table
+          </button>
+
+          <button
+            @click="activeView = 'sip'"
+            :class="[
+              'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm',
+              activeView === 'sip' 
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
+                : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
+            ]"
+          >
+            <i-mdi-phone-settings class="w-5 h-5" />
+            SIP Agent
+          </button>
+
+        
+        </div>
       </div>
 
       <!-- Timeline view -->
@@ -80,6 +90,11 @@
           @select-call="selectCall"
         />
       </div>
+
+      <!-- SIP Agent view -->
+      <div v-if="activeView === 'sip'">
+        <SipAgentView />
+      </div>
     </div>
 
   </div>
@@ -90,6 +105,7 @@ import { ref, computed, onMounted } from "vue"
 import Timeline from "@/components/calls/Timeline.vue"
 import Table from "@/components/calls/Table.vue"
 import CallsFilter from "@/components/calls/CallsFilter.vue"
+import SipAgentView from "@/components/calls/SipAgentView.vue"
 import { useCallStore } from "@/stores/calls"
 
 const callsStore = useCallStore()

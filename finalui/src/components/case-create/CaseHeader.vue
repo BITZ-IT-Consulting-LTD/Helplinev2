@@ -1,11 +1,11 @@
 <template>
   <div class="flex items-center justify-between gap-3 mb-6">
     <div>
-      <h1 class="text-2xl font-black tracking-tight text-gray-900 mb-1.5">
+      <h1 class="text-2xl font-black tracking-tight text-gray-100 mb-1.5">
         Create New Case
         <span class="block w-12 h-0.5 bg-blue-600 rounded-full mt-1.5"></span>
       </h1>
-      <p class="text-sm text-gray-600 mt-1.5">
+      <p class="text-sm text-gray-400 mt-1.5">
         {{ currentDescription }}
       </p>
     </div>

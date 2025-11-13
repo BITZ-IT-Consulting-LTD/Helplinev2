@@ -1,8 +1,8 @@
 <template>
   <div :class="containerClass">
-    <label class="block text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
+    <label class="block text-sm font-semibold text-gray-100 mb-2">
       {{ label }}
-      <span v-if="required" class="text-red-500 font-bold">*</span>
+      <span v-if="required" class="text-red-400 font-bold">*</span>
     </label>
     <textarea
       v-model="model"
@@ -11,12 +11,12 @@
       :disabled="disabled"
       :maxlength="maxlength"
       :required="required"
-      class="px-4 py-3 border-2 border-blue-300 dark:border-blue-700 rounded-lg text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 w-full focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/50 transition-all resize-y disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed shadow-sm"
+      class="px-4 py-3 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 w-full focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all resize-y disabled:bg-gray-800 disabled:cursor-not-allowed"
     ></textarea>
     <div v-if="hint || (maxlength && showCharCount)" class="flex justify-between items-center mt-2">
-      <p v-if="hint" class="text-xs text-gray-600 dark:text-gray-400">{{ hint }}</p>
+      <p v-if="hint" class="text-xs text-gray-400">{{ hint }}</p>
       <p v-if="maxlength && showCharCount" class="text-xs font-semibold"
-        :class="model?.length > maxlength * 0.9 ? 'text-red-600' : 'text-gray-500 dark:text-gray-400'">
+        :class="model?.length > maxlength * 0.9 ? 'text-red-400' : 'text-gray-400'">
         {{ model?.length || 0 }} / {{ maxlength }}
       </p>
     </div>

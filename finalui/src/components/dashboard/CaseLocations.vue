@@ -87,28 +87,28 @@ watch(() => props.filters, () => {
 
 <template>
   <div>
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="font-bold text-lg">Cases by Reporter Location</h2>
-      <div class="text-2xl font-bold text-blue-600">
-        {{ totalCases }} <span class="text-sm text-gray-500">Total</span>
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="font-semibold text-base text-gray-200">Cases by Reporter Location</h2>
+      <div class="text-3xl font-bold text-blue-400">
+        {{ totalCases }} <span class="text-sm text-gray-500 font-normal">Total</span>
       </div>
     </div>
 
-    <div v-if="!localData || localData.length === 0" class="text-gray-500 text-center py-8">
+    <div v-if="!localData || localData.length === 0" class="text-gray-500 text-center py-12">
       No data available
     </div>
 
-    <div v-else class="space-y-4">
+    <div v-else class="space-y-6">
       <!-- SVG Pie Chart -->
-      <div class="flex justify-center">
-        <svg viewBox="0 0 200 200" class="w-64 h-64">
+      <div class="flex justify-center py-4">
+        <svg viewBox="0 0 200 200" class="w-72 h-72">
           <g v-for="(slice, index) in chartData" :key="index">
             <path
               :d="getSlicePath(slice.startAngle, slice.endAngle)"
               :fill="slice.color"
-              class="hover:opacity-80 transition-opacity cursor-pointer"
-              stroke="white"
-              stroke-width="2"
+              class="hover:opacity-90 transition-opacity cursor-pointer"
+              stroke="#1F2937"
+              stroke-width="3"
             >
               <title>{{ slice.label }}: {{ slice.value }} ({{ slice.percentage }}%)</title>
             </path>
@@ -117,18 +117,18 @@ watch(() => props.filters, () => {
       </div>
 
       <!-- Legend -->
-      <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="grid grid-cols-2 gap-3 text-sm">
         <div 
           v-for="(slice, index) in chartData" 
           :key="index"
-          class="flex items-center gap-2"
+          class="flex items-center gap-3 bg-gray-900/40 px-3 py-2 rounded"
         >
           <div 
-            class="w-4 h-4 rounded"
+            class="w-3 h-3 rounded-sm flex-shrink-0"
             :style="{ backgroundColor: slice.color }"
           ></div>
-          <span class="truncate">{{ slice.label }}</span>
-          <span class="text-gray-600 ml-auto">{{ slice.value }}</span>
+          <span class="truncate text-gray-300 flex-1">{{ slice.label }}</span>
+          <span class="text-gray-400 font-medium">{{ slice.value }}</span>
         </div>
       </div>
     </div>

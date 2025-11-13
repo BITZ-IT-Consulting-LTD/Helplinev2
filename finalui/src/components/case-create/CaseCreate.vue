@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-gray-900 py-8 px-4 sm:px-6 lg:px-8">
     <div class="max-w-5xl mx-auto">
       <!-- Header Section -->
       <div class="mb-8">
@@ -19,7 +19,7 @@
       </div>
       
       <!-- Step Content Area -->
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8 mb-6">
+      <div class="bg-gray-800 rounded-lg shadow-xl border border-gray-700 p-6 sm:p-8 mb-6">
         <Step1ReporterSelection
           v-if="currentStep === 1"
           :currentStep="currentStep"

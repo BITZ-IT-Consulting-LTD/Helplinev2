@@ -1,7 +1,7 @@
 <template>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold mb-2">Chats</h1>
-    <p class="text-gray-500 mb-4">Manage conversations and communications across all channels</p>
+  <div class="p-6 bg-gray-900 min-h-screen">
+    <h1 class="text-2xl font-bold mb-2 text-gray-100">Chats</h1>
+    <p class="text-gray-400 mb-6">Manage conversations and communications across all channels</p>
 
     <!-- Channel Filter Pills -->
     <Filter 
@@ -10,55 +10,58 @@
       @update:activePlatform="handlePlatformChange"
     />
 
-    <!-- Stats Summary -->
-    <div class="bg-white rounded-lg shadow p-4 mb-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-gray-600">
-            Total Messages: <span class="font-semibold text-lg">{{ messagesStore.messageCount }}</span>
-          </p>
-        </div>
-        
-        <div class="flex gap-2">
-          <button 
-            @click="refreshMessages"
-            :disabled="messagesStore.loading"
-            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-sm font-medium disabled:opacity-50"
-          >
-            Refresh
-          </button>
-        </div>
-      </div>
-    </div>
-
     <!-- Loading State -->
-    <div v-if="messagesStore.loading" class="text-center py-12 bg-white rounded-lg shadow">
-      <div class="text-gray-500">Loading messages...</div>
+    <div v-if="messagesStore.loading" class="text-center py-12 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
+      <div class="text-gray-400">Loading messages...</div>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="messagesStore.error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+    <div v-else-if="messagesStore.error" class="bg-red-600/20 border border-red-600/50 text-red-400 px-4 py-3 rounded-lg">
       {{ messagesStore.error }}
     </div>
 
     <!-- Content -->
     <template v-else>
-      <!-- View Buttons -->
-      <div class="flex space-x-2 mb-4">
-        <button 
-          class="px-4 py-2 border rounded transition" 
-          :class="activeView==='timeline'?'bg-blue-500 text-white':'hover:bg-gray-50'" 
-          @click="activeView='timeline'"
-        >
-          Timeline
-        </button>
-        <button 
-          class="px-4 py-2 border rounded transition" 
-          :class="activeView==='table'?'bg-blue-500 text-white':'hover:bg-gray-50'" 
-          @click="activeView='table'"
-        >
-          Table
-        </button>
+      <!-- View Buttons and Total Count -->
+      <div class="flex justify-between items-center mb-6">
+        <!-- Total Count -->
+        <div class="flex items-center gap-2 text-gray-300">
+          <i-mdi-message-text-outline class="w-5 h-5 text-blue-400" />
+          <span class="text-sm">Total Messages:</span>
+          <span class="text-lg font-bold text-blue-400">{{ messagesStore.messageCount }}</span>
+        </div>
+
+        <!-- View Toggle Buttons -->
+        <div class="flex gap-3">
+          <button 
+            class="px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm" 
+            :class="activeView==='timeline' 
+              ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
+              : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'" 
+            @click="activeView='timeline'"
+          >
+            <i-mdi-timeline-text-outline class="w-5 h-5" />
+            Timeline
+          </button>
+          <button 
+            class="px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm" 
+            :class="activeView==='table' 
+              ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
+              : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'" 
+            @click="activeView='table'"
+          >
+            <i-mdi-table class="w-5 h-5" />
+            Table
+          </button>
+          <button 
+            @click="refreshMessages"
+            :disabled="messagesStore.loading"
+            class="px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm bg-gray-800 text-gray-300 border border-gray-700 hover:border-green-500 hover:text-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <i-mdi-refresh class="w-5 h-5" />
+            Refresh
+          </button>
+        </div>
       </div>
 
       <!-- Views -->
@@ -99,13 +102,13 @@ import { useMessagesStore } from '@/stores/messages'
 const messagesStore = useMessagesStore()
 
 const channelFilters = ref([
-  { id: "all", name: "All" },
-  { id: "whatsapp", name: "WhatsApp" },
-  { id: "safepal", name: "SafePal" },
-  { id: "email", name: "Email" },
-  { id: "walkin", name: "Walk-In" },
-  { id: "ai", name: "AI" },
-  { id: "call", name: "Call" }
+  { id: "all", name: "All", icon: "i-mdi-apps" },
+  { id: "whatsapp", name: "WhatsApp", icon: "i-mdi-whatsapp" },
+  { id: "safepal", name: "SafePal", icon: "i-mdi-shield-check" },
+  { id: "email", name: "Email", icon: "i-mdi-email-outline" },
+  { id: "walkin", name: "Walk-In", icon: "i-mdi-walk" },
+  { id: "ai", name: "AI", icon: "i-mdi-robot-outline" },
+  { id: "call", name: "Call", icon: "i-mdi-phone-outline" }
 ])
 
 const activePlatform = ref("all")

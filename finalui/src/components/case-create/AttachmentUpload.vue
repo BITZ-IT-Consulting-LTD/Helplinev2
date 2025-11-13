@@ -1,16 +1,16 @@
 <template>
   <div class="attachment-upload">
     <!-- Label and Description -->
-    <label class="block font-semibold mb-2 text-gray-900 dark:text-gray-100">{{ label }}</label>
-    <p v-if="description" class="text-sm text-gray-600 dark:text-gray-400 mb-4 -mt-1">{{ description }}</p>
+    <label class="block font-semibold mb-2 text-gray-100">{{ label }}</label>
+    <p v-if="description" class="text-sm text-gray-400 mb-4 -mt-1">{{ description }}</p>
     
     <div class="flex flex-col gap-4">
       <!-- File Upload Area -->
       <div 
         :class="[
           'border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all duration-200',
-          isDragOver ? 'border-primary bg-primary/10 scale-[1.02]' : 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/50',
-          filesStore.loading ? 'opacity-60 cursor-not-allowed' : 'hover:border-primary hover:bg-primary/5'
+          isDragOver ? 'border-blue-500 bg-blue-600/10 scale-[1.02]' : 'border-gray-600 bg-gray-800/50',
+          filesStore.loading ? 'opacity-60 cursor-not-allowed' : 'hover:border-blue-500 hover:bg-blue-600/5'
         ]"
         @dragover.prevent="handleDragOver"
         @dragleave.prevent="handleDragLeave"
@@ -29,8 +29,8 @@
         
         <div class="flex flex-col items-center gap-4">
           <div :class="[
-            'text-gray-400 dark:text-gray-500 opacity-70',
-            !filesStore.loading && 'group-hover:text-primary group-hover:opacity-100'
+            'text-gray-500 opacity-70',
+            !filesStore.loading && 'group-hover:text-blue-400 group-hover:opacity-100'
           ]">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -39,10 +39,10 @@
             </svg>
           </div>
           <div class="flex flex-col gap-1">
-            <p class="text-base font-medium text-gray-900 dark:text-gray-100">
+            <p class="text-base font-medium text-gray-100">
               {{ filesStore.loading ? 'Uploading...' : 'Drop files here or click to browse' }}
             </p>
-            <p class="text-xs text-gray-600 dark:text-gray-400">
+            <p class="text-xs text-gray-400">
               {{ acceptedTypesText }} (Max {{ maxSizeMB }}MB each)
             </p>
           </div>
@@ -50,28 +50,28 @@
       </div>
 
       <!-- Uploaded Files List -->
-      <div v-if="attachments && attachments.length > 0" class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg p-4">
-        <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
+      <div v-if="attachments && attachments.length > 0" class="bg-gray-800 border border-gray-700 rounded-lg p-4">
+        <h4 class="text-sm font-semibold text-gray-100 mb-3">
           Uploaded Files ({{ attachments.length }})
         </h4>
         <div class="flex flex-col gap-2">
           <div
             v-for="(file, index) in attachments"
             :key="index"
-            class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 rounded-md transition-all duration-200 hover:border-primary"
+            class="flex items-center justify-between p-3 bg-gray-700/50 border border-gray-600 rounded-md transition-all duration-200 hover:border-blue-500"
           >
             <div class="flex items-center gap-3 flex-1 min-w-0">
-              <div class="text-gray-600 dark:text-gray-400 flex-shrink-0">
+              <div class="text-gray-400 flex-shrink-0">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                   <polyline points="14,2 14,8 20,8"/>
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <div class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-0.5 truncate whitespace-nowrap overflow-hidden">
+                <div class="text-sm font-medium text-gray-100 mb-0.5 truncate whitespace-nowrap overflow-hidden">
                   {{ file.name }}
                 </div>
-                <div class="text-xs text-gray-600 dark:text-gray-400">
+                <div class="text-xs text-gray-400">
                   {{ formatFileSize(file.size) }} • {{ getFileType(file.name) }}
                   {{ file.id ? ` • ID: ${file.id}` : '' }}
                 </div>
@@ -81,7 +81,7 @@
             <div class="flex gap-2 items-center">
               <button
                 type="button"
-                class="bg-transparent border border-gray-300 dark:border-gray-600 rounded px-1.5 py-1.5 cursor-pointer text-gray-600 dark:text-gray-400 transition-all duration-200 flex items-center justify-center hover:bg-red-600 hover:border-red-600 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                class="bg-transparent border border-gray-600 rounded px-1.5 py-1.5 cursor-pointer text-gray-400 transition-all duration-200 flex items-center justify-center hover:bg-red-600 hover:border-red-600 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 @click="removeFile(index)"
                 title="Remove file"
                 :disabled="filesStore.loading"
@@ -97,18 +97,18 @@
       </div>
 
       <!-- Upload Progress -->
-      <div v-if="uploadProgress > 0 && uploadProgress < 100" class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg p-4">
-        <div class="w-full h-2 bg-gray-100 dark:bg-gray-700 rounded overflow-hidden mb-2">
-          <div class="h-full bg-primary transition-all duration-300" :style="{ width: uploadProgress + '%' }"></div>
+      <div v-if="uploadProgress > 0 && uploadProgress < 100" class="bg-gray-800 border border-gray-700 rounded-lg p-4">
+        <div class="w-full h-2 bg-gray-700 rounded overflow-hidden mb-2">
+          <div class="h-full bg-blue-600 transition-all duration-300" :style="{ width: uploadProgress + '%' }"></div>
         </div>
-        <span class="text-xs text-gray-600 dark:text-gray-400 text-center block">
+        <span class="text-xs text-gray-400 text-center block">
           Uploading attachments... {{ Math.round(uploadProgress) }}%
         </span>
       </div>
 
       <!-- Upload Status -->
-      <div v-if="filesStore.loading" class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg p-4">
-        <div class="flex items-center justify-center gap-3 text-sm text-gray-600 dark:text-gray-400">
+      <div v-if="filesStore.loading" class="bg-gray-800 border border-gray-700 rounded-lg p-4">
+        <div class="flex items-center justify-center gap-3 text-sm text-gray-400">
           <svg width="20" height="20" viewBox="0 0 24 24" class="animate-spin">
             <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" opacity="0.3"/>
             <path d="M12,2 A10,10 0 0,1 22,12" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -118,8 +118,8 @@
       </div>
 
       <!-- Error Display -->
-      <div v-if="filesStore.error" class="bg-white dark:bg-gray-800 border border-red-600 rounded-lg p-4">
-        <div class="flex items-center gap-3 text-sm text-red-600">
+      <div v-if="filesStore.error" class="bg-red-600/20 border border-red-600/50 rounded-lg p-4">
+        <div class="flex items-center gap-3 text-sm text-red-400">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/>
             <line x1="15" y1="9" x2="9" y2="15"/>

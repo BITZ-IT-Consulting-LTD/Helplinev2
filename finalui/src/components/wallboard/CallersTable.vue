@@ -1,39 +1,56 @@
 <template>
-  <div class="h-[260px]">
-    <div class="mb-2">
-      <h2 class="text-sm font-semibold text-gray-800 m-0">
-        Callers Online: {{ onlineCount }}
+  <div class="bg-gray-800 rounded-lg shadow-xl border border-gray-700">
+    <!-- Header -->
+    <div class="px-4 py-3 bg-gray-900/60 border-b border-gray-700 flex items-center justify-between">
+      <h2 class="text-sm font-bold text-gray-100 flex items-center gap-2">
+        <i-mdi-phone-incoming class="w-5 h-5 text-emerald-400" />
+        Callers Online
+        <span class="px-2 py-0.5 rounded-full bg-emerald-600/20 text-emerald-400 text-xs font-semibold border border-emerald-600/30">
+          {{ onlineCount }}
+        </span>
       </h2>
     </div>
-    <div class="bg-white rounded-lg overflow-hidden shadow-sm h-[230px]">
-      <div class="grid gap-2 px-2.5 py-2 bg-gray-50 font-semibold text-xs text-gray-700 uppercase tracking-wide flex-shrink-0"
-           style="grid-template-columns: 140px 100px 100px 1fr">
-        <div class="flex items-center overflow-hidden text-ellipsis whitespace-nowrap">Caller Number</div>
-        <div class="flex items-center overflow-hidden text-ellipsis whitespace-nowrap">Queue</div>
-        <div class="flex items-center overflow-hidden text-ellipsis whitespace-nowrap">Wait Time</div>
-        <div class="flex items-center overflow-hidden text-ellipsis whitespace-nowrap">Status</div>
+
+    <!-- Table Container with Fixed Height -->
+    <div class="overflow-hidden" style="height: 280px;">
+      <!-- Table Headers -->
+      <div class="bg-gray-900/40 border-b border-gray-700 px-4 py-2">
+        <div class="grid gap-4 text-xs font-semibold text-gray-400 uppercase tracking-wide"
+             style="grid-template-columns: 1fr 120px 100px 140px;">
+          <div>Caller Number</div>
+          <div>Queue</div>
+          <div>Wait Time</div>
+          <div>Status</div>
+        </div>
       </div>
+
+      <!-- Scrollable Content -->
       <div 
         ref="tableContainer"
-        class="flex-1 overflow-y-auto overflow-x-hidden max-h-40 min-h-40"
-        style="scroll-behavior: smooth; pointer-events: none;"
+        class="overflow-y-auto"
+        style="height: 236px; scroll-behavior: smooth;"
       >
-        <div v-if="callers.length === 0" class="px-2 py-5 text-center h-40 flex items-center justify-center">
-          <div class="text-gray-500 italic text-xs">
-            No callers currently online
-          </div>
+        <!-- Empty State -->
+        <div v-if="callers.length === 0" class="flex items-center justify-center h-full">
+          <div class="text-gray-500 italic text-sm">No callers currently online</div>
         </div>
+
+        <!-- Table Rows -->
         <div 
           v-for="caller in callers" 
           :key="caller.id"
-          class="grid gap-2 px-2.5 py-2 border-b border-gray-100 text-sm h-10 items-center font-medium"
-          style="grid-template-columns: 140px 100px 100px 1fr"
+          class="px-4 py-2 border-b border-gray-700/50 hover:bg-gray-700/30 transition-all duration-200"
         >
-          <div class="flex items-center overflow-hidden text-ellipsis whitespace-nowrap">{{ caller.callerNumber || '--' }}</div>
-          <div class="flex items-center overflow-hidden text-ellipsis whitespace-nowrap">{{ caller.vector || '--' }}</div>
-          <div class="flex items-center overflow-hidden text-ellipsis whitespace-nowrap">{{ caller.waitTime || '--' }}</div>
-          <div :class="['flex items-center overflow-hidden text-ellipsis whitespace-nowrap', getStatusClass(caller.queueStatus)]">
-            {{ caller.queueStatus || 'Unknown' }}
+          <div class="grid gap-4 text-sm items-center"
+               style="grid-template-columns: 1fr 120px 100px 140px;">
+            <div class="text-gray-300 font-medium">{{ caller.callerNumber || '--' }}</div>
+            <div class="text-gray-400">{{ caller.vector || '--' }}</div>
+            <div class="text-gray-400">{{ caller.waitTime || '--' }}</div>
+            <div>
+              <span :class="['text-xs font-semibold px-2 py-1 rounded-full', getStatusClass(caller.queueStatus)]">
+                {{ caller.queueStatus || 'Unknown' }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -62,12 +79,7 @@ export default {
     const tableContainer = ref(null)
     let scrollInterval = null
 
-    // Debug watch
-    watch(() => props.callers, (newVal) => {
-      console.log('CallersTable - callers changed:', newVal.length, 'callers')
-    }, { immediate: true })
-
-    const setupAutoScroll = (container, scrollSpeed = 0.8, pauseDuration = 2500) => {
+    const setupAutoScroll = (container, scrollSpeed = 0.5, pauseDuration = 3000) => {
       if (!container) return null
       
       let direction = 1
@@ -81,18 +93,18 @@ export default {
         
         if (maxScroll <= 0) return
         
-        if (scrollTop >= maxScroll - 3) {
+        if (scrollTop >= maxScroll - 2) {
           direction = -1
           isPaused = true
           setTimeout(() => { isPaused = false }, pauseDuration)
-        } else if (scrollTop <= 3) {
+        } else if (scrollTop <= 2) {
           direction = 1
           isPaused = true
           setTimeout(() => { isPaused = false }, pauseDuration)
         }
         
         container.scrollBy(0, direction * scrollSpeed)
-      }, 40)
+      }, 30)
     }
 
     const startAutoScroll = () => {
@@ -112,11 +124,11 @@ export default {
 
     watch(() => props.callers, () => {
       stopAutoScroll()
-      setTimeout(startAutoScroll, 800)
+      setTimeout(startAutoScroll, 1000)
     })
 
     onMounted(() => {
-      setTimeout(startAutoScroll, 1500)
+      setTimeout(startAutoScroll, 2000)
     })
 
     onBeforeUnmount(() => {
@@ -130,12 +142,12 @@ export default {
   methods: {
     getStatusClass(status) {
       const s = (status || 'Available').toString().toLowerCase()
-      if (s.includes('on call')) return 'text-emerald-500 font-semibold'
-      if (s.includes('ring')) return 'text-amber-500 font-semibold animate-blink'
-      if (s.includes('queue')) return 'text-blue-500 font-semibold'
-      if (s.includes('available')) return 'text-gray-500 font-medium'
-      if (s.includes('offline')) return 'text-red-500 font-semibold'
-      return 'text-gray-500'
+      if (s.includes('on call')) return 'bg-emerald-600/20 text-emerald-400 border border-emerald-600/30'
+      if (s.includes('ring')) return 'bg-amber-600/20 text-amber-400 border border-amber-600/30 animate-pulse'
+      if (s.includes('queue')) return 'bg-blue-600/20 text-blue-400 border border-blue-600/30'
+      if (s.includes('available')) return 'bg-gray-600/20 text-gray-400 border border-gray-600/30'
+      if (s.includes('offline')) return 'bg-red-600/20 text-red-400 border border-red-600/30'
+      return 'bg-gray-600/20 text-gray-400'
     }
   }
 }
@@ -143,24 +155,20 @@ export default {
 
 <style scoped>
 .overflow-y-auto::-webkit-scrollbar {
-  width: 1px;
+  width: 6px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 3px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  background: rgba(203, 213, 225, 0.2);
-  border-radius: 1px;
+  background: rgba(75, 85, 99, 0.5);
+  border-radius: 3px;
 }
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-.animate-blink {
-  animation: blink 1.5s ease-in-out infinite;
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: rgba(75, 85, 99, 0.7);
 }
 </style>

@@ -1,16 +1,40 @@
 <template>
-  <div class="flex space-x-2 mb-4">
+  <div class="flex flex-wrap gap-3 mb-6">
     <button
       v-for="platform in channelFilters"
       :key="platform.id"
       :class="[
-        'px-4 py-2 rounded-full border transition',
+        'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 text-sm flex items-center gap-2',
         activePlatform === platform.id 
-          ? 'bg-blue-500 text-white border-blue-500' 
-          : 'bg-white text-gray-700 border-gray-300 hover:border-blue-300'
+          ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
+          : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
       ]"
       @click="$emit('update:activePlatform', platform.id)"
     >
+      <!-- All -->
+      <i-mdi-apps v-if="platform.id === 'all'" class="w-5 h-5" />
+      
+      <!-- WhatsApp -->
+      <i-mdi-whatsapp v-else-if="platform.id === 'whatsapp'" class="w-5 h-5" />
+      
+      <!-- SafePal -->
+      <i-mdi-shield-check v-else-if="platform.id === 'safepal'" class="w-5 h-5" />
+      
+      <!-- Email -->
+      <i-mdi-email-outline v-else-if="platform.id === 'email'" class="w-5 h-5" />
+      
+      <!-- Walk-In -->
+      <i-mdi-walk v-else-if="platform.id === 'walkin'" class="w-5 h-5" />
+      
+      <!-- AI -->
+      <i-mdi-robot-outline v-else-if="platform.id === 'ai'" class="w-5 h-5" />
+      
+      <!-- Call -->
+      <i-mdi-phone-outline v-else-if="platform.id === 'call'" class="w-5 h-5" />
+      
+      <!-- Default fallback -->
+      <i-mdi-message-text-outline v-else class="w-5 h-5" />
+      
       {{ platform.name }}
     </button>
   </div>

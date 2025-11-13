@@ -1,59 +1,89 @@
 <template>
-  <div class="p-4 bg-white rounded-2xl shadow">
-    <table class="min-w-full border-collapse text-sm">
-      <thead class="bg-gray-100 text-gray-700">
-        <tr>
-          <th class="text-left py-2 px-3">Call Date</th>
-          <th class="text-left py-2 px-3">User</th>
-          <th class="text-left py-2 px-3">Talk Time</th>
-          <th class="text-left py-2 px-3">Opening</th>
-          <th class="text-left py-2 px-3">Listening</th>
-          <th class="text-left py-2 px-3">Proactive</th>
-          <th class="text-left py-2 px-3">Resolution</th>
-          <th class="text-left py-2 px-3">Holding</th>
-          <th class="text-left py-2 px-3">Closing</th>
-          <th class="text-left py-2 px-3">Total Score</th>
-          <th class="text-left py-2 px-3">Supervisor</th>
-          <th class="text-left py-2 px-3">Created On</th>
-        </tr>
-      </thead>
+  <div class="bg-gray-800 rounded-lg shadow-xl border border-gray-700 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="bg-gray-900/60 border-b border-gray-700">
+            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Call Date</th>
+            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">User</th>
+            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Talk Time</th>
+            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Opening</th>
+            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Listening</th>
+            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Proactive</th>
+            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Resolution</th>
+            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Holding</th>
+            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Closing</th>
+            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Total Score</th>
+            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Supervisor</th>
+            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Created On</th>
+          </tr>
+        </thead>
 
-      <tbody>
-        <tr
-          v-for="(qa, i) in qas"
-          :key="i"
-          class="border-t hover:bg-gray-50 transition"
-        >
-          <!-- Call Date -->
-          <td class="py-2 px-3">
-            {{ formatTimestamp(qa[qas_k.chan_chan_ts[0]]) }}
-          </td>
+        <tbody class="divide-y divide-gray-700">
+          <tr
+            v-for="(qa, i) in qas"
+            :key="i"
+            class="hover:bg-gray-700/30 transition-all duration-200"
+          >
+            <!-- Call Date -->
+            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">
+              {{ formatTimestamp(qa[qas_k.chan_chan_ts[0]]) }}
+            </td>
 
-          <!-- User -->
-          <td class="py-2 px-3">{{ qa[qas_k.chan_user_name[0]] }}</td>
+            <!-- User -->
+            <td class="px-6 py-4 text-gray-300 text-sm">{{ qa[qas_k.chan_user_name[0]] }}</td>
 
-          <!-- Talk Time -->
-          <td class="py-2 px-3">{{ formatTalkTime(qa[qas_k.chan_talk_time[0]]) }}</td>
+            <!-- Talk Time -->
+            <td class="px-6 py-4 text-gray-300 text-sm">{{ formatTalkTime(qa[qas_k.chan_talk_time[0]]) }}</td>
 
-          <!-- Scores -->
-          <td class="py-2 px-3">{{ qa[qas_k.opening_phrase[0]] }} %</td>
-          <td class="py-2 px-3">{{ qa[qas_k.listening_score_p[0]] }} %</td>
-          <td class="py-2 px-3">{{ qa[qas_k.proactive_score_p[0]] }} %</td>
-          <td class="py-2 px-3">{{ qa[qas_k.resolution_score_p[0]] }} %</td>
-          <td class="py-2 px-3">{{ qa[qas_k.holding_score_p[0]] }} %</td>
-          <td class="py-2 px-3">{{ qa[qas_k.closing_score_p[0]] }} %</td>
-          <td class="py-2 px-3">{{ qa[qas_k.total_score_p[0]] }} %</td>
+            <!-- Scores -->
+            <td class="px-6 py-4 text-gray-300 text-sm">
+              <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
+                {{ qa[qas_k.opening_phrase[0]] }}%
+              </span>
+            </td>
+            <td class="px-6 py-4 text-gray-300 text-sm">
+              <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
+                {{ qa[qas_k.listening_score_p[0]] }}%
+              </span>
+            </td>
+            <td class="px-6 py-4 text-gray-300 text-sm">
+              <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
+                {{ qa[qas_k.proactive_score_p[0]] }}%
+              </span>
+            </td>
+            <td class="px-6 py-4 text-gray-300 text-sm">
+              <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
+                {{ qa[qas_k.resolution_score_p[0]] }}%
+              </span>
+            </td>
+            <td class="px-6 py-4 text-gray-300 text-sm">
+              <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
+                {{ qa[qas_k.holding_score_p[0]] }}%
+              </span>
+            </td>
+            <td class="px-6 py-4 text-gray-300 text-sm">
+              <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
+                {{ qa[qas_k.closing_score_p[0]] }}%
+              </span>
+            </td>
+            <td class="px-6 py-4 text-sm">
+              <span class="px-3 py-1 rounded-full bg-green-600/20 text-green-400 font-semibold border border-green-600/30">
+                {{ qa[qas_k.total_score_p[0]] }}%
+              </span>
+            </td>
 
-          <!-- Supervisor -->
-          <td class="py-2 px-3">{{ qa[qas_k.created_by[0]] }}</td>
+            <!-- Supervisor -->
+            <td class="px-6 py-4 text-gray-300 text-sm">{{ qa[qas_k.created_by[0]] }}</td>
 
-          <!-- Created On -->
-          <td class="py-2 px-3">
-            {{ formatTimestamp(qa[qas_k.created_on[0]]) }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            <!-- Created On -->
+            <td class="px-6 py-4 text-gray-400 text-sm whitespace-nowrap">
+              {{ formatTimestamp(qa[qas_k.created_on[0]]) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
