@@ -1,14 +1,14 @@
 <template>
   <div class="relative w-full">
-    <label v-if="label" :for="id" class="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-1.5">{{ label }}</label>
+    <label v-if="label" :for="id" class="block text-sm font-semibold text-gray-100 mb-1.5">{{ label }}</label>
     
-    <div :class="['relative border rounded-md bg-white dark:bg-gray-800 transition-all', isOpen ? 'border-primary ring-2 ring-primary/10' : 'border-gray-300 dark:border-gray-600 hover:border-primary', selectedOptions.length > 0 ? '' : '']">
+    <div :class="['relative border rounded-lg bg-gray-700 transition-all', isOpen ? 'border-blue-500 ring-2 ring-blue-500/50' : 'border-gray-600 hover:border-blue-500', selectedOptions.length > 0 ? '' : '']">
       <!-- Selected items display -->
-      <div v-if="selectedOptions.length > 0" class="flex flex-wrap gap-1.5 p-2 pb-1 border-b border-gray-200 dark:border-gray-600">
+      <div v-if="selectedOptions.length > 0" class="flex flex-wrap gap-1.5 p-2 pb-1 border-b border-gray-600">
         <div 
           v-for="option in selectedOptions" 
           :key="option.value"
-          class="inline-flex items-center gap-1.5 px-2 py-1 bg-primary text-white rounded text-xs font-medium"
+          class="inline-flex items-center gap-1.5 px-2 py-1 bg-blue-600 text-white rounded text-xs font-medium"
         >
           <span class="max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap">{{ option.text }}</span>
           <button 
@@ -27,14 +27,14 @@
         :class="['flex items-center justify-between px-3 cursor-pointer select-none min-h-[44px]', selectedOptions.length === 0 ? 'py-3' : 'py-3']"
         @click="toggleDropdown"
       >
-        <span v-if="selectedOptions.length === 0" class="text-gray-600 dark:text-gray-400">
+        <span v-if="selectedOptions.length === 0" class="text-gray-400">
           {{ placeholder || 'Select options...' }}
         </span>
-        <span v-else class="text-gray-900 dark:text-gray-100 font-medium">
+        <span v-else class="text-gray-100 font-medium">
           {{ selectedOptions.length }} selected
         </span>
         
-        <div :class="['text-gray-600 dark:text-gray-400 transition-transform flex items-center justify-center', isOpen ? 'rotate-180' : '']">
+        <div :class="['text-gray-400 transition-transform flex items-center justify-center', isOpen ? 'rotate-180' : '']">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
             <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -42,21 +42,21 @@
       </div>
 
       <!-- Dropdown menu -->
-      <div v-if="isOpen" class="absolute top-full left-0 right-0 z-50 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-xl mt-0.5 max-h-[300px] overflow-hidden">
-        <div v-if="loading" class="flex items-center justify-center gap-2 p-5 text-gray-600 dark:text-gray-400 text-sm">
-          <div class="w-4 h-4 border-2 border-gray-300 dark:border-gray-600 border-t-primary rounded-full animate-spin"></div>
+      <div v-if="isOpen" class="absolute top-full left-0 right-0 z-50 bg-gray-800 border border-gray-700 rounded-lg shadow-xl mt-0.5 max-h-[300px] overflow-hidden">
+        <div v-if="loading" class="flex items-center justify-center gap-2 p-5 text-gray-400 text-sm">
+          <div class="w-4 h-4 border-2 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
           <span>Loading options...</span>
         </div>
 
-        <div v-else-if="error" class="flex flex-col items-center justify-center gap-3 p-5 text-red-600 text-sm">
+        <div v-else-if="error" class="flex flex-col items-center justify-center gap-3 p-5 text-red-400 text-sm">
           <span class="text-xl">⚠️</span>
           <span>{{ error }}</span>
-          <button type="button" class="px-3 py-1.5 bg-primary text-white border-none rounded text-xs cursor-pointer transition-colors hover:bg-primary/90" @click="fetchOptions">
+          <button type="button" class="px-3 py-1.5 bg-blue-600 text-white border-none rounded text-xs cursor-pointer transition-colors hover:bg-blue-700" @click="fetchOptions">
             Retry
           </button>
         </div>
 
-        <div v-else-if="options.length === 0" class="flex flex-col items-center justify-center gap-2 p-5 text-gray-600 dark:text-gray-400 text-sm">
+        <div v-else-if="options.length === 0" class="flex flex-col items-center justify-center gap-2 p-5 text-gray-400 text-sm">
           <span class="text-xl">📋</span>
           <span>No options available</span>
         </div>
@@ -67,18 +67,18 @@
             <label
               v-for="option in options"
               :key="option.value"
-              :class="['flex items-start gap-3 px-3 py-3 cursor-pointer transition-colors border-b border-gray-100 dark:border-gray-700 last:border-b-0', isSelected(option) ? 'bg-primary/5' : 'hover:bg-gray-50 dark:hover:bg-gray-700']"
+              :class="['flex items-start gap-3 px-3 py-3 cursor-pointer transition-colors border-b border-gray-700 last:border-b-0', isSelected(option) ? 'bg-blue-600/10 border-l-4 border-l-blue-500' : 'hover:bg-gray-700']"
             >
               <input
                 type="checkbox"
                 :value="option.value"
                 :checked="isSelected(option)"
                 @change="toggleSelection(option)"
-                class="mt-0.5 cursor-pointer accent-primary"
+                class="mt-0.5 cursor-pointer accent-blue-600"
               >
               <div class="flex-1 min-w-0">
-                <span class="text-sm text-gray-900 dark:text-gray-100 font-medium block">{{ option.text }}</span>
-                <span v-if="option.description" class="block text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                <span class="text-sm text-gray-100 font-medium block">{{ option.text }}</span>
+                <span v-if="option.description" class="block text-xs text-gray-400 mt-0.5">
                   {{ option.description }}
                 </span>
               </div>

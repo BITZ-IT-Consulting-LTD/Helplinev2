@@ -2,53 +2,51 @@
   <div class="min-h-96">
     <form class="flex flex-col gap-5" @submit.prevent="handleFormSubmit">
       <div>
-        <div class="text-xl font-semibold text-gray-900 mb-2">Select Reporter</div>
-        <p class="text-sm text-gray-600 mb-5">
+        <div class="text-xl font-semibold text-gray-100 mb-2">Select Reporter</div>
+        <p class="text-sm text-gray-400 mb-5">
           Choose an existing contact or create a new reporter for this case.
         </p>
 
         <!-- Search Section -->
         <div class="mb-5">
           <div class="flex gap-3 items-center mb-4">
-            <div class="relative flex items-center gap-2 border border-gray-300 rounded-xl px-3 py-2.5 bg-white flex-1 max-w-xs focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="text-gray-400">
-                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-                <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2"/>
-              </svg>
+            <div class="relative flex items-center gap-2 border border-gray-600 rounded-lg px-3 py-2.5 bg-gray-700 flex-1 max-w-xs focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/50">
+              <i-mdi-magnify class="w-5 h-5 text-gray-400" />
               <input
                 v-model="searchQuery"
                 type="text"
                 placeholder="Search by name or phone..."
-                class="border-0 outline-none w-full text-sm bg-transparent"
+                class="border-0 outline-none w-full text-sm bg-transparent text-gray-100 placeholder-gray-500"
                 @input="handleSearchInput"
               />
             </div>
             <button
               type="button"
-              class="h-10 px-4 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors whitespace-nowrap"
+              class="h-10 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap"
               @click="createNewReporter"
             >
-              + New Reporter
+              <i-mdi-plus class="w-5 h-5" />
+              New Reporter
             </button>
           </div>
         </div>
 
         <!-- Loading State -->
-        <div v-if="isLoading" class="flex items-center gap-3 p-5 text-center text-gray-500">
-          <div class="w-5 h-5 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+        <div v-if="isLoading" class="flex items-center gap-3 p-5 text-center text-gray-400">
+          <div class="w-5 h-5 border-2 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
           <span>Searching reporters...</span>
         </div>
 
         <!-- Search Results -->
         <div class="flex flex-col gap-2 max-h-96 overflow-y-auto" v-else-if="shouldShowResults && filteredContacts.length">
-          <div class="py-2 text-sm text-gray-500 border-b border-gray-200 mb-3">
+          <div class="py-2 text-sm text-gray-400 border-b border-gray-700 mb-3">
             <span>{{ filteredContacts.length }} reporter(s) found</span>
           </div>
           <div
             v-for="contact in filteredContacts"
             :key="getContactId(contact)"
-            class="flex items-center gap-3 border rounded-xl p-3 bg-white cursor-pointer transition-all hover:bg-gray-50 hover:border-blue-500"
-            :class="{ 'border-blue-500 bg-blue-50': isSelected(contact) }"
+            class="flex items-center gap-3 border rounded-lg p-3 bg-gray-800 cursor-pointer transition-all hover:bg-gray-700 hover:border-blue-500"
+            :class="{ 'border-blue-500 bg-blue-900/20': isSelected(contact), 'border-gray-700': !isSelected(contact) }"
             @click="selectExistingReporter(contact)"
           >
             <!-- Avatar -->
@@ -60,18 +58,21 @@
             <div class="flex-1 min-w-0">
               <div class="flex flex-col gap-2">
                 <div class="flex flex-col gap-1">
-                  <div class="font-semibold text-base text-gray-900 leading-tight truncate">
+                  <div class="font-semibold text-base text-gray-100 leading-tight truncate">
                     {{ getValue(contact, 'fullname') || "Unnamed Reporter" }}
                   </div>
-                  <div class="text-gray-500 text-sm leading-tight">
+                  <div class="text-gray-400 text-sm leading-tight">
                     {{ getValue(contact, 'phone') || 'No phone' }}
                   </div>
                 </div>
                 <div class="flex items-center gap-2 mt-1">
                   <div class="flex gap-2 flex-wrap">
-                    <span v-if="getValue(contact, 'age')" class="border border-gray-300 rounded-2xl px-2.5 py-1 text-xs font-medium bg-gray-50 text-gray-900 whitespace-nowrap">{{ getValue(contact, 'age') }}y</span>
-                    <span v-if="getValue(contact, 'sex')" class="border border-gray-300 rounded-2xl px-2.5 py-1 text-xs font-medium bg-gray-50 text-gray-900 whitespace-nowrap">{{ getValue(contact, 'sex') }}</span>
-                    <span v-if="getValue(contact, 'location')" class="bg-blue-50 text-blue-600 border border-blue-200 rounded-2xl px-2.5 py-1 text-xs font-medium whitespace-nowrap">📍 {{ getValue(contact, 'location') }}</span>
+                    <span v-if="getValue(contact, 'age')" class="border border-gray-600 rounded-full px-2.5 py-1 text-xs font-medium bg-gray-700 text-gray-300 whitespace-nowrap">{{ getValue(contact, 'age') }}y</span>
+                    <span v-if="getValue(contact, 'sex')" class="border border-gray-600 rounded-full px-2.5 py-1 text-xs font-medium bg-gray-700 text-gray-300 whitespace-nowrap">{{ getValue(contact, 'sex') }}</span>
+                    <span v-if="getValue(contact, 'location')" class="bg-blue-600/20 text-blue-400 border border-blue-600/30 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap flex items-center gap-1">
+                      <i-mdi-map-marker class="w-3 h-3" />
+                      {{ getValue(contact, 'location') }}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -79,61 +80,53 @@
 
             <!-- Selection Indicator -->
             <div class="flex-shrink-0">
-              <svg v-if="isSelected(contact)" width="20" height="20" viewBox="0 0 24 24" fill="none" class="text-blue-600">
-                <circle cx="12" cy="12" r="10" fill="currentColor" stroke="currentColor" stroke-width="2"/>
-                <path d="M8 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" class="text-gray-400">
-                <polyline points="9,18 15,12 9,6" stroke="currentColor" stroke-width="2"/>
-              </svg>
+              <i-mdi-check-circle v-if="isSelected(contact)" class="w-5 h-5 text-blue-400" />
+              <i-mdi-chevron-right v-else class="w-5 h-5 text-gray-500" />
             </div>
           </div>
         </div>
 
         <!-- No Results -->
-        <div v-else-if="shouldShowResults && !filteredContacts.length" class="text-center p-10 text-gray-500">
-          <div class="text-5xl mb-3 opacity-50">🔍</div>
+        <div v-else-if="shouldShowResults && !filteredContacts.length" class="text-center p-10 text-gray-400 bg-gray-800 rounded-lg border border-gray-700">
+          <i-mdi-account-search class="mx-auto text-5xl mb-3 opacity-50" />
           <div class="text-base font-medium mb-1">No reporters found</div>
           <div class="text-sm opacity-70">Try searching with a different name or phone number</div>
         </div>
 
         <!-- Search Prompt -->
-        <div v-else-if="!searchQuery.trim()" class="text-center p-10 text-gray-500">
-          <div class="text-5xl mb-3 opacity-50">👥</div>
+        <div v-else-if="!searchQuery.trim()" class="text-center p-10 text-gray-400 bg-gray-800 rounded-lg border border-gray-700">
+          <i-mdi-account-group class="mx-auto text-5xl mb-3 opacity-50" />
           <div class="text-base font-medium mb-1">Start typing to search for existing reporters</div>
           <div class="text-sm opacity-70">Or click "New Reporter" to create a new one</div>
         </div>
 
         <!-- Selected Reporter Summary -->
-        <div v-if="selectedReporter" class="mt-5 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-          <div class="text-sm font-semibold text-blue-600 mb-3">Selected Reporter:</div>
+        <div v-if="selectedReporter" class="mt-5 p-4 bg-blue-900/20 border border-blue-600/30 rounded-lg">
+          <div class="text-sm font-semibold text-blue-400 mb-3">Selected Reporter:</div>
           <div class="flex items-center gap-3">
             <div class="w-9 h-9 rounded-full flex items-center justify-center bg-blue-600 text-white font-semibold text-sm flex-shrink-0">
               <span>{{ getInitials(getValue(selectedReporter, 'fullname') || 'NR') }}</span>
             </div>
             <div class="flex-1">
-              <div class="font-semibold text-gray-900">{{ getValue(selectedReporter, 'fullname') || 'New Reporter' }}</div>
-              <div class="text-sm text-gray-600 mt-0.5">
+              <div class="font-semibold text-gray-100">{{ getValue(selectedReporter, 'fullname') || 'New Reporter' }}</div>
+              <div class="text-sm text-gray-400 mt-0.5">
                 {{ getValue(selectedReporter, 'phone') || 'No phone' }} • 
                 {{ getValue(selectedReporter, 'age') || 'Age unknown' }} • 
                 {{ getValue(selectedReporter, 'sex') || 'Gender unknown' }}
               </div>
             </div>
-            <button type="button" @click="clearSelection" class="p-1.5 rounded-md border border-gray-300 hover:bg-gray-100 hover:border-red-500 text-gray-500 hover:text-red-500 transition-colors">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
-                <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
-              </svg>
+            <button type="button" @click="clearSelection" class="p-1.5 rounded-md border border-gray-600 hover:bg-gray-700 hover:border-red-500 text-gray-400 hover:text-red-400 transition-colors">
+              <i-mdi-close class="w-4 h-4" />
             </button>
           </div>
         </div>
       </div>
 
-      <div class="flex gap-3 justify-between mt-6 pt-5 border-t border-gray-200">
-        <button type="button" class="px-4 py-2 bg-transparent text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 hover:border-red-500 hover:text-red-500 transition-colors" @click="cancelForm">Cancel</button>
+      <div class="flex gap-3 justify-between mt-6 pt-5 border-t border-gray-700">
+        <button type="button" class="px-4 py-2 bg-transparent text-gray-300 border border-gray-600 rounded-lg hover:bg-gray-700 hover:border-red-500 hover:text-red-400 transition-colors" @click="cancelForm">Cancel</button>
         <div class="flex gap-3">
-          <button type="button" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors" @click="handleSkipStep">Skip</button>
-          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!selectedReporter && !isNewReporter">
+          <button type="button" class="px-4 py-2 bg-gray-700 text-gray-300 border border-gray-600 rounded-lg hover:bg-gray-600 transition-colors" @click="handleSkipStep">Skip</button>
+          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" :disabled="!selectedReporter && !isNewReporter">
             {{ selectedReporter ? 'Continue with Selected Reporter' : (isNewReporter ? 'Create New Reporter' : 'Select a Reporter') }}
           </button>
         </div>
