@@ -1,7 +1,8 @@
 <template>
   <div class="p-6 space-y-6 bg-gray-900 min-h-screen">
     
-    <h1 class="text-2xl font-bold text-gray-100 mb-4">Call History</h1>
+    <h1 class="text-2xl font-bold text-gray-100 mb-2">Call History</h1>
+    <p class="text-gray-400 mb-6">Track and analyze all incoming and outgoing call records</p>
 
     <!-- Filters -->
     <CallsFilter @update:filters="applyFilters" />
@@ -18,7 +19,7 @@
 
     <!-- Content when loaded -->
     <div v-else>
-      <!-- View Toggle Buttons and Stats -->
+      <!-- View Toggle Buttons and Stats Row -->
       <div class="flex justify-between items-center mb-6">
         <!-- Total Count -->
         <div class="flex items-center gap-2 text-gray-300">
@@ -68,7 +69,14 @@
             SIP Agent
           </button>
 
-        
+          <button
+            @click="refreshCalls"
+            :disabled="callsStore.loading"
+            class="px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm bg-gray-800 text-gray-300 border border-gray-700 hover:border-green-500 hover:text-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <i-mdi-refresh class="w-5 h-5" />
+            Refresh
+          </button>
         </div>
       </div>
 
@@ -88,6 +96,7 @@
           :calls-store="callsStore"
           :selected-call-id="selectedCallId"
           @select-call="selectCall"
+          @create-qa="handleCreateQA"
         />
       </div>
 
@@ -102,12 +111,14 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue"
+import { useRouter } from "vue-router"
 import Timeline from "@/components/calls/Timeline.vue"
 import Table from "@/components/calls/Table.vue"
 import CallsFilter from "@/components/calls/CallsFilter.vue"
 import SipAgentView from "@/components/calls/SipAgentView.vue"
 import { useCallStore } from "@/stores/calls"
 
+const router = useRouter()
 const callsStore = useCallStore()
 const activeView = ref("timeline")
 const selectedCallId = ref(null)
@@ -136,25 +147,24 @@ async function applyFilters(filters) {
   }
 }
 
-// Download CSV with current filters
-async function downloadCSV() {
+// Refresh calls with current filters
+async function refreshCalls() {
   try {
-    const blob = await callsStore.downloadCSV(currentFilters.value)
-    
-    // Create download link
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `calls_${new Date().toISOString().split('T')[0]}.csv`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    window.URL.revokeObjectURL(url)
-    
-  } catch (error) {
-    console.error('Failed to download CSV:', error)
-    alert('Failed to download CSV. Please try again.')
+    console.log("Refreshing calls...")
+    await callsStore.listCalls(currentFilters.value)
+    console.log("Calls refreshed")
+  } catch (err) {
+    console.error("Error refreshing calls:", err)
   }
+}
+
+// Handle create QA
+function handleCreateQA(uniqueid) {
+  console.log('Navigating to QA creation with callId:', uniqueid)
+  router.push({
+    name: 'QaCreation',
+    query: { callId: uniqueid }
+  })
 }
 
 // Parent-level select handler (child components emit callId)

@@ -97,9 +97,12 @@ const props = defineProps({
 
 const isPlaying = ref(false)
 
-const formatDateTime = (dateTime) => {
-  if (!dateTime) return 'N/A'
-  const date = new Date(dateTime)
+const formatDateTime = (timestamp) => {
+  if (!timestamp || timestamp === '0') return 'N/A'
+  
+  // Handle Unix timestamp (convert to milliseconds)
+  const date = new Date(parseInt(timestamp) * 1000)
+  
   return date.toLocaleString('en-GB', {
     day: '2-digit',
     month: 'short',

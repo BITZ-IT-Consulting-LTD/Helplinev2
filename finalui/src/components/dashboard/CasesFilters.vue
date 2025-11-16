@@ -39,13 +39,21 @@
       </select>
     </div>
 
-    <!-- Apply Button -->
-    <div class="flex items-end">
+    <!-- Apply and Reset Buttons -->
+    <div class="flex items-end gap-2">
       <button
         @click="emitFilters"
-        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-sm shadow-lg"
+        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all duration-200 text-sm shadow-lg flex items-center gap-2 active:scale-95 active:shadow-md"
       >
-        Apply
+        <i-mdi-filter class="w-4 h-4" />
+        Apply Filters
+      </button>
+      <button
+        @click="resetFilters"
+        class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-all duration-200 text-sm shadow-lg flex items-center gap-2 active:scale-95 active:shadow-md"
+      >
+        <i-mdi-refresh class="w-4 h-4" />
+        Reset
       </button>
     </div>
 
@@ -196,6 +204,16 @@ function emitFilters() {
   }
   
   emit('update:filters', backendFilters)
+}
+
+function resetFilters() {
+  // Reset all filters to default values
+  filters.period = 'all'
+  filters.gbv = 'both'
+  filters.source = 'all'
+  
+  // Emit the default filters
+  emitFilters()
 }
 
 // Emit default filters on mount so widgets load immediately

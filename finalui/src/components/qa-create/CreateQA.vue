@@ -1,5 +1,11 @@
 <template>
   <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
+    <!-- Debug info (remove after testing) -->
+    <div v-if="!formData.chan_uniqueid" class="mb-4 p-3 bg-yellow-600/20 border border-yellow-600/50 rounded">
+      <p class="text-yellow-400 text-sm">⚠️ Warning: Call ID not loaded yet</p>
+      <p class="text-xs text-gray-400 mt-1">Props chanUniqueid: {{ props.chanUniqueid }}</p>
+    </div>
+
     <form @submit.prevent="handleSubmit">
       <!-- Active Section Display -->
       <div v-if="activeSection < qaData.sections.length" class="animate-fadeIn">
@@ -92,7 +98,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useQAStore } from '@/stores/qas'
 import QASection from './QASection.vue'
 import QARatingField from './QARatingField.vue'
@@ -102,13 +108,20 @@ const props = defineProps({
   activeSection: {
     type: Number,
     default: 0
+  },
+  chanUniqueid: {
+    type: String,
+    required: true
   }
 })
 
-const emit = defineEmits(['qa-submitted', 'section-scores-updated'])
+const emit = defineEmits(['qa-submitted', 'next-section', 'previous-section', 'section-scores-updated'])
 
 const qaStore = useQAStore()
 const successMessage = ref('')
+
+// Log prop value immediately
+console.log('CreateQA component initialized with chanUniqueid:', props.chanUniqueid)
 
 const qaData = reactive({
   sections: [
@@ -178,7 +191,7 @@ const qaData = reactive({
 })
 
 const formData = reactive({
-  chan_uniqueid: '1761627874.2',
+  chan_uniqueid: '',
   opening_phrase: '',
   opening_phrase_comments: '',
   non_interrupting: '',
@@ -204,6 +217,26 @@ const formData = reactive({
   call_closing_comments: '',
   feedback: ''
 })
+
+// Initialize chan_uniqueid on mount
+onMounted(() => {
+  console.log('CreateQA mounted - chanUniqueid prop:', props.chanUniqueid)
+  if (props.chanUniqueid) {
+    formData.chan_uniqueid = props.chanUniqueid
+    console.log('formData.chan_uniqueid set to:', formData.chan_uniqueid)
+  } else {
+    console.error('ERROR: chanUniqueid prop is empty or undefined!')
+  }
+})
+
+// Watch for chanUniqueid changes and update formData
+watch(() => props.chanUniqueid, (newValue, oldValue) => {
+  console.log('chanUniqueid prop changed from:', oldValue, 'to:', newValue)
+  if (newValue) {
+    formData.chan_uniqueid = newValue
+    console.log('formData.chan_uniqueid updated to:', formData.chan_uniqueid)
+  }
+}, { immediate: true })
 
 const calculateSectionScore = (sectionIndex) => {
   const section = qaData.sections[sectionIndex]
@@ -233,8 +266,9 @@ const isFormValid = computed(() => {
   const ratingFields = qaData.sections.flatMap(s => s.fields.map(f => f.key))
   const allRatingsFilled = ratingFields.every(key => formData[key] !== '')
   const feedbackFilled = formData.feedback.trim() !== ''
+  const hasCallId = formData.chan_uniqueid && formData.chan_uniqueid.trim() !== ''
   
-  return allRatingsFilled && feedbackFilled
+  return allRatingsFilled && feedbackFilled && hasCallId
 })
 
 const nextSection = () => {
@@ -246,15 +280,57 @@ const previousSection = () => {
 }
 
 const handleSubmit = async () => {
+  console.log('=== QA SUBMISSION DEBUG ===')
+  console.log('Props chanUniqueid:', props.chanUniqueid)
+  console.log('formData.chan_uniqueid:', formData.chan_uniqueid)
+  console.log('Full formData:', JSON.stringify(formData, null, 2))
+  
+  // Critical validation
+  if (!formData.chan_uniqueid || formData.chan_uniqueid.trim() === '') {
+    console.error('CRITICAL ERROR: chan_uniqueid is missing!')
+    alert('Error: Call ID is missing. Cannot submit QA evaluation.\n\nPlease go back to the Calls page and try again.')
+    return
+  }
+
   if (!isFormValid.value) {
     alert('Please fill in all required fields (all ratings and feedback)')
     return
   }
 
   try {
-    console.log('Submitting QA with payload:', formData)
+    // Create a clean payload to ensure chan_uniqueid is included
+    const payload = {
+      chan_uniqueid: formData.chan_uniqueid,
+      opening_phrase: formData.opening_phrase,
+      opening_phrase_comments: formData.opening_phrase_comments,
+      non_interrupting: formData.non_interrupting,
+      empathy: formData.empathy,
+      paraphrasing: formData.paraphrasing,
+      listening_comments: formData.listening_comments,
+      courteous: formData.courteous,
+      grammar: formData.grammar,
+      nonhesitant: formData.nonhesitant,
+      educative: formData.educative,
+      procedure_adherance: formData.procedure_adherance,
+      extra_mile_willingness: formData.extra_mile_willingness,
+      consults: formData.consults,
+      follows_up_on_case_updates: formData.follows_up_on_case_updates,
+      pro_active_comments: formData.pro_active_comments,
+      accuracy: formData.accuracy,
+      confirms_client_satisfaction: formData.confirms_client_satisfaction,
+      resolution_comments: formData.resolution_comments,
+      notifies_hold: formData.notifies_hold,
+      updates_hold: formData.updates_hold,
+      hold_comments: formData.hold_comments,
+      call_closing_coutesy: formData.call_closing_coutesy,
+      call_closing_comments: formData.call_closing_comments,
+      feedback: formData.feedback
+    }
     
-    const response = await qaStore.createQA(formData)
+    console.log('Submitting QA with clean payload:', payload)
+    console.log('Payload chan_uniqueid:', payload.chan_uniqueid)
+    
+    const response = await qaStore.createQA(payload)
     
     console.log('QA created successfully:', response)
     successMessage.value = 'QA submitted successfully!'
@@ -263,6 +339,7 @@ const handleSubmit = async () => {
     
   } catch (error) {
     console.error('Failed to create QA:', error)
+    console.error('Error details:', error.response?.data)
     emit('qa-submitted', { success: false, error })
   }
 }
