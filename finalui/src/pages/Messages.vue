@@ -15,11 +15,6 @@
       <div class="text-gray-400">Loading messages...</div>
     </div>
 
-    <!-- Error State -->
-    <div v-else-if="messagesStore.error" class="bg-red-600/20 border border-red-600/50 text-red-400 px-4 py-3 rounded-lg">
-      {{ messagesStore.error }}
-    </div>
-
     <!-- Content -->
     <template v-else>
       <!-- View Buttons and Total Count -->
@@ -92,6 +87,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { toast } from 'vue-sonner'
 import Filter from '@/components/messages/Filter.vue'
 import Timeline from '@/components/messages/Timeline.vue'
 import Table from '@/components/messages/Table.vue'
@@ -112,7 +108,7 @@ const channelFilters = ref([
 ])
 
 const activePlatform = ref("all")
-const activeView = ref("table")
+const activeView = ref("timeline")
 const showChatPanel = ref(false)
 const selectedMessage = ref(null)
 const selectedMessageId = ref(null)
@@ -153,26 +149,35 @@ function handlePlatformChange(platformId) {
   
   console.log('Platform changed to:', platformId)
   
-  // Store handles server-side filtering
-  if (platformId === 'all') {
-    messagesStore.fetchAllMessages()
-  } else {
-    messagesStore.fetchMessagesBySource(platformId)
+  try {
+    if (platformId === 'all') {
+      messagesStore.fetchAllMessages()
+    } else {
+      messagesStore.fetchMessagesBySource(platformId)
+    }
+    
+    setTimeout(() => {
+      console.log('Messages after filter:', messagesStore.pmessages?.length || 0)
+      console.log('Messages_k:', messagesStore.pmessages_k)
+    }, 500)
+  } catch (err) {
+    console.error('Error filtering messages:', err)
+    toast.error('Failed to filter messages. Please try again.')
   }
-  
-  // Log data after fetch
-  setTimeout(() => {
-    console.log('Messages after filter:', messagesStore.pmessages?.length || 0)
-    console.log('Messages_k:', messagesStore.pmessages_k)
-  }, 500)
 }
 
 // Refresh messages
 async function refreshMessages() {
-  if (activePlatform.value === 'all') {
-    await messagesStore.fetchAllMessages()
-  } else {
-    await messagesStore.fetchMessagesBySource(activePlatform.value)
+  try {
+    if (activePlatform.value === 'all') {
+      await messagesStore.fetchAllMessages()
+    } else {
+      await messagesStore.fetchMessagesBySource(activePlatform.value)
+    }
+    toast.success('Messages refreshed successfully!')
+  } catch (err) {
+    console.error('Error refreshing messages:', err)
+    toast.error('Failed to refresh messages. Please try again.')
   }
 }
 
@@ -200,6 +205,7 @@ onMounted(async () => {
     await messagesStore.fetchAllMessages()
   } catch (err) {
     console.log('Failed to fetch messages:', err)
+    toast.error('Failed to load messages. Please try again.')
   }
 })
 </script>

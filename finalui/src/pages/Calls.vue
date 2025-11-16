@@ -12,11 +12,6 @@
       <div class="text-gray-400">Loading calls...</div>
     </div>
 
-    <!-- Error State -->
-    <div v-else-if="callsStore.error" class="bg-red-600/20 border border-red-600/50 text-red-400 px-4 py-3 rounded-lg">
-      {{ callsStore.error }}
-    </div>
-
     <!-- Content when loaded -->
     <div v-else>
       <!-- View Toggle Buttons and Stats Row -->
@@ -86,6 +81,7 @@
           :grouped-calls="groupedCalls"
           :calls-store="callsStore"
           @select-call="selectCall"
+          @create-qa="handleCreateQA"
         />
       </div>
 
@@ -112,6 +108,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue"
 import { useRouter } from "vue-router"
+import { toast } from 'vue-sonner'
 import Timeline from "@/components/calls/Timeline.vue"
 import Table from "@/components/calls/Table.vue"
 import CallsFilter from "@/components/calls/CallsFilter.vue"
@@ -132,6 +129,7 @@ onMounted(async () => {
     console.log("Calls fetched:", callsStore.calls)
   } catch (err) {
     console.error("Error fetching calls:", err)
+    toast.error('Failed to load calls. Please try again.')
   }
 })
 
@@ -144,6 +142,7 @@ async function applyFilters(filters) {
     console.log("Filtered calls fetched:", callsStore.calls)
   } catch (err) {
     console.error("Error fetching filtered calls:", err)
+    toast.error('Failed to apply filters. Please try again.')
   }
 }
 
@@ -153,8 +152,10 @@ async function refreshCalls() {
     console.log("Refreshing calls...")
     await callsStore.listCalls(currentFilters.value)
     console.log("Calls refreshed")
+    toast.success('Calls refreshed successfully!')
   } catch (err) {
     console.error("Error refreshing calls:", err)
+    toast.error('Failed to refresh calls. Please try again.')
   }
 }
 
