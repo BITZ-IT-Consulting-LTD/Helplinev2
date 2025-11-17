@@ -1,9 +1,21 @@
 <template>
   <aside class="fixed left-0 top-0 h-screen w-64 bg-gray-800 border-r border-gray-700 flex flex-col p-6 shadow-xl">
 
-    <h2 class="text-xl font-bold mb-8 text-gray-100 tracking-tight">
-      Helpline System
-    </h2>
+    <!-- Header with Theme Toggle -->
+    <div class="flex items-center justify-between mb-8">
+      <h2 class="text-xl font-bold text-gray-100 tracking-tight">
+        Helpline System
+      </h2>
+      
+      <!-- Theme Toggle Button -->
+      <button 
+        class="p-2 bg-gray-700 rounded-lg border border-gray-600 hover:bg-gray-600 transition-all duration-200 flex items-center justify-center"
+        @click="$emit('toggle-theme')" 
+        :title="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+      >
+        <span class="text-base">{{ isDarkMode ? '☀️' : '🌙' }}</span>
+      </button>
+    </div>
 
     <nav class="flex flex-col gap-1.5 text-gray-300">
 
@@ -114,3 +126,16 @@
 
   </aside>
 </template>
+
+<script>
+export default {
+  name: 'Sidebar',
+  props: {
+    isDarkMode: {
+      type: Boolean,
+      default: true
+    }
+  },
+  emits: ['toggle-theme']
+}
+</script>
