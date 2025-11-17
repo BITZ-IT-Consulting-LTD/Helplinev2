@@ -13,7 +13,7 @@
           <th class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-gray-300">Hangup By</th>
           <th class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-gray-300">QA Score</th>
           <th class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-gray-300">Disposition</th>
-          <th class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-gray-300 text-center">Actions</th>
+          <th class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-gray-300 text-center">QA</th>
         </tr>
       </thead>
 
@@ -88,21 +88,21 @@
             {{ call[callsStore.calls_k?.dispositions?.[0]] || '-' }}
           </td>
 
-          <!-- Actions -->
+          <!-- QA Creation Button -->
           <td class="px-4 py-3 text-center">
-            <div class="flex items-center justify-center gap-2">
-              <button @click.stop="emitViewDetails(call)" class="p-1.5 bg-gray-700 hover:bg-blue-600 rounded text-gray-300 hover:text-white transition" title="View Details">
-                <i-mdi-eye class="w-4 h-4" />
-              </button>
-
-              <button @click.stop="emitLinkToCase(call)" class="p-1.5 bg-gray-700 hover:bg-green-600 rounded text-gray-300 hover:text-white transition" title="Link to Case">
-                <i-mdi-link class="w-4 h-4" />
-              </button>
-
-              <button @click.stop="emitViewCase(call)" class="p-1.5 bg-blue-600 text-white hover:bg-blue-700 rounded transition" title="View Case">
-                <i-mdi-folder-open class="w-4 h-4" />
-              </button>
-            </div>
+            <button 
+              @click.stop="emitCreateQA(call)" 
+              :disabled="!isAnswered(call)"
+              :class="[
+                'p-2 rounded transition-all duration-200',
+                isAnswered(call) 
+                  ? 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95' 
+                  : 'bg-gray-700 text-gray-500 cursor-not-allowed opacity-50'
+              ]"
+              :title="isAnswered(call) ? 'Create QA Evaluation' : 'Only available for answered calls'"
+            >
+              <i-mdi-clipboard-check class="w-5 h-5" />
+            </button>
           </td>
         </tr>
       </tbody>
@@ -123,7 +123,7 @@ const props = defineProps({
   selectedCallId: { type: [String, Number, null], default: null }
 })
 
-const emit = defineEmits(['select-call', 'view-call-details', 'link-to-case', 'view-case'])
+const emit = defineEmits(['select-call', 'create-qa'])
 
 function emitSelect(call) {
   const idIndex = props.callsStore.calls_k?.uniqueid?.[0]
@@ -131,22 +131,19 @@ function emitSelect(call) {
   if (id !== null) emit('select-call', id)
 }
 
-function emitViewDetails(call) {
+function emitCreateQA(call) {
   const idIndex = props.callsStore.calls_k?.uniqueid?.[0]
-  const id = idIndex !== undefined ? call[idIndex] : null
-  if (id !== null) emit('view-call-details', id)
+  const uniqueid = idIndex !== undefined ? call[idIndex] : null
+  if (uniqueid !== null) emit('create-qa', uniqueid)
 }
 
-function emitLinkToCase(call) {
-  const idIndex = props.callsStore.calls_k?.uniqueid?.[0]
-  const id = idIndex !== undefined ? call[idIndex] : null
-  if (id !== null) emit('link-to-case', id)
-}
-
-function emitViewCase(call) {
-  const caseIndex = props.callsStore.calls_k?.has_case_id?.[0]
-  const cid = caseIndex !== undefined ? call[caseIndex] : null
-  if (cid !== null) emit('view-case', cid)
+// Check if call status is 5 (answered in backend)
+function isAnswered(call) {
+  const statusIndex = props.callsStore.calls_k?.hangup_status?.[0]
+  if (statusIndex === undefined) return false
+  const status = call[statusIndex]
+  // Check for both numeric 5 and string '5'
+  return status === 5 || status === '5'
 }
 
 // Format timestamp to readable date and time
@@ -163,14 +160,13 @@ function formatDateTime(timestamp) {
   })
 }
 
-// Format duration (seconds to readable format)
-function formatDuration(seconds) {
-  if (!seconds || seconds === '0') return '0.00'
-  const num = parseFloat(seconds)
-  if (num < 60) return num.toFixed(2)
-  const mins = Math.floor(num / 60)
-  const secs = (num % 60).toFixed(0)
-  return `${mins}:${secs.padStart(2, '0')}`
+// Format duration (stored as integer representing centiseconds, display as decimal minutes)
+function formatDuration(value) {
+  if (!value || value === '0') return '0.00'
+  const num = parseFloat(value)
+  // Divide by 100 to convert from centiseconds to decimal minutes
+  const minutes = num / 100
+  return minutes.toFixed(2)
 }
 
 // Direction styling

@@ -106,7 +106,7 @@
     <div class="flex gap-2 mt-4">
       <button
         @click="applyFilters"
-        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-medium flex items-center gap-2"
+        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all duration-200 text-sm shadow-lg flex items-center gap-2 active:scale-95 active:shadow-md"
       >
         <i-mdi-filter class="w-4 h-4" />
         Apply Filters
@@ -114,8 +114,9 @@
       
       <button
         @click="resetFilters"
-        class="bg-gray-700 text-gray-300 px-6 py-2 rounded-lg hover:bg-gray-600 transition text-sm font-medium border border-gray-600"
+        class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-all duration-200 text-sm shadow-lg flex items-center gap-2 active:scale-95 active:shadow-md"
       >
+        <i-mdi-refresh class="w-4 h-4" />
         Reset
       </button>
     </div>

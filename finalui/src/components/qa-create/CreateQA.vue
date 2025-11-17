@@ -1,5 +1,7 @@
 <template>
   <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
+    <!-- Remove debug warning banner -->
+    
     <form @submit.prevent="handleSubmit">
       <!-- Active Section Display -->
       <div v-if="activeSection < qaData.sections.length" class="animate-fadeIn">
@@ -73,26 +75,14 @@
         </button>
       </div>
 
-      <!-- Success/Error Messages -->
-      <div v-if="successMessage" class="mt-6 p-4 bg-green-600/20 border border-green-600/50 rounded-lg">
-        <p class="text-sm font-semibold text-green-400 flex items-center gap-2">
-          <i-mdi-check-circle class="w-5 h-5" />
-          {{ successMessage }}
-        </p>
-      </div>
-
-      <div v-if="qaStore.error" class="mt-6 p-4 bg-red-600/20 border border-red-600/50 rounded-lg">
-        <p class="text-sm font-semibold text-red-400 flex items-center gap-2">
-          <i-mdi-alert-circle class="w-5 h-5" />
-          {{ qaStore.error }}
-        </p>
-      </div>
+      
     </form>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
+import { toast } from 'vue-sonner'
 import { useQAStore } from '@/stores/qas'
 import QASection from './QASection.vue'
 import QARatingField from './QARatingField.vue'
@@ -102,13 +92,16 @@ const props = defineProps({
   activeSection: {
     type: Number,
     default: 0
+  },
+  chanUniqueid: {
+    type: String,
+    required: true
   }
 })
 
-const emit = defineEmits(['qa-submitted', 'section-scores-updated'])
+const emit = defineEmits(['qa-submitted', 'next-section', 'previous-section', 'section-scores-updated'])
 
 const qaStore = useQAStore()
-const successMessage = ref('')
 
 const qaData = reactive({
   sections: [
@@ -178,7 +171,7 @@ const qaData = reactive({
 })
 
 const formData = reactive({
-  chan_uniqueid: '1761627874.2',
+  chan_uniqueid: '',
   opening_phrase: '',
   opening_phrase_comments: '',
   non_interrupting: '',
@@ -204,6 +197,18 @@ const formData = reactive({
   call_closing_comments: '',
   feedback: ''
 })
+
+// Initialize chan_uniqueid on mount
+onMounted(() => {
+  console.log('CreateQA mounted with chanUniqueid:', props.chanUniqueid)
+  formData.chan_uniqueid = props.chanUniqueid
+})
+
+// Watch for chanUniqueid changes
+watch(() => props.chanUniqueid, (newValue) => {
+  console.log('chanUniqueid prop changed to:', newValue)
+  formData.chan_uniqueid = newValue
+}, { immediate: true })
 
 const calculateSectionScore = (sectionIndex) => {
   const section = qaData.sections[sectionIndex]
@@ -233,8 +238,9 @@ const isFormValid = computed(() => {
   const ratingFields = qaData.sections.flatMap(s => s.fields.map(f => f.key))
   const allRatingsFilled = ratingFields.every(key => formData[key] !== '')
   const feedbackFilled = formData.feedback.trim() !== ''
+  const hasCallId = formData.chan_uniqueid && formData.chan_uniqueid.trim() !== ''
   
-  return allRatingsFilled && feedbackFilled
+  return allRatingsFilled && feedbackFilled && hasCallId
 })
 
 const nextSection = () => {
@@ -246,23 +252,61 @@ const previousSection = () => {
 }
 
 const handleSubmit = async () => {
+  // Validate chan_uniqueid before submission
+  if (!formData.chan_uniqueid || formData.chan_uniqueid.trim() === '') {
+    toast.error('Call ID is missing. Please go back and try again.')
+    console.error('chan_uniqueid is missing:', formData.chan_uniqueid)
+    return
+  }
+
   if (!isFormValid.value) {
-    alert('Please fill in all required fields (all ratings and feedback)')
+    toast.error('Please fill in all required fields (all ratings and feedback)')
     return
   }
 
   try {
     console.log('Submitting QA with payload:', formData)
+    console.log('chan_uniqueid value:', formData.chan_uniqueid)
     
-    const response = await qaStore.createQA(formData)
+    // Create a clean payload
+    const payload = {
+      chan_uniqueid: formData.chan_uniqueid,
+      opening_phrase: formData.opening_phrase,
+      opening_phrase_comments: formData.opening_phrase_comments,
+      non_interrupting: formData.non_interrupting,
+      empathy: formData.empathy,
+      paraphrasing: formData.paraphrasing,
+      listening_comments: formData.listening_comments,
+      courteous: formData.courteous,
+      grammar: formData.grammar,
+      nonhesitant: formData.nonhesitant,
+      educative: formData.educative,
+      procedure_adherance: formData.procedure_adherance,
+      extra_mile_willingness: formData.extra_mile_willingness,
+      consults: formData.consults,
+      follows_up_on_case_updates: formData.follows_up_on_case_updates,
+      pro_active_comments: formData.pro_active_comments,
+      accuracy: formData.accuracy,
+      confirms_client_satisfaction: formData.confirms_client_satisfaction,
+      resolution_comments: formData.resolution_comments,
+      notifies_hold: formData.notifies_hold,
+      updates_hold: formData.updates_hold,
+      hold_comments: formData.hold_comments,
+      call_closing_coutesy: formData.call_closing_coutesy,
+      call_closing_comments: formData.call_closing_comments,
+      feedback: formData.feedback
+    }
+    
+    const response = await qaStore.createQA(payload)
     
     console.log('QA created successfully:', response)
-    successMessage.value = 'QA submitted successfully!'
+    toast.success('QA submitted successfully!')
     
     emit('qa-submitted', { success: true, data: response })
     
   } catch (error) {
     console.error('Failed to create QA:', error)
+    toast.error('Failed to submit QA. Please try again.')
     emit('qa-submitted', { success: false, error })
   }
 }

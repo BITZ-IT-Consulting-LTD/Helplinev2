@@ -1,7 +1,7 @@
 <template>
   <div class="bg-gray-800 rounded-lg shadow-xl border border-gray-700 overflow-hidden">
     <div class="overflow-x-auto">
-      <table class="w-full">
+      <table class="w-full min-w-[1400px]">
         <thead>
           <tr class="bg-gray-900/60 border-b border-gray-700">
             <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Call Date</th>
@@ -31,50 +31,50 @@
             </td>
 
             <!-- User -->
-            <td class="px-6 py-4 text-gray-300 text-sm">{{ qa[qas_k.chan_user_name[0]] }}</td>
+            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">{{ qa[qas_k.chan_user_name[0]] }}</td>
 
             <!-- Talk Time -->
-            <td class="px-6 py-4 text-gray-300 text-sm">{{ formatTalkTime(qa[qas_k.chan_talk_time[0]]) }}</td>
+            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">{{ formatTalkTime(qa[qas_k.chan_talk_time[0]]) }}</td>
 
             <!-- Scores -->
-            <td class="px-6 py-4 text-gray-300 text-sm">
+            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">
               <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
                 {{ qa[qas_k.opening_phrase[0]] }}%
               </span>
             </td>
-            <td class="px-6 py-4 text-gray-300 text-sm">
+            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">
               <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
                 {{ qa[qas_k.listening_score_p[0]] }}%
               </span>
             </td>
-            <td class="px-6 py-4 text-gray-300 text-sm">
+            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">
               <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
                 {{ qa[qas_k.proactive_score_p[0]] }}%
               </span>
             </td>
-            <td class="px-6 py-4 text-gray-300 text-sm">
+            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">
               <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
                 {{ qa[qas_k.resolution_score_p[0]] }}%
               </span>
             </td>
-            <td class="px-6 py-4 text-gray-300 text-sm">
+            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">
               <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
                 {{ qa[qas_k.holding_score_p[0]] }}%
               </span>
             </td>
-            <td class="px-6 py-4 text-gray-300 text-sm">
+            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">
               <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
                 {{ qa[qas_k.closing_score_p[0]] }}%
               </span>
             </td>
-            <td class="px-6 py-4 text-sm">
+            <td class="px-6 py-4 text-sm whitespace-nowrap">
               <span class="px-3 py-1 rounded-full bg-green-600/20 text-green-400 font-semibold border border-green-600/30">
                 {{ qa[qas_k.total_score_p[0]] }}%
               </span>
             </td>
 
             <!-- Supervisor -->
-            <td class="px-6 py-4 text-gray-300 text-sm">{{ qa[qas_k.created_by[0]] }}</td>
+            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">{{ qa[qas_k.created_by[0]] }}</td>
 
             <!-- Created On -->
             <td class="px-6 py-4 text-gray-400 text-sm whitespace-nowrap">
@@ -83,6 +83,12 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- Empty State -->
+    <div v-if="!qas || qas.length === 0" class="text-center py-12">
+      <i-mdi-clipboard-check-outline class="w-16 h-16 mx-auto text-gray-600 mb-4" />
+      <p class="text-gray-500">No QA records found</p>
     </div>
   </div>
 </template>

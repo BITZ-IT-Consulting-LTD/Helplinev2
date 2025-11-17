@@ -10,25 +10,13 @@
         <p class="text-gray-400 text-sm">Real-time counselling and support monitoring</p>
       </div>
       
-      <!-- Status & Controls -->
-      <div class="flex items-center gap-3">
-        <!-- Connection Status -->
-        <div class="flex items-center gap-2 px-3 py-2 bg-gray-900/60 rounded-lg border border-gray-700">
-          <span :class="['w-2 h-2 rounded-full flex-shrink-0', dotClass]"></span>
-          <div class="flex flex-col">
-            <span class="text-xs font-semibold text-gray-300">{{ connectionLabel }}</span>
-            <span v-if="lastUpdate" class="text-[0.65rem] text-gray-500">{{ lastUpdate }}</span>
-          </div>
+      <!-- Connection Status -->
+      <div class="flex items-center gap-2 px-3 py-2 bg-gray-900/60 rounded-lg border border-gray-700">
+        <span :class="['w-2 h-2 rounded-full flex-shrink-0', dotClass]"></span>
+        <div class="flex flex-col">
+          <span class="text-xs font-semibold text-gray-300">{{ connectionLabel }}</span>
+          <span v-if="lastUpdate" class="text-[0.65rem] text-gray-500">{{ lastUpdate }}</span>
         </div>
-        
-        <!-- Theme Toggle -->
-        <button 
-          class="p-2 bg-gray-700 rounded-lg border border-gray-600 hover:bg-gray-600 transition-all duration-200 flex items-center justify-center"
-          @click="$emit('toggle-theme')" 
-          :title="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
-        >
-          <span class="text-lg">{{ isDarkMode ? '☀️' : '🌙' }}</span>
-        </button>
       </div>
     </div>
   </div>
@@ -49,13 +37,8 @@ export default {
     lastUpdate: {
       type: String,
       default: null
-    },
-    isDarkMode: {
-      type: Boolean,
-      required: true
     }
   },
-  emits: ['toggle-theme'],
   computed: {
     dotClass() {
       if (this.connectionStatus === 'on') return 'bg-emerald-500 animate-pulse-dot'

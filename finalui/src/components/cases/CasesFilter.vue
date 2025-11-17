@@ -9,7 +9,7 @@
           type="text" 
           v-model="filters.caseId" 
           placeholder="Enter case ID"
-          class="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
 
@@ -19,7 +19,7 @@
         <input 
           type="date" 
           v-model="filters.dateFrom" 
-          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="bg-gray-700 border border-gray-600 text-gray-100 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
 
@@ -29,7 +29,7 @@
         <input 
           type="date" 
           v-model="filters.dateTo" 
-          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="bg-gray-700 border border-gray-600 text-gray-100 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
 
@@ -40,34 +40,34 @@
           type="text" 
           v-model="filters.createdBy" 
           placeholder="Enter name"
-          class="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
 
       <!-- Source -->
       <div class="flex flex-col">
         <label class="text-sm font-medium mb-1 text-gray-300">Source</label>
-        <select v-model="filters.source" class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <select v-model="filters.source" class="bg-gray-700 border border-gray-600 text-gray-100 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
           <option value="">All</option>
-          <option value="walkin">walkin</option>
-          <option value="call">call</option>
-          <option value="sms">sms</option>
-          <option value="email">email</option>
-          <option value="chat">chat</option>
-          <option value="whatsApp">whatsApp</option>
-          <option value="FACEBOOK">FACEBOOK</option>
-          <option value="TWITTER">TWITTER</option>
-          <option value="WENI">WENI</option>
-          <option value="safepal">safepal</option>
-          <option value="ai">ai</option>
-          <option value="aii">aii</option>
+          <option value="walkin">Walk-in</option>
+          <option value="call">Call</option>
+          <option value="sms">SMS</option>
+          <option value="email">Email</option>
+          <option value="chat">Chat</option>
+          <option value="whatsApp">WhatsApp</option>
+          <option value="FACEBOOK">Facebook</option>
+          <option value="TWITTER">Twitter</option>
+          <option value="WENI">Weni</option>
+          <option value="safepal">SafePal</option>
+          <option value="ai">AI</option>
+          <option value="aii">AII</option>
         </select>
       </div>
 
       <!-- Priority -->
       <div class="flex flex-col">
         <label class="text-sm font-medium mb-1 text-gray-300">Priority</label>
-        <select v-model="filters.priority" class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <select v-model="filters.priority" class="bg-gray-700 border border-gray-600 text-gray-100 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
           <option value="">All</option>
           <option value="1">Low</option>
           <option value="2">Medium</option>
@@ -78,7 +78,7 @@
       <!-- Status -->
       <div class="flex flex-col">
         <label class="text-sm font-medium mb-1 text-gray-300">Status</label>
-        <select v-model="filters.status" class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <select v-model="filters.status" class="bg-gray-700 border border-gray-600 text-gray-100 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
           <option value="">All</option>
           <option value="1">Open</option>
           <option value="2">Closed</option>
@@ -91,7 +91,7 @@
     <div class="flex gap-2 mt-4">
       <button
         @click="applyFilters"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-all duration-200 font-medium flex items-center gap-2"
+        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all duration-200 text-sm shadow-lg flex items-center gap-2 active:scale-95 active:shadow-md"
       >
         <i-mdi-filter class="w-4 h-4" />
         Apply Filters
@@ -99,8 +99,9 @@
       
       <button
         @click="resetFilters"
-        class="bg-gray-700 text-gray-300 px-6 py-2 rounded-lg hover:bg-gray-600 transition-all duration-200 font-medium border border-gray-600"
+        class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-all duration-200 text-sm shadow-lg flex items-center gap-2 active:scale-95 active:shadow-md"
       >
+        <i-mdi-refresh class="w-4 h-4" />
         Reset
       </button>
     </div>
@@ -146,7 +147,7 @@ function applyFilters() {
     params.id = filters.caseId.trim()
   }
 
-  // Date range - using created_on field (assuming dt maps to created_on)
+  // Date range - using created_on field
   if (filters.dateFrom || filters.dateTo) {
     const fromTs = filters.dateFrom ? getUnixTimestamp(filters.dateFrom) : 0
     const toTs = filters.dateTo ? getEndOfDayTimestamp(filters.dateTo) : Math.floor(Date.now() / 1000)
