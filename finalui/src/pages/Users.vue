@@ -1,50 +1,8 @@
 <template>
-  <div class="p-6 bg-gray-900 min-h-screen space-y-6">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-6">
-      <h1 class="text-2xl font-bold text-gray-100">System Users</h1>
-
-      <div class="flex gap-3">
-        <button
-          @click="view = 'table'"
-          :class="[
-            'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2',
-            view === 'table' 
-              ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
-              : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
-          ]"
-        >
-          <i-mdi-table class="w-5 h-5" />
-          Table
-        </button>
-
-        <button
-          @click="view = 'timeline'"
-          :class="[
-            'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2',
-            view === 'timeline' 
-              ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
-              : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
-          ]"
-        >
-          <i-mdi-timeline class="w-5 h-5" />
-          Timeline
-        </button>
-
-        <button
-          @click="view = 'create'"
-          :class="[
-            'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2',
-            view === 'create' 
-              ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
-              : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
-          ]"
-        >
-          <i-mdi-plus class="w-5 h-5" />
-          Create User
-        </button>
-      </div>
-    </div>
+  <div class="p-6 space-y-6 bg-gray-900 min-h-screen">
+    
+    <h1 class="text-2xl font-bold text-gray-100 mb-2">System Users</h1>
+    <p class="text-gray-400 mb-6">Manage user accounts and permissions across the system</p>
 
     <!-- Filters (only show for table and timeline views) -->
     <UsersFilter 
@@ -52,49 +10,91 @@
       @update:filters="applyFilters" 
     />
 
-    <!-- Stats Summary (only show for table and timeline views) -->
-    <div v-if="view !== 'create'" class="bg-gray-800 rounded-lg shadow-xl p-4 border border-gray-700">
-      <div class="flex items-center justify-between">
+    <!-- Loading State -->
+    <div v-if="store.loading && view !== 'create'" class="flex justify-center items-center py-12 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
+      <div class="text-gray-400">Loading users...</div>
+    </div>
+
+    <!-- Content when loaded -->
+    <div v-else-if="view !== 'create'">
+      <!-- View Toggle Buttons and Stats Row -->
+      <div class="flex justify-between items-center mb-6">
+        <!-- Total Count -->
         <div class="flex items-center gap-2 text-gray-300">
           <i-mdi-account-multiple class="w-5 h-5 text-blue-400" />
           <span class="text-sm">Total Users:</span>
           <span class="text-lg font-bold text-blue-400">{{ store.userCount }}</span>
         </div>
-        
-        <div class="flex gap-2">
-          <button 
+
+        <!-- View Toggle Buttons -->
+        <div class="flex gap-3">
+          <button
+            @click="view = 'timeline'"
+            :class="[
+              'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm',
+              view === 'timeline' 
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
+                : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
+            ]"
+          >
+            <i-mdi-timeline-text-outline class="w-5 h-5" />
+            Timeline
+          </button>
+
+          <button
+            @click="view = 'table'"
+            :class="[
+              'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm',
+              view === 'table' 
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
+                : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
+            ]"
+          >
+            <i-mdi-table class="w-5 h-5" />
+            Table
+          </button>
+
+          <button
+            @click="view = 'create'"
+            class="px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm bg-green-600 text-white hover:bg-green-700 shadow-lg active:scale-95"
+          >
+            <i-mdi-plus-circle class="w-5 h-5" />
+            Create User
+          </button>
+
+          <button
             @click="refreshUsers"
             :disabled="store.loading"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg transition-all duration-200 font-medium flex items-center gap-2 disabled:opacity-50"
+            class="px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm bg-gray-800 text-gray-300 border border-gray-700 hover:border-green-500 hover:text-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <i-mdi-refresh class="w-5 h-5" />
             Refresh
           </button>
         </div>
       </div>
+
+      <!-- Timeline view -->
+      <div v-if="view === 'timeline'">
+        <UsersTimeline />
+      </div>
+
+      <!-- Table view -->
+      <div v-if="view === 'table'">
+        <UsersTable />
+      </div>
     </div>
 
-    <!-- Loading State -->
-    <div v-if="store.loading && view !== 'create'" class="text-center py-12 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
-      <div class="text-gray-400">Loading users...</div>
+    <!-- Create User View -->
+    <div v-else>
+      <UserForm @saved="handleSaved" />
     </div>
 
-    <!-- Error State -->
-    <div v-else-if="store.error && view !== 'create'" class="bg-red-600/20 border border-red-600/50 text-red-400 px-5 py-4 rounded-lg font-medium">
-      {{ store.error }}
-    </div>
-
-    <!-- Switch Components -->
-    <template v-else>
-      <UsersTable v-if="view === 'table'" />
-      <UsersTimeline v-else-if="view === 'timeline'" />
-      <UserForm v-else @saved="handleSaved" />
-    </template>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { toast } from 'vue-sonner'
 import { useUserStore } from '@/stores/users'
 import UsersTable from '@/components/users/Table.vue'
 import UsersTimeline from '@/components/users/Timeline.vue'
@@ -102,11 +102,16 @@ import UserForm from '@/components/users/UserForm.vue'
 import UsersFilter from '@/components/users/UsersFilter.vue'
 
 const store = useUserStore()
-const view = ref('table')
+const view = ref('timeline')
 const currentFilters = ref({})
 
-onMounted(() => {
-  store.listUsers()
+onMounted(async () => {
+  try {
+    await store.listUsers()
+  } catch (err) {
+    console.error('Failed to fetch users:', err)
+    toast.error('Failed to load users. Please try again.')
+  }
 })
 
 // Apply filters and fetch users
@@ -118,16 +123,26 @@ async function applyFilters(filters) {
     console.log('Filtered users fetched:', store.users)
   } catch (err) {
     console.error('Error fetching filtered users:', err)
+    toast.error('Failed to apply filters. Please try again.')
   }
 }
 
 // Refresh users with current filters
 async function refreshUsers() {
-  await store.listUsers(currentFilters.value)
+  try {
+    console.log('Refreshing users...')
+    await store.listUsers(currentFilters.value)
+    console.log('Users refreshed')
+    toast.success('Users refreshed successfully!')
+  } catch (err) {
+    console.error('Error refreshing users:', err)
+    toast.error('Failed to refresh users. Please try again.')
+  }
 }
 
 const handleSaved = () => {
   view.value = 'table'
   store.listUsers()
+  toast.success('User saved successfully!')
 }
 </script>
