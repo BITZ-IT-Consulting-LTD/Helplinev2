@@ -14,7 +14,7 @@
             v-model="localForm.isGBVRelated"
             placeholder="Select an option"
             :category-id="118"
-            @change="updateForm"
+            @change="handleGBVChange"
           />
         </div>
 
@@ -26,7 +26,7 @@
             v-model="localForm.categories"
             placeholder="Select case category"
             :category-id="362557"
-            @change="updateForm"
+            @change="handleCategoryChange"
           />
         </div>
 
@@ -63,7 +63,7 @@
             <select 
               v-model="localForm.priority" 
               class="w-full px-3 py-2 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
-              @change="updateForm"
+              @change="handlePriorityChange"
             >
               <option value="">Select priority</option>
               <option value="3">High</option>
@@ -78,7 +78,7 @@
             <select 
               v-model="localForm.status" 
               class="w-full px-3 py-2 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
-              @change="updateForm"
+              @change="handleStatusChange"
             >
               <option value="">Select status</option>
               <option value="1">Open</option>
@@ -124,7 +124,7 @@
               v-model="localForm.justiceSystemState"
               placeholder="Select an option"
               :category-id="236687"
-              @change="updateForm"
+              @change="handleJusticeSystemChange"
             />
           </div>
           <div>
@@ -134,7 +134,7 @@
               v-model="localForm.generalAssessment"
               placeholder="Select an option"
               :category-id="236694"
-              @change="updateForm"
+              @change="handleGeneralAssessmentChange"
             />
           </div>
         </div>
@@ -154,7 +154,7 @@
             v-else
             v-model="localForm.escalatedTo" 
             class="w-full px-3 py-2 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
-            @change="updateForm"
+            @change="handleEscalationChange"
           >
             <option value="0">None</option>
             <option 
@@ -186,6 +186,7 @@
 <script setup>
 import { reactive, watch, computed, onMounted } from "vue"
 import { useUserStore } from "@/stores/users"
+import { useCategoryStore } from "@/stores/categories"
 import BaseSelect from "@/components/base/BaseSelect.vue"
 import BaseTextarea from "@/components/base/BaseTextarea.vue"
 
@@ -201,11 +202,22 @@ const emit = defineEmits([
 ])
 
 const userStore = useUserStore()
+const categoryStore = useCategoryStore()
+
 const localForm = reactive({ 
   ...props.formData,
   clientPassportNumber: props.formData.clientPassportNumber || '',
   justiceSystemState: props.formData.justiceSystemState || '',
-  generalAssessment: props.formData.generalAssessment || ''
+  generalAssessment: props.formData.generalAssessment || '',
+  // Text fields
+  isGBVRelatedText: props.formData.isGBVRelatedText || '',
+  categoriesText: props.formData.categoriesText || '',
+  priorityText: props.formData.priorityText || '',
+  statusText: props.formData.statusText || '',
+  departmentText: props.formData.departmentText || '',
+  escalatedToText: props.formData.escalatedToText || '',
+  justiceSystemStateText: props.formData.justiceSystemStateText || '',
+  generalAssessmentText: props.formData.generalAssessmentText || ''
 })
 
 // Load users on mount
@@ -263,9 +275,86 @@ const getUserRole = (user) => {
   return getValue(user, 'role') || getValue(user, 'user_role') || getValue(user, 'role_name') || "No Role"
 }
 
+// Helper to get category text
+const getCategoryText = async (categoryId, parentCategoryId) => {
+  try {
+    await categoryStore.viewCategory(parentCategoryId)
+    const k = categoryStore.subcategories_k
+    const idIdx = Number(k?.id?.[0] ?? 0)
+    const nameIdx = Number(k?.name?.[0] ?? 5)
+    
+    const option = categoryStore.subcategories?.find(row => row[idIdx] === categoryId)
+    return option ? option[nameIdx] : ''
+  } catch (error) {
+    console.error('Error fetching category text:', error)
+    return ''
+  }
+}
+
+// Change handlers to capture text
+const handleGBVChange = async (value) => {
+  localForm.isGBVRelated = value
+  localForm.isGBVRelatedText = await getCategoryText(value, 118)
+  updateForm()
+}
+
+const handleCategoryChange = async (value) => {
+  localForm.categories = value
+  localForm.categoriesText = await getCategoryText(value, 362557)
+  updateForm()
+}
+
+const handlePriorityChange = (event) => {
+  const value = event.target.value
+  localForm.priority = value
+  const priorityMap = { '3': 'High', '2': 'Medium', '1': 'Low' }
+  localForm.priorityText = priorityMap[value] || ''
+  updateForm()
+}
+
+const handleStatusChange = (event) => {
+  const value = event.target.value
+  localForm.status = value
+  const statusMap = { '1': 'Open', '2': 'Closed' }
+  localForm.statusText = statusMap[value] || ''
+  updateForm()
+}
+
 const handleDepartmentChange = () => {
+  const deptMap = { '116': '116', 'labor': 'Labor' }
+  localForm.departmentText = deptMap[localForm.department] || ''
+  
   if (localForm.department !== 'labor') {
     localForm.clientPassportNumber = ''
+  }
+  updateForm()
+}
+
+const handleJusticeSystemChange = async (value) => {
+  localForm.justiceSystemState = value
+  localForm.justiceSystemStateText = await getCategoryText(value, 236687)
+  updateForm()
+}
+
+const handleGeneralAssessmentChange = async (value) => {
+  localForm.generalAssessment = value
+  localForm.generalAssessmentText = await getCategoryText(value, 236694)
+  updateForm()
+}
+
+const handleEscalationChange = (event) => {
+  const value = event.target.value
+  localForm.escalatedTo = value
+  
+  if (value === '0') {
+    localForm.escalatedToText = 'None'
+  } else {
+    const user = users.value.find(u => getUserId(u) === value)
+    if (user) {
+      localForm.escalatedToText = `${getUserName(user)} - ${getUserRole(user)}`
+    } else {
+      localForm.escalatedToText = ''
+    }
   }
   updateForm()
 }

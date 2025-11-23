@@ -142,7 +142,7 @@ export default {
     const perpetratorStore = usePerpetratorStore();
     
     const currentStep = ref(1);
-    const totalSteps = 4; // Changed from 5 to 4
+    const totalSteps = 4;
     const isSubmittingCase = ref(false);
     const reporterId = ref(null);
     
@@ -168,38 +168,49 @@ export default {
     ];
     
     const formData = reactive({
-  step1: {
-    searchQuery: '',
-    selectedReporter: null,
-    filteredContacts: []
-  },
-  step2: {
-    // Case Details (Right column - mandatory fields)
-    narrative: '',
-    plan: '',
-    isGBVRelated: '',
-    categories: '',
-    priority: '',
-    status: '',
-    department: '',
-    escalatedTo: '',
-    clientPassportNumber: '', // NEW
-    justiceSystemState: '', // NEW
-    generalAssessment: '' // NEW
-  },
-  step3: {
-    // Additional Details (Left column)
-    clients: [],
-    perpetrators: [],
-    attachments: [],
-    servicesOffered: [],
-    servicesOfferedText: [],
-    referralSource: '',
-    referralsType: [],
-    policeDetails: '',
-    otherServicesDetails: ''
-  }
-});
+      step1: {
+        searchQuery: '',
+        selectedReporter: null,
+        filteredContacts: []
+      },
+      step2: {
+        // IDs for backend
+        narrative: '',
+        plan: '',
+        isGBVRelated: '',
+        categories: '',
+        priority: '',
+        status: '',
+        department: '',
+        escalatedTo: '',
+        clientPassportNumber: '',
+        justiceSystemState: '',
+        generalAssessment: '',
+        
+        // Text for display (NEW)
+        isGBVRelatedText: '',
+        categoriesText: '',
+        priorityText: '',
+        statusText: '',
+        departmentText: '',
+        escalatedToText: '',
+        justiceSystemStateText: '',
+        generalAssessmentText: ''
+      },
+      step3: {
+        clients: [],
+        perpetrators: [],
+        attachments: [],
+        servicesOffered: [],
+        servicesOfferedText: [],
+        referralSource: '',
+        referralSourceText: '', // NEW
+        referralsType: [],
+        referralsTypeText: [], // NEW
+        policeDetails: '',
+        otherServicesDetails: ''
+      }
+    });
     
     // Client Modal State
     const clientModalOpen = ref(false);
@@ -273,9 +284,37 @@ export default {
       additionalDetails: ''
     });
 
+    // Helper function to get field index from reporter store
+    const getReporterFieldIndex = (fieldName) => {
+      const mapping = reporterStore.reporters_k?.[`contact_${fieldName}`];
+      if (mapping && Array.isArray(mapping) && mapping.length > 0) {
+        return mapping[0];
+      }
+      const fallbackMapping = reporterStore.reporters_k?.[fieldName];
+      if (fallbackMapping && Array.isArray(fallbackMapping) && fallbackMapping.length > 0) {
+        return fallbackMapping[0];
+      }
+      return null;
+    };
+
+    // Helper function to get value from reporter contact array
+    const getReporterValue = (contact, fieldName) => {
+      if (!contact || !Array.isArray(contact)) return "";
+      const idx = getReporterFieldIndex(fieldName);
+      if (idx !== null && idx >= 0 && idx < contact.length) {
+        return contact[idx] || "";
+      }
+      return "";
+    };
+
     // Methods
     const updateFormData = (step, data) => {
-      if (step === 'step3') {
+      if (step === 'step2') {
+        // Merge all data including text fields
+        Object.keys(data).forEach(key => {
+          formData.step2[key] = data[key];
+        });
+      } else if (step === 'step3') {
         if (data.servicesOfferedSelection) {
           formData.step3.servicesOffered = data.servicesOfferedSelection.values || [];
           formData.step3.servicesOfferedText = data.servicesOfferedSelection.texts || [];
@@ -312,7 +351,6 @@ export default {
     };
     
     const validateAndProceed = (step) => {
-      // Step 1 validation: Reporter must be selected or created
       if (step === 1) {
         if (!reporterId.value) {
           toast.error('Please select or create a reporter before proceeding');
@@ -325,7 +363,6 @@ export default {
     };
     
     const saveAndProceed = (step) => {
-      // Step 2 validation: Check mandatory fields
       if (step === 2) {
         const errors = [];
         if (!formData.step2.isGBVRelated) errors.push('GBV Related is required');
@@ -360,15 +397,7 @@ export default {
       
       // Extract reporter ID from selected reporter
       if (reporter && Array.isArray(reporter)) {
-        const getFieldIndex = (fieldName) => {
-          const mapping = reporterStore.reporters_k?.[`contact_${fieldName}`] || reporterStore.reporters_k?.[fieldName];
-          if (mapping && Array.isArray(mapping) && mapping.length > 0) {
-            return mapping[0];
-          }
-          return null;
-        };
-        
-        const idIndex = getFieldIndex('id');
+        const idIndex = getReporterFieldIndex('id');
         if (idIndex !== null && reporter[idIndex]) {
           reporterId.value = reporter[idIndex];
           console.log('Selected existing reporter with ID:', reporterId.value);
@@ -585,7 +614,7 @@ export default {
           age: getValueOrDefault(perpetratorForm.age),
           dob: getValueOrDefault(perpetratorForm.dob),
           age_group_id: getValueOrDefault(perpetratorForm.ageGroup),
-          location_id: getValueOrDefault(perpetratorForm.location),
+          location_id: getValueOrDefault(perpetratorForm.sex),
           sex_id: getValueOrDefault(perpetratorForm.sex),
           landmark: getValueOrDefault(perpetratorForm.landmark),
           nationality_id: getValueOrDefault(perpetratorForm.nationality),
@@ -635,132 +664,148 @@ export default {
     };
     
     const submitCase = async () => {
-  if (isSubmittingCase.value) {
-    return;
-  }
-
-  isSubmittingCase.value = true;
-
-  try {
-    const timestamp = Date.now();
-    const timestampSeconds = (timestamp / 1000).toFixed(3);
-    const userId = "100";
-    const srcUid = `walkin-${userId}-${timestamp}`;
-    const srcUid2 = `${srcUid}-1`;
-    const srcCallId = srcUid2;
-    
-    const getValueOrDefault = (value, defaultValue = "") => {
-      return value !== null && value !== undefined && value !== "" ? value : defaultValue;
-    };
-    
-    const baseSourceFields = {
-      src: "walkin",
-      src_ts: timestampSeconds,
-      src_uid: srcUid,
-      src_uid2: srcUid2,
-      src_callid: srcCallId,
-      src_usr: userId,
-      src_vector: "2"
-    };
-    
-    const clientsPayload = formData.step3.clients.map(client => ({
-      client_id: client.id || ""
-    }));
-    
-    const perpetratorsPayload = formData.step3.perpetrators.map(perpetrator => ({
-      perpetrator_id: perpetrator.id || ""
-    }));
-    
-    const servicesPayload = (formData.step3.servicesOffered || []).map(serviceId => ({
-      category_id: String(serviceId)
-    }));
-    
-    const referralsPayload = (formData.step3.referralsType || []).map(referralId => ({
-      category_id: String(referralId)
-    }));
-    
-    const attachmentsPayload = (formData.step3.attachments || []).map((attachment) => ({
-      attachment_id: String(attachment.id || attachment.attachment_id || "")
-    })).filter(item => item.attachment_id !== "");
-    
-    const mapDepartmentToBackend = (dept) => {
-      const deptMap = {
-        '116': '1',
-        'labor': '2'
-      };
-      return deptMap[dept] || '0';
-    };
-    
-    const mapGBVRelatedToBackend = (gbvId) => {
-      if (!gbvId) return '0';
-      const gbvRelatedIds = ['118002', '363070'];
-      return gbvRelatedIds.includes(String(gbvId)) ? '1' : '0';
-    };
-    
-    const casePayload = {
-  ".id": "",
-  ...baseSourceFields,
-  src_address: getValueOrDefault(formData.step3.clients[0]?.phone || ""),
-  
-  // Use reporter_uuid_id instead of reporter_id and reporter_contact_id
-  reporter_uuid_id: reporterId.value || "",
-  contact_uuid_id: reporterId.value || "",
-  
-  case_category_id: getValueOrDefault(formData.step2.categories),
-  narrative: getValueOrDefault(formData.step2.narrative),
-  plan: getValueOrDefault(formData.step2.plan),
-  dept: mapDepartmentToBackend(formData.step2.department),
-  disposition_id: "363037",
-  escalated_to_id: getValueOrDefault(formData.step2.escalatedTo, "0"),
-  gbv_related: mapGBVRelatedToBackend(formData.step2.isGBVRelated),
-  knowabout116_id: getValueOrDefault(formData.step3.referralSource),
-  police_ob_no: getValueOrDefault(formData.step3.policeDetails),
-  priority: getValueOrDefault(formData.step2.priority) || "1",
-  status: getValueOrDefault(formData.step2.status) || "1",
-  
-  // NEW FIELDS
-  national_id_: getValueOrDefault(formData.step2.clientPassportNumber),
-  justice_id: getValueOrDefault(formData.step2.justiceSystemState),
-  assessment_id: getValueOrDefault(formData.step2.generalAssessment),
-  
-  services: servicesPayload,
-  referals: referralsPayload,
-  specify_service: getValueOrDefault(formData.step3.otherServicesDetails),
-  clients_case: clientsPayload,
-  perpetrators_case: perpetratorsPayload,
-  attachments_case: attachmentsPayload,
-  
-  activity_id: "",
-  activity_ca_id: ""
-};
-    
-    // Remove undefined fields
-    Object.keys(casePayload).forEach(key => {
-      if (casePayload[key] === undefined) {
-        delete casePayload[key];
+      if (isSubmittingCase.value) {
+        return;
       }
-    });
-    
-    console.log('Submitting payload:', JSON.stringify(casePayload, null, 2));
-    await casesStore.createCase(casePayload);
-    
-    toast.success('Case created successfully!', {
-      description: 'The case has been submitted to the system.'
-    });
-    
-    setTimeout(() => {
-      router.push("/cases");
-    }, 1500);
-    
-  } catch (error) {
-    console.error("Failed to create case:", error);
-    toast.error('Failed to create case', {
-      description: error.message || 'An error occurred while creating the case'
-    });
-  } finally {
-    isSubmittingCase.value = false;
-  }
-};
+
+      isSubmittingCase.value = true;
+
+      try {
+        const timestamp = Date.now();
+        const timestampSeconds = (timestamp / 1000).toFixed(3);
+        const userId = "100";
+        const srcUid = `walkin-${userId}-${timestamp}`;
+        const srcUid2 = `${srcUid}-1`;
+        const srcCallId = srcUid2;
+        
+        const getValueOrDefault = (value, defaultValue = "") => {
+          return value !== null && value !== undefined && value !== "" ? value : defaultValue;
+        };
+        
+        const baseSourceFields = {
+          src: "walkin",
+          src_ts: timestampSeconds,
+          src_uid: srcUid,
+          src_uid2: srcUid2,
+          src_callid: srcCallId,
+          src_usr: userId,
+          src_vector: "2"
+        };
+        
+        const clientsPayload = formData.step3.clients.map(client => ({
+          client_id: client.id || ""
+        }));
+        
+        const perpetratorsPayload = formData.step3.perpetrators.map(perpetrator => ({
+          perpetrator_id: perpetrator.id || ""
+        }));
+        
+        const servicesPayload = (formData.step3.servicesOffered || []).map(serviceId => ({
+          category_id: String(serviceId)
+        }));
+        
+        const referralsPayload = (formData.step3.referralsType || []).map(referralId => ({
+          category_id: String(referralId)
+        }));
+        
+        const attachmentsPayload = (formData.step3.attachments || []).map((attachment) => ({
+          attachment_id: String(attachment.id || attachment.attachment_id || "")
+        })).filter(item => item.attachment_id !== "");
+        
+        const mapDepartmentToBackend = (dept) => {
+          const deptMap = {
+            '116': '1',
+            'labor': '2'
+          };
+          return deptMap[dept] || '0';
+        };
+        
+        const mapGBVRelatedToBackend = (gbvId) => {
+          if (!gbvId) return '0';
+          const gbvRelatedIds = ['118002', '363070'];
+          return gbvRelatedIds.includes(String(gbvId)) ? '1' : '0';
+        };
+        
+        // CRITICAL FIX: Extract reporter details from selected reporter
+        let reporterDetails = {};
+        if (formData.step1.selectedReporter && Array.isArray(formData.step1.selectedReporter)) {
+          reporterDetails = {
+            reporter_contact_id: reporterId.value || "",
+            reporter_fullname: getReporterValue(formData.step1.selectedReporter, 'fullname') || "",
+            reporter_age_group_id: getReporterValue(formData.step1.selectedReporter, 'age_group_id') || "",
+            reporter_sex_id: getReporterValue(formData.step1.selectedReporter, 'sex_id') || ""
+          };
+          
+          console.log('Extracted reporter details:', reporterDetails);
+        }
+        
+        const casePayload = {
+          ".id": "",
+          ...baseSourceFields,
+          src_address: getValueOrDefault(formData.step3.clients[0]?.phone || ""),
+          
+          // Reporter IDs
+          reporter_uuid_id: reporterId.value || "",
+          contact_uuid_id: reporterId.value || "",
+          
+          // ADD REPORTER DETAILS HERE (CRITICAL FIX)
+          ...reporterDetails,
+          
+          case_category_id: getValueOrDefault(formData.step2.categories),
+          narrative: getValueOrDefault(formData.step2.narrative),
+          plan: getValueOrDefault(formData.step2.plan),
+          dept: mapDepartmentToBackend(formData.step2.department),
+          disposition_id: "363037",
+          escalated_to_id: getValueOrDefault(formData.step2.escalatedTo, "0"),
+          gbv_related: mapGBVRelatedToBackend(formData.step2.isGBVRelated),
+          knowabout116_id: getValueOrDefault(formData.step3.referralSource),
+          police_ob_no: getValueOrDefault(formData.step3.policeDetails),
+          priority: getValueOrDefault(formData.step2.priority) || "1",
+          status: getValueOrDefault(formData.step2.status) || "1",
+          
+          // NEW FIELDS
+          national_id_: getValueOrDefault(formData.step2.clientPassportNumber),
+          justice_id: getValueOrDefault(formData.step2.justiceSystemState),
+          assessment_id: getValueOrDefault(formData.step2.generalAssessment),
+          
+          services: servicesPayload,
+          referals: referralsPayload,
+          specify_service: getValueOrDefault(formData.step3.otherServicesDetails),
+          clients_case: clientsPayload,
+          perpetrators_case: perpetratorsPayload,
+          attachments_case: attachmentsPayload,
+          
+          activity_id: "",
+          activity_ca_id: ""
+        };
+        
+        // Remove undefined fields
+        Object.keys(casePayload).forEach(key => {
+          if (casePayload[key] === undefined) {
+            delete casePayload[key];
+          }
+        });
+        
+        console.log('Submitting payload:', JSON.stringify(casePayload, null, 2));
+        await casesStore.createCase(casePayload);
+        
+        toast.success('Case created successfully!', {
+          description: 'The case has been submitted to the system.'
+        });
+        
+        setTimeout(() => {
+          router.push("/cases");
+        }, 1500);
+        
+      } catch (error) {
+        console.error("Failed to create case:", error);
+        toast.error('Failed to create case', {
+          description: error.message || 'An error occurred while creating the case'
+        });
+      } finally {
+        isSubmittingCase.value = false;
+      }
+    };
 
     return {
       currentStep,

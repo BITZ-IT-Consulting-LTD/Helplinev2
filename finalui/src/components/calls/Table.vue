@@ -69,13 +69,13 @@
           <!-- Hangup Status -->
           <td class="px-4 py-3">
             <span :class="['px-3 py-1 rounded-full text-xs font-semibold border', statusClass(call[callsStore.calls_k?.hangup_status?.[0]])]">
-              {{ call[callsStore.calls_k?.hangup_status?.[0]] || 'Unknown' }}
+              {{ getStatusLabel(call[callsStore.calls_k?.hangup_status?.[0]]) }}
             </span>
           </td>
 
           <!-- Hangup By -->
           <td class="px-4 py-3 text-gray-400">
-            {{ call[callsStore.calls_k?.hangup_reason?.[0]] || 'N/A' }}
+            {{ getHangupReasonLabel(call[callsStore.calls_k?.hangup_reason?.[0]]) }}
           </td>
 
           <!-- QA Score -->
@@ -125,6 +125,46 @@ const props = defineProps({
 
 const emit = defineEmits(['select-call', 'create-qa'])
 
+// Backend hangup_reason mapping
+const hangupReasonMap = {
+  "": "",
+  "phone": "Customer",
+  "usr": "Extension",
+  "ivr": "IVR",
+  "net": "Network"
+}
+
+// Backend hangup_status mapping
+const hangupStatusMap = {
+  "": "",
+  "answered": "Answered",
+  "abandoned": "Abandoned",
+  "dump": "AgentDump",
+  "ivr": "IVR",
+  "missed": "Missed",
+  "no-answer": "Flash",
+  "noanswer": "Flash",
+  "busy": "Busy",
+  "networkerror": "Network Error",
+  "voicemail": "Voicemail",
+  "xfer_consult": "Consult",
+  "xfer_noanswer": "Transfer No Answer",
+  "xfer_offline": "Transfer Unavailable",
+  "xfer_ok": "Transferred",
+  "SCHED": "Sched",
+  "Reattempt": "Reattempt"
+}
+
+function getHangupReasonLabel(reason) {
+  if (!reason) return 'N/A'
+  return hangupReasonMap[reason] || reason
+}
+
+function getStatusLabel(status) {
+  if (!status) return 'Unknown'
+  return hangupStatusMap[status] || status
+}
+
 function emitSelect(call) {
   const idIndex = props.callsStore.calls_k?.uniqueid?.[0]
   const id = idIndex !== undefined ? call[idIndex] : null
@@ -137,13 +177,12 @@ function emitCreateQA(call) {
   if (uniqueid !== null) emit('create-qa', uniqueid)
 }
 
-// Check if call status is 5 (answered in backend)
+// Check if call status is answered
 function isAnswered(call) {
   const statusIndex = props.callsStore.calls_k?.hangup_status?.[0]
   if (statusIndex === undefined) return false
   const status = call[statusIndex]
-  // Check for both numeric 5 and string '5'
-  return status === 5 || status === '5'
+  return status === 'answered'
 }
 
 // Format timestamp to readable date and time
@@ -164,7 +203,6 @@ function formatDateTime(timestamp) {
 function formatDuration(value) {
   if (!value || value === '0') return '0.00'
   const num = parseFloat(value)
-  // Divide by 100 to convert from centiseconds to decimal minutes
   const minutes = num / 100
   return minutes.toFixed(2)
 }
@@ -182,9 +220,29 @@ function directionClass(direction) {
 function statusClass(status) {
   if (!status) return 'bg-gray-700/50 text-gray-400 border-gray-600'
   const s = String(status).toLowerCase()
-  if (s.includes('answered') || s.includes('resolved')) return 'bg-green-600/20 text-green-400 border-green-600/30'
-  if (s.includes('abandoned') || s.includes('missed')) return 'bg-red-600/20 text-red-400 border-red-600/30'
-  if (s.includes('noanswer') || s.includes('no answer')) return 'bg-amber-600/20 text-amber-400 border-amber-600/30'
+  
+  if (s === 'answered' || s === 'xfer_ok' || s === 'sched') {
+    return 'bg-green-600/20 text-green-400 border-green-600/30'
+  }
+  if (s === 'abandoned' || s === 'missed' || s === 'no-answer' || s === 'noanswer' || s === 'busy' || s === 'xfer_noanswer' || s === 'xfer_offline') {
+    return 'bg-amber-600/20 text-amber-400 border-amber-600/30'
+  }
+  if (s === 'dump') {
+    return 'bg-red-600/20 text-red-400 border-red-600/30'
+  }
+  if (s === 'ivr' || s === 'xfer_consult') {
+    return 'bg-blue-600/20 text-blue-400 border-blue-600/30'
+  }
+  if (s === 'voicemail') {
+    return 'bg-green-600/20 text-green-400 border-green-600/30'
+  }
+  if (s === 'networkerror') {
+    return 'bg-purple-600/20 text-purple-400 border-purple-600/30'
+  }
+  if (s === 'reattempt') {
+    return 'bg-cyan-600/20 text-cyan-400 border-cyan-600/30'
+  }
+  
   return 'bg-gray-700/50 text-gray-400 border-gray-600'
 }
 </script>

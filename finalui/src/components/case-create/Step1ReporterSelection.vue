@@ -513,15 +513,30 @@ const getValue = (contact, fieldName) => {
 }
 
 const getContactId = (contact) => {
-  if (!contact || !Array.isArray(contact)) return Math.random().toString()
-  const idFields = ['id', '_id', 'reporter_id']
+  if (!contact || !Array.isArray(contact)) return null
+  
+  // Try to get the actual ID field first (these are most reliable)
+  const idFields = ['id', '_id', 'reporter_id', 'contact_id']
   for (const fieldName of idFields) {
     const value = getValue(contact, fieldName)
-    if (value) return value.toString()
+    if (value) {
+      console.log(`Found reporter ID from field ${fieldName}:`, value)
+      return value.toString()
+    }
   }
+  
+  // If no ID found, try to get the first element (often the ID in array structures)
+  if (contact.length > 0 && contact[0]) {
+    console.log('Using first array element as reporter ID:', contact[0])
+    return contact[0].toString()
+  }
+  
+  // Fallback to name-phone combination (last resort)
   const name = getValue(contact, 'fullname')
   const phone = getValue(contact, 'phone')
-  return `${name}-${phone}`.replace(/\s+/g, '-')
+  const fallbackId = `${name}-${phone}`.replace(/\s+/g, '-')
+  console.log('Using fallback ID:', fallbackId)
+  return fallbackId
 }
 
 const shouldShowResults = computed(() => {
@@ -549,7 +564,25 @@ const handleSearchInput = (event) => {
 const selectExistingReporter = (contact) => {
   selectedReporter.value = contact
   showCreateForm.value = false
+  
+  // CRITICAL FIX: Extract the reporter ID from the selected contact
+  const extractedId = getContactId(contact)
+  
+  console.log('Selected existing reporter:', {
+    contact,
+    extractedId,
+    fullname: getValue(contact, 'fullname')
+  })
+  
+  // Emit both the reporter data AND the reporter ID
   emit('select-reporter', contact)
+  
+  // This is the key fix - emit the reporter ID for existing reporters too!
+  if (extractedId) {
+    emit('reporter-created', extractedId)
+  } else {
+    console.error('Could not extract reporter ID from contact')
+  }
 }
 
 const openCreateReporterForm = () => {
@@ -584,6 +617,7 @@ const closeCreateForm = () => {
 const clearSelection = () => {
   selectedReporter.value = null
   emit('select-reporter', null)
+  emit('reporter-created', null)
 }
 
 const isSelected = (contact) => {
@@ -737,6 +771,8 @@ const handleCreateReporter = async () => {
       } else if (result.id) {
         extractedId = result.id
       }
+      
+      console.log('New reporter created with ID:', extractedId)
       
       if (extractedId) {
         emit('reporter-created', extractedId)
