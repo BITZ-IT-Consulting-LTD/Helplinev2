@@ -97,24 +97,42 @@
           <div class="text-sm opacity-70">Or click "New Reporter" to create a new one</div>
         </div>
 
-        <!-- Selected Reporter Summary -->
-        <div v-if="selectedReporter && !showCreateForm" class="mt-5 p-4 bg-blue-900/20 border border-blue-600/30 rounded-lg">
-          <div class="text-sm font-semibold text-blue-400 mb-3">Selected Reporter:</div>
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-full flex items-center justify-center bg-blue-600 text-white font-semibold text-sm flex-shrink-0">
-              <span>{{ getInitials(getValue(selectedReporter, 'fullname') || 'NR') }}</span>
-            </div>
-            <div class="flex-1">
-              <div class="font-semibold text-gray-100">{{ getValue(selectedReporter, 'fullname') || 'Reporter' }}</div>
-              <div class="text-sm text-gray-400 mt-0.5">
-                {{ getValue(selectedReporter, 'phone') || 'No phone' }} • 
-                {{ getValue(selectedReporter, 'age') || 'Age unknown' }} • 
-                {{ getValue(selectedReporter, 'sex') || 'Gender unknown' }}
-              </div>
-            </div>
+        <!-- Combined Selected Reporter Summary & ID Display -->
+        <div v-if="(selectedReporter || reporterId) && !showCreateForm" class="mt-5 p-4 bg-blue-900/20 border border-blue-600/30 rounded-lg">
+          <div class="flex items-start justify-between mb-3">
+            <div class="text-sm font-semibold text-blue-400">Selected Reporter:</div>
             <button type="button" @click="clearSelection" class="p-1.5 rounded-md border border-gray-600 hover:bg-gray-700 hover:border-red-500 text-gray-400 hover:text-red-400 transition-colors">
               <i-mdi-close class="w-4 h-4" />
             </button>
+          </div>
+          
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-blue-600 text-white font-semibold text-sm flex-shrink-0">
+              <span>{{ getInitials(getValue(selectedReporter, 'fullname') || 'NR') }}</span>
+            </div>
+            
+            <div class="flex-1 min-w-0">
+              <div class="font-semibold text-base text-gray-100 mb-1">
+                {{ getValue(selectedReporter, 'fullname') || 'Reporter' }}
+              </div>
+              
+              <div class="text-sm text-gray-400 space-y-1 mb-3">
+                <div>{{ getValue(selectedReporter, 'phone') || 'No phone' }}</div>
+                <div>
+                  {{ getValue(selectedReporter, 'age') || 'Age unknown' }} • 
+                  {{ getValue(selectedReporter, 'sex') || 'Gender unknown' }}
+                </div>
+              </div>
+
+              <!-- Reporter ID -->
+              <div v-if="reporterId" class="flex items-center gap-2 p-2 bg-green-900/30 border border-green-600/40 rounded-md">
+                <i-mdi-check-circle class="w-5 h-5 text-green-400 flex-shrink-0" />
+                <div class="flex-1">
+                  <div class="text-xs font-medium text-green-400">Reporter ID</div>
+                  <div class="text-sm font-bold text-green-300">{{ reporterId }}</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -368,17 +386,6 @@
                 {{ isCreating ? 'Creating...' : 'Create Reporter' }}
               </button>
             </div>
-          </div>
-        </div>
-
-        <!-- Reporter ID Display -->
-        <div v-if="reporterId" class="mt-5 p-4 bg-green-900/20 border border-green-600/30 rounded-lg">
-          <div class="flex items-center justify-between">
-            <div>
-              <div class="text-sm font-semibold text-green-400 mb-1">Reporter ID Captured:</div>
-              <div class="text-lg font-bold text-green-300">{{ reporterId }}</div>
-            </div>
-            <i-mdi-check-circle class="w-8 h-8 text-green-400" />
           </div>
         </div>
       </div>

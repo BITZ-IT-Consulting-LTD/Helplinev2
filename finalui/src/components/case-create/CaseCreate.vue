@@ -168,35 +168,38 @@ export default {
     ];
     
     const formData = reactive({
-      step1: {
-        searchQuery: '',
-        selectedReporter: null,
-        filteredContacts: []
-      },
-      step2: {
-        // Case Details (Right column - mandatory fields)
-        narrative: '',
-        plan: '',
-        isGBVRelated: '',
-        categories: '',
-        priority: '',
-        status: '',
-        department: '',
-        escalatedTo: ''
-      },
-      step3: {
-        // Additional Details (Left column)
-        clients: [],
-        perpetrators: [],
-        attachments: [],
-        servicesOffered: [],
-        servicesOfferedText: [],
-        referralSource: '',
-        referralsType: [],
-        policeDetails: '',
-        otherServicesDetails: ''
-      }
-    });
+  step1: {
+    searchQuery: '',
+    selectedReporter: null,
+    filteredContacts: []
+  },
+  step2: {
+    // Case Details (Right column - mandatory fields)
+    narrative: '',
+    plan: '',
+    isGBVRelated: '',
+    categories: '',
+    priority: '',
+    status: '',
+    department: '',
+    escalatedTo: '',
+    clientPassportNumber: '', // NEW
+    justiceSystemState: '', // NEW
+    generalAssessment: '' // NEW
+  },
+  step3: {
+    // Additional Details (Left column)
+    clients: [],
+    perpetrators: [],
+    attachments: [],
+    servicesOffered: [],
+    servicesOfferedText: [],
+    referralSource: '',
+    referralsType: [],
+    policeDetails: '',
+    otherServicesDetails: ''
+  }
+});
     
     // Client Modal State
     const clientModalOpen = ref(false);
@@ -695,36 +698,41 @@ export default {
     };
     
     const casePayload = {
-      ".id": "",
-      ...baseSourceFields,
-      src_address: getValueOrDefault(formData.step3.clients[0]?.phone || ""),
-      
-      // Use reporter_uuid_id instead of reporter_id and reporter_contact_id
-      reporter_uuid_id: reporterId.value || "",
-      contact_uuid_id: reporterId.value || "",
-      
-      case_category_id: getValueOrDefault(formData.step2.categories),
-      narrative: getValueOrDefault(formData.step2.narrative),
-      plan: getValueOrDefault(formData.step2.plan),
-      dept: mapDepartmentToBackend(formData.step2.department),
-      disposition_id: "363037",
-      escalated_to_id: getValueOrDefault(formData.step2.escalatedTo, "0"),
-      gbv_related: mapGBVRelatedToBackend(formData.step2.isGBVRelated),
-      knowabout116_id: getValueOrDefault(formData.step3.referralSource),
-      police_ob_no: getValueOrDefault(formData.step3.policeDetails),
-      priority: getValueOrDefault(formData.step2.priority) || "1",
-      status: getValueOrDefault(formData.step2.status) || "1",
-      
-      services: servicesPayload,
-      referals: referralsPayload,
-      specify_service: getValueOrDefault(formData.step3.otherServicesDetails),
-      clients_case: clientsPayload,
-      perpetrators_case: perpetratorsPayload,
-      attachments_case: attachmentsPayload,
-      
-      activity_id: "",
-      activity_ca_id: ""
-    };
+  ".id": "",
+  ...baseSourceFields,
+  src_address: getValueOrDefault(formData.step3.clients[0]?.phone || ""),
+  
+  // Use reporter_uuid_id instead of reporter_id and reporter_contact_id
+  reporter_uuid_id: reporterId.value || "",
+  contact_uuid_id: reporterId.value || "",
+  
+  case_category_id: getValueOrDefault(formData.step2.categories),
+  narrative: getValueOrDefault(formData.step2.narrative),
+  plan: getValueOrDefault(formData.step2.plan),
+  dept: mapDepartmentToBackend(formData.step2.department),
+  disposition_id: "363037",
+  escalated_to_id: getValueOrDefault(formData.step2.escalatedTo, "0"),
+  gbv_related: mapGBVRelatedToBackend(formData.step2.isGBVRelated),
+  knowabout116_id: getValueOrDefault(formData.step3.referralSource),
+  police_ob_no: getValueOrDefault(formData.step3.policeDetails),
+  priority: getValueOrDefault(formData.step2.priority) || "1",
+  status: getValueOrDefault(formData.step2.status) || "1",
+  
+  // NEW FIELDS
+  national_id_: getValueOrDefault(formData.step2.clientPassportNumber),
+  justice_id: getValueOrDefault(formData.step2.justiceSystemState),
+  assessment_id: getValueOrDefault(formData.step2.generalAssessment),
+  
+  services: servicesPayload,
+  referals: referralsPayload,
+  specify_service: getValueOrDefault(formData.step3.otherServicesDetails),
+  clients_case: clientsPayload,
+  perpetrators_case: perpetratorsPayload,
+  attachments_case: attachmentsPayload,
+  
+  activity_id: "",
+  activity_ca_id: ""
+};
     
     // Remove undefined fields
     Object.keys(casePayload).forEach(key => {

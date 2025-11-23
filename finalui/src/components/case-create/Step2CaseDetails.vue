@@ -92,13 +92,50 @@
           <label class="block font-semibold mb-2 text-gray-100">Department *</label>
           <div class="flex gap-4 mt-2">
             <label class="flex items-center gap-1.5 cursor-pointer">
-              <input v-model="localForm.department" type="radio" value="116" @change="updateForm" class="w-4 h-4 text-blue-600" />
+              <input v-model="localForm.department" type="radio" value="116" @change="handleDepartmentChange" class="w-4 h-4 text-blue-600" />
               <span class="text-sm text-gray-300">116</span>
             </label>
             <label class="flex items-center gap-1.5 cursor-pointer">
-              <input v-model="localForm.department" type="radio" value="labor" @change="updateForm" class="w-4 h-4 text-blue-600" />
+              <input v-model="localForm.department" type="radio" value="labor" @change="handleDepartmentChange" class="w-4 h-4 text-blue-600" />
               <span class="text-sm text-gray-300">Labor</span>
             </label>
+          </div>
+
+          <!-- Client Passport Number (conditional) -->
+          <div v-if="showPassportField" class="mt-4 p-4 bg-gray-800 border border-gray-600 rounded-lg animate-fadeIn">
+            <label for="client-passport" class="block font-semibold mb-2 text-gray-100">Client's Passport Number</label>
+            <input 
+              id="client-passport" 
+              v-model="localForm.clientPassportNumber" 
+              type="text" 
+              class="w-full px-3 py-2 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50" 
+              placeholder="Enter client's passport number" 
+              @input="updateForm" 
+            />
+          </div>
+        </div>
+
+        <!-- Justice System State and General Assessment -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
+          <div>
+            <BaseSelect
+              id="justice-system-state"
+              label="State of the Case in the Justice System *"
+              v-model="localForm.justiceSystemState"
+              placeholder="Select an option"
+              :category-id="236687"
+              @change="updateForm"
+            />
+          </div>
+          <div>
+            <BaseSelect
+              id="general-assessment"
+              label="General Case Assessment *"
+              v-model="localForm.generalAssessment"
+              placeholder="Select an option"
+              :category-id="236694"
+              @change="updateForm"
+            />
           </div>
         </div>
 
@@ -164,7 +201,12 @@ const emit = defineEmits([
 ])
 
 const userStore = useUserStore()
-const localForm = reactive({ ...props.formData })
+const localForm = reactive({ 
+  ...props.formData,
+  clientPassportNumber: props.formData.clientPassportNumber || '',
+  justiceSystemState: props.formData.justiceSystemState || '',
+  generalAssessment: props.formData.generalAssessment || ''
+})
 
 // Load users on mount
 onMounted(async () => {
@@ -177,7 +219,11 @@ watch(() => props.formData, (newData) => {
   Object.assign(localForm, newData)
 }, { deep: true })
 
-// Computed users list
+// Computed properties
+const showPassportField = computed(() => {
+  return localForm.department === 'labor'
+})
+
 const users = computed(() => userStore.users || [])
 
 // Helper functions to extract user data
@@ -217,6 +263,13 @@ const getUserRole = (user) => {
   return getValue(user, 'role') || getValue(user, 'user_role') || getValue(user, 'role_name') || "No Role"
 }
 
+const handleDepartmentChange = () => {
+  if (localForm.department !== 'labor') {
+    localForm.clientPassportNumber = ''
+  }
+  updateForm()
+}
+
 function updateForm() {
   emit("form-update", localForm)
 }
@@ -230,3 +283,20 @@ function handleFormSubmit() {
   emit("save-and-proceed", { step: 2, data: localForm })
 }
 </script>
+
+<style scoped>
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(-10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+</style>

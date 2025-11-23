@@ -18,15 +18,48 @@
             Edit
           </button>
         </div>
-        <div class="p-3 px-4">
-          <div class="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg">
-            <div class="w-12 h-12 rounded-full flex items-center justify-center bg-blue-600 text-white font-semibold text-lg flex-shrink-0">
-              <span>{{ getReporterInitials() }}</span>
+        <div class="p-4">
+          <div v-if="formData.step1.selectedReporter || reporterId" class="p-4 bg-blue-900/20 border border-blue-600/30 rounded-lg">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center bg-blue-600 text-white font-semibold text-sm flex-shrink-0">
+                <span>{{ getReporterInitials() }}</span>
+              </div>
+              
+              <div class="flex-1 min-w-0">
+                <div class="font-semibold text-base text-gray-100 mb-1">
+                  {{ getReporterName() }}
+                </div>
+                
+                <div class="text-sm text-gray-400 space-y-1 mb-3">
+                  <div v-if="getReporterPhone()">
+                    <i-mdi-phone class="w-4 h-4 inline mr-1" />
+                    {{ getReporterPhone() }}
+                  </div>
+                  <div v-if="getReporterAge() || getReporterGender()">
+                    <i-mdi-account-details class="w-4 h-4 inline mr-1" />
+                    {{ getReporterAge() || 'Age unknown' }} • {{ getReporterGender() || 'Gender unknown' }}
+                  </div>
+                  <div v-if="getReporterLocation()">
+                    <i-mdi-map-marker class="w-4 h-4 inline mr-1" />
+                    {{ getReporterLocation() }}
+                  </div>
+                </div>
+
+                <!-- Reporter ID -->
+                <div v-if="reporterId" class="flex items-center gap-2 p-2 bg-green-900/30 border border-green-600/40 rounded-md">
+                  <i-mdi-check-circle class="w-5 h-5 text-green-400 flex-shrink-0" />
+                  <div class="flex-1">
+                    <div class="text-xs font-medium text-green-400">Reporter ID</div>
+                    <div class="text-sm font-bold text-green-300">{{ reporterId }}</div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div>
-              <div class="font-semibold text-gray-100">Reporter ID: {{ reporterId || 'N/A' }}</div>
-              <div class="text-sm text-gray-400">{{ formData.step1.selectedReporter ? 'Existing Reporter' : 'New Reporter' }}</div>
-            </div>
+          </div>
+
+          <div v-else class="p-4 bg-gray-700/50 border border-gray-600 rounded-lg text-center text-gray-400">
+            <i-mdi-account-alert class="w-8 h-8 mx-auto mb-2 opacity-50" />
+            <div class="text-sm">No reporter information available</div>
           </div>
         </div>
       </div>
@@ -163,6 +196,7 @@
 <script setup>
 import { computed, onMounted } from "vue"
 import { useUserStore } from "@/stores/users"
+import { useReporterStore } from "@/stores/reporters"
 
 const props = defineProps({
   currentStep: { type: Number, required: true },
@@ -173,6 +207,7 @@ const props = defineProps({
 const emit = defineEmits(["go-to-step", "submit-case"])
 
 const userStore = useUserStore()
+const reporterStore = useReporterStore()
 
 onMounted(async () => {
   if (!userStore.users.length) {
@@ -188,11 +223,67 @@ function submitCase() {
   emit("submit-case", props.formData)
 }
 
-function getReporterInitials() {
-  if (props.formData.step1.selectedReporter) {
-    return 'ER' // Existing Reporter
+// Reporter helper functions
+const getReporterFieldIndex = (fieldName) => {
+  const mapping = reporterStore.reporters_k?.[`contact_${fieldName}`]
+  if (mapping && Array.isArray(mapping) && mapping.length > 0) {
+    return mapping[0]
   }
-  return 'NR' // New Reporter
+  const fallbackMapping = reporterStore.reporters_k?.[fieldName]
+  if (fallbackMapping && Array.isArray(fallbackMapping) && fallbackMapping.length > 0) {
+    return fallbackMapping[0]
+  }
+  return null
+}
+
+const getReporterValue = (contact, fieldName) => {
+  if (!contact || !Array.isArray(contact)) return ""
+  const idx = getReporterFieldIndex(fieldName)
+  if (idx !== null && idx >= 0 && idx < contact.length) {
+    return contact[idx] || ""
+  }
+  return ""
+}
+
+function getReporterName() {
+  const reporter = props.formData.step1.selectedReporter
+  if (!reporter) return 'Reporter'
+  return getReporterValue(reporter, 'fullname') || 'Reporter'
+}
+
+function getReporterPhone() {
+  const reporter = props.formData.step1.selectedReporter
+  if (!reporter) return ''
+  return getReporterValue(reporter, 'phone')
+}
+
+function getReporterAge() {
+  const reporter = props.formData.step1.selectedReporter
+  if (!reporter) return ''
+  return getReporterValue(reporter, 'age')
+}
+
+function getReporterGender() {
+  const reporter = props.formData.step1.selectedReporter
+  if (!reporter) return ''
+  return getReporterValue(reporter, 'sex')
+}
+
+function getReporterLocation() {
+  const reporter = props.formData.step1.selectedReporter
+  if (!reporter) return ''
+  return getReporterValue(reporter, 'location')
+}
+
+function getReporterInitials() {
+  const name = getReporterName()
+  if (!name || name === 'Reporter') return 'NR'
+  
+  return name.split(" ")
+    .map((n) => n[0] || "")
+    .join("")
+    .toUpperCase()
+    .slice(0, 2)
 }
 
 function formatPriority(priority) {
