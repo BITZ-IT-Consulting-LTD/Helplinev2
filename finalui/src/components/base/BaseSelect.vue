@@ -170,7 +170,8 @@ async function handleOptionClick(option) {
 function selectOption(option) {
   selectedOption.value = option
   emit('update:modelValue', option.id)
-  emit('change', option.id)
+  // IMPORTANT: Emit change with both ID and text
+  emit('change', option.id, option.name)
   isOpen.value = false
 }
 
@@ -187,7 +188,7 @@ function clearSelection() {
   navigationPath.value = []
   if (props.categoryId) loadLevel(props.categoryId)
   emit('update:modelValue', '')
-  emit('change', '')
+  emit('change', '', '')
   isOpen.value = false
 }
 

@@ -27,12 +27,19 @@
       <!-- Role -->
       <div class="flex flex-col">
         <label class="text-sm font-medium mb-1 text-gray-300">Role</label>
-        <input 
-          type="text" 
+        <select 
           v-model="filters.role" 
-          placeholder="Enter role"
-          class="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
+          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">All Roles</option>
+          <option value="1">Counsellor</option>
+          <option value="2">Supervisor</option>
+          <option value="3">Case Manager</option>
+          <option value="4">Case Worker</option>
+          <option value="5">Partner</option>
+          <option value="6">Media Account</option>
+          <option value="99">Administrator</option>
+        </select>
       </div>
 
       <!-- Created By -->
@@ -52,7 +59,7 @@
         <input 
           type="date" 
           v-model="filters.createdDateFrom" 
-          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
@@ -62,7 +69,7 @@
         <input 
           type="date" 
           v-model="filters.createdDateTo" 
-          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
@@ -131,9 +138,9 @@ function applyFilters() {
     params.contact_fname = filters.firstName.trim()
   }
 
-  // Role - using role field
+  // Role - using role field (now sends the role ID)
   if (filters.role) {
-    params.role = filters.role.trim()
+    params.role = filters.role
   }
 
   // Created By - using created_by field

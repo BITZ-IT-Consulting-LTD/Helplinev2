@@ -4,19 +4,16 @@
     <h1 class="text-2xl font-bold text-gray-100 mb-2">System Users</h1>
     <p class="text-gray-400 mb-6">Manage user accounts and permissions across the system</p>
 
-    <!-- Filters (only show for table and timeline views) -->
-    <UsersFilter 
-      v-if="view !== 'create'" 
-      @update:filters="applyFilters" 
-    />
+    <!-- Filters -->
+    <UsersFilter @update:filters="applyFilters" />
 
     <!-- Loading State -->
-    <div v-if="store.loading && view !== 'create'" class="flex justify-center items-center py-12 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
+    <div v-if="store.loading" class="flex justify-center items-center py-12 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
       <div class="text-gray-400">Loading users...</div>
     </div>
 
     <!-- Content when loaded -->
-    <div v-else-if="view !== 'create'">
+    <div v-else>
       <!-- View Toggle Buttons and Stats Row -->
       <div class="flex justify-between items-center mb-6">
         <!-- Total Count -->
@@ -55,7 +52,7 @@
           </button>
 
           <button
-            @click="view = 'create'"
+            @click="showCreateModal = true"
             class="px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm bg-green-600 text-white hover:bg-green-700 shadow-lg active:scale-95"
           >
             <i-mdi-plus-circle class="w-5 h-5" />
@@ -84,10 +81,17 @@
       </div>
     </div>
 
-    <!-- Create User View -->
-    <div v-else>
-      <UserForm @saved="handleSaved" />
-    </div>
+    <!-- Create User Modal - Blocking -->
+    <Transition name="modal">
+      <div 
+        v-if="showCreateModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto"
+      >
+        <div class="my-8">
+          <UserForm @saved="handleSaved" @cancel="showCreateModal = false" />
+        </div>
+      </div>
+    </Transition>
 
   </div>
 </template>
@@ -103,6 +107,7 @@ import UsersFilter from '@/components/users/UsersFilter.vue'
 
 const store = useUserStore()
 const view = ref('timeline')
+const showCreateModal = ref(false)
 const currentFilters = ref({})
 
 onMounted(async () => {
@@ -114,7 +119,6 @@ onMounted(async () => {
   }
 })
 
-// Apply filters and fetch users
 async function applyFilters(filters) {
   currentFilters.value = filters
   try {
@@ -127,7 +131,6 @@ async function applyFilters(filters) {
   }
 }
 
-// Refresh users with current filters
 async function refreshUsers() {
   try {
     console.log('Refreshing users...')
@@ -141,8 +144,20 @@ async function refreshUsers() {
 }
 
 const handleSaved = () => {
-  view.value = 'table'
+  showCreateModal.value = false
   store.listUsers()
   toast.success('User saved successfully!')
 }
 </script>
+
+<style scoped>
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+</style>

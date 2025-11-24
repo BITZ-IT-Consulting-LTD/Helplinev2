@@ -1,647 +1,518 @@
 <template>
-  <div class="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
-    <div class="max-w-7xl mx-auto">
-      <!-- Page Header -->
-      <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Reports & Analytics</h1>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">Visualize and analyze your data</p>
-      </div>
+  <div class="min-h-screen bg-gray-900 py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-gray-800 rounded-lg shadow-xl border border-gray-700 p-6">
+        <h1 class="text-2xl font-bold text-gray-100 mb-6">
+          Reporter Form Demo
+        </h1>
 
-      <!-- Controls Section -->
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Endpoint Selection -->
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-              Data Source
-            </label>
-            <select 
-              v-model="selectedEndpoint" 
-              class="w-full px-4 py-3 bg-white dark:bg-gray-900 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-sm font-medium text-gray-800 dark:text-gray-100 cursor-pointer transition-all duration-300 hover:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            >
-              <option value="qa">QA Results</option>
-              <option value="cases">Cases</option>
-              <option value="calls">Call History</option>
-              <option value="users">Users</option>
-            </select>
-          </div>
+        <div class="space-y-6">
+          <!-- Basic Information -->
+          <div class="border-b border-gray-700 pb-6">
+            <h2 class="text-lg font-semibold text-gray-100 mb-4">Basic Information</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">
+                  Full Name *
+                </label>
+                <input
+                  v-model="formData.fname"
+                  type="text"
+                  class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500"
+                  placeholder="Enter full name"
+                />
+              </div>
 
-          <!-- X-Axis (Time Duration) -->
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-              Time Period (X-Axis)
-            </label>
-            <div class="flex gap-2">
-              <button
-                v-for="period in timePeriods"
-                :key="period.value"
-                @click="xAxis = period.value"
-                :class="[
-                  'flex-1 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200',
-                  xAxis === period.value
-                    ? 'bg-orange-500 text-white shadow-md'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                ]"
-              >
-                {{ period.label }}
-              </button>
-            </div>
-          </div>
-        </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">
+                  Date of Birth
+                </label>
+                <input
+                  v-model="formData.dob"
+                  type="date"
+                  @change="handleDobChange"
+                  class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500"
+                />
+                <p v-if="formData.dob" class="text-xs text-gray-400 mt-1">
+                  Auto-fills Age and Age Group
+                </p>
+              </div>
 
-        <!-- Y-Axis Filter Selection -->
-        <div class="mt-6">
-          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-            Filter By (Y-Axis)
-          </label>
-          
-          <!-- Available Options -->
-          <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 mb-4 border-2 border-gray-200 dark:border-gray-700">
-            <div class="flex flex-wrap gap-2">
-              <button
-                v-for="field in availableYAxisFields"
-                :key="field"
-                @click="toggleYAxis(field)"
-                :disabled="selectedYAxis.includes(field)"
-                :class="[
-                  'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
-                  selectedYAxis.includes(field)
-                    ? 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed'
-                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:border-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 cursor-pointer'
-                ]"
-              >
-                {{ formatFieldName(field) }}
-              </button>
-            </div>
-          </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">
+                  Age
+                </label>
+                <input
+                  v-model="formData.age"
+                  type="number"
+                  :readonly="!!formData.dob"
+                  :class="[
+                    'w-full px-3 py-2 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500',
+                    formData.dob ? 'bg-gray-600 cursor-not-allowed' : 'bg-gray-700'
+                  ]"
+                  placeholder="Age (auto-calculated from DOB)"
+                />
+              </div>
 
-          <!-- Selected Filters -->
-          <div v-if="selectedYAxis.length > 0" class="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 border-2 border-orange-200 dark:border-orange-800">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-sm font-semibold text-orange-800 dark:text-orange-200">Selected Filters</span>
-              <button
-                @click="selectedYAxis = []"
-                class="text-xs text-orange-600 dark:text-orange-400 hover:text-orange-800 dark:hover:text-orange-200 font-medium"
-              >
-                Clear All
-              </button>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <div
-                v-for="(field, index) in selectedYAxis"
-                :key="field"
-                class="flex items-center gap-2 px-3 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium shadow-sm"
-              >
-                <span>{{ formatFieldName(field) }}</span>
-                <button
-                  @click="removeYAxis(index)"
-                  class="hover:bg-orange-600 rounded p-0.5 transition-colors"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+              <div>
+                <BaseSelect
+                  id="reporter-age-group"
+                  label="Age Group"
+                  v-model="formData.ageGroup"
+                  placeholder="Select Age Group (auto-filled from DOB)"
+                  :category-id="101"
+                  :readonly="!!formData.dob"
+                  :disabled="!!formData.dob"
+                />
+                <p v-if="formData.dob" class="text-xs text-gray-400 mt-1">
+                  Auto-selected based on DOB
+                </p>
+              </div>
+
+              <div>
+                <BaseSelect
+                  id="reporter-sex"
+                  label="Sex"
+                  v-model="formData.sex"
+                  placeholder="Select sex"
+                  :category-id="120"
+                />
+              </div>
+
+              <div>
+                <BaseSelect
+                  id="reporter-location"
+                  label="Location"
+                  v-model="formData.location"
+                  placeholder="Select location"
+                  :category-id="88"
+                />
               </div>
             </div>
           </div>
 
-          <p v-else class="text-sm text-gray-500 dark:text-gray-400 italic">No filters selected. Click on options above to add filters.</p>
-        </div>
-
-        <!-- Apply Button -->
-        <div class="mt-6 flex justify-end">
-          <button
-            @click="fetchData"
-            :disabled="loading || selectedYAxis.length === 0 || !xAxis"
-            class="px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-orange-500 disabled:hover:to-orange-600"
-          >
-            {{ loading ? 'Loading...' : 'Generate Report' }}
-          </button>
-        </div>
-      </div>
-
-      <!-- Graph Section -->
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
-            {{ formatFieldName(selectedEndpoint) }} Analytics
-          </h2>
-          <div class="px-4 py-2 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-lg text-sm font-medium">
-            {{ formatFieldName(currentMetric) }}
-          </div>
-        </div>
-
-        <div v-if="loading" class="flex items-center justify-center h-96">
-          <div class="flex flex-col items-center gap-4">
-            <div class="animate-spin rounded-full h-12 w-12 border-4 border-orange-200 border-t-orange-500"></div>
-            <div class="text-gray-500 dark:text-gray-400 font-medium">Loading data...</div>
-          </div>
-        </div>
-
-        <div v-else-if="chartData.length === 0" class="flex items-center justify-center h-96">
-          <div class="text-center">
-            <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-            <p class="mt-4 text-gray-500 dark:text-gray-400 font-medium">No data available</p>
-            <p class="mt-2 text-sm text-gray-400 dark:text-gray-500">Select filters and click "Generate Report"</p>
-          </div>
-        </div>
-
-        <!-- Bar Chart -->
-        <div v-else class="overflow-x-auto">
-          <div class="inline-block min-w-full">
-            <svg :width="svgWidth" :height="svgHeight">
-              <!-- Horizontal gridlines -->
-              <g v-for="tick in yTicks" :key="'grid-' + tick">
-                <line
-                  :x1="margin.left"
-                  :x2="svgWidth - margin.right"
-                  :y1="yScale(tick)"
-                  :y2="yScale(tick)"
-                  stroke="#e5e7eb"
-                  stroke-width="1"
-                  stroke-dasharray="4"
+          <!-- Contact Information -->
+          <div class="border-b border-gray-700 pb-6">
+            <h2 class="text-lg font-semibold text-gray-100 mb-4">Contact Information</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">
+                  Phone Number
+                </label>
+                <input
+                  v-model="formData.phone"
+                  type="tel"
+                  class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500"
+                  placeholder="Enter phone number"
                 />
-              </g>
+              </div>
 
-              <!-- Bars -->
-              <g v-for="(bar, index) in chartData" :key="'bar-' + index">
-                <rect
-                  :x="margin.left + index * (barWidth + barSpacing)"
-                  :y="yScale(bar.value)"
-                  :width="barWidth"
-                  :height="svgHeight - margin.bottom - yScale(bar.value)"
-                  fill="url(#barGradient)"
-                  class="cursor-pointer hover:opacity-80 transition-opacity"
-                  rx="4"
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">
+                  Alternative Phone
+                </label>
+                <input
+                  v-model="formData.phone2"
+                  type="tel"
+                  class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500"
+                  placeholder="Alternative phone"
                 />
-                <!-- X-axis labels -->
-                <text
-                  :x="margin.left + index * (barWidth + barSpacing) + barWidth / 2"
-                  :y="svgHeight - margin.bottom + 20"
-                  text-anchor="middle"
-                  font-size="11"
-                  class="fill-gray-600 dark:fill-gray-400 font-medium"
-                >
-                  {{ bar.label }}
-                </text>
-              </g>
+              </div>
 
-              <!-- Y-axis labels -->
-              <g v-for="tick in yTicks" :key="'label-' + tick">
-                <text
-                  :x="margin.left - 8"
-                  :y="yScale(tick) + 4"
-                  text-anchor="end"
-                  font-size="11"
-                  class="fill-gray-600 dark:fill-gray-400 font-medium"
-                >
-                  {{ tick }}
-                </text>
-              </g>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-300 mb-2">
+                  Email
+                </label>
+                <input
+                  v-model="formData.email"
+                  type="email"
+                  class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500"
+                  placeholder="Enter email address"
+                />
+              </div>
 
-              <!-- X-axis line -->
-              <line
-                :x1="margin.left"
-                :x2="svgWidth - margin.right"
-                :y1="svgHeight - margin.bottom"
-                :y2="svgHeight - margin.bottom"
-                stroke="#9ca3af"
-                stroke-width="2"
-              />
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-300 mb-2">
+                  Nearest Landmark
+                </label>
+                <input
+                  v-model="formData.landmark"
+                  type="text"
+                  class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500"
+                  placeholder="Enter landmark"
+                />
+              </div>
+            </div>
+          </div>
 
-              <!-- Y-axis line -->
-              <line
-                :x1="margin.left"
-                :x2="margin.left"
-                :y1="margin.top"
-                :y2="svgHeight - margin.bottom"
-                stroke="#9ca3af"
-                stroke-width="2"
-              />
+          <!-- Additional Details -->
+          <div class="border-b border-gray-700 pb-6">
+            <h2 class="text-lg font-semibold text-gray-100 mb-4">Additional Details</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <BaseSelect
+                  id="reporter-nationality"
+                  label="Nationality"
+                  v-model="formData.nationality"
+                  placeholder="Select nationality"
+                  :category-id="126"
+                />
+              </div>
 
-              <!-- Gradient for bars -->
-              <defs>
-                <linearGradient id="barGradient" x1="0" y1="1" x2="0" y2="0">
-                  <stop offset="0%" stop-color="#f97316" />
-                  <stop offset="100%" stop-color="#fb923c" />
-                </linearGradient>
-              </defs>
-            </svg>
+              <div>
+                <BaseSelect
+                  id="reporter-language"
+                  label="Language"
+                  v-model="formData.language"
+                  placeholder="Select language"
+                  :category-id="123"
+                />
+              </div>
+
+              <div>
+                <BaseSelect
+                  id="reporter-tribe"
+                  label="Tribe"
+                  v-model="formData.tribe"
+                  placeholder="Select tribe"
+                  :category-id="133"
+                />
+              </div>
+
+              <div>
+                <BaseSelect
+                  id="reporter-id-type"
+                  label="ID Type"
+                  v-model="formData.idType"
+                  placeholder="Select ID type"
+                  :category-id="362409"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">
+                  ID Number
+                </label>
+                <input
+                  v-model="formData.idNumber"
+                  type="text"
+                  class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500"
+                  placeholder="Enter ID number"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">
+                  Is Refugee?
+                </label>
+                <div class="flex gap-4 mt-2">
+                  <label class="flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      v-model="formData.isRefugee"
+                      type="radio"
+                      value="1"
+                      class="w-4 h-4 text-blue-600"
+                    />
+                    <span class="text-sm text-gray-300">Yes</span>
+                  </label>
+                  <label class="flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      v-model="formData.isRefugee"
+                      type="radio"
+                      value="0"
+                      class="w-4 h-4 text-blue-600"
+                    />
+                    <span class="text-sm text-gray-300">No</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex gap-3 justify-end">
+            <button
+              @click="handleReset"
+              :disabled="reporterStore.loading"
+              class="px-6 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Reset
+            </button>
+            <button
+              @click="handleSubmit"
+              :disabled="reporterStore.loading"
+              class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              <span v-if="reporterStore.loading" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              {{ reporterStore.loading ? 'Creating...' : 'Create Reporter' }}
+            </button>
           </div>
         </div>
-      </div>
 
-      <!-- Table Section -->
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">Data Table</h2>
-        
-        <div v-if="loading" class="flex items-center justify-center h-64">
-          <div class="flex flex-col items-center gap-4">
-            <div class="animate-spin rounded-full h-12 w-12 border-4 border-orange-200 border-t-orange-500"></div>
-            <div class="text-gray-500 dark:text-gray-400 font-medium">Loading data...</div>
+        <!-- Response Display -->
+        <div v-if="response" class="mt-6 p-4 bg-green-900/20 border border-green-600 rounded-lg">
+          <h3 class="text-lg font-semibold text-green-400 mb-2">
+            Success! Reporter ID: {{ response.id || 'Created' }}
+          </h3>
+          <div class="mb-3">
+            <button
+              @click="showPayload = !showPayload"
+              class="text-sm text-green-400 hover:text-green-300 underline"
+            >
+              {{ showPayload ? 'Hide' : 'Show' }} Payload
+            </button>
           </div>
+          <pre v-if="showPayload" class="text-xs text-gray-300 overflow-x-auto max-h-64 p-2 bg-gray-900 rounded">{{ JSON.stringify(response, null, 2) }}</pre>
         </div>
 
-        <div v-else-if="tableData.length === 0" class="flex items-center justify-center h-64">
-          <div class="text-center">
-            <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
-            <p class="mt-4 text-gray-500 dark:text-gray-400 font-medium">No data available</p>
-            <p class="mt-2 text-sm text-gray-400 dark:text-gray-500">Select filters and click "Generate Report"</p>
-          </div>
-        </div>
-
-        <div v-else class="overflow-x-auto rounded-xl border-2 border-gray-200 dark:border-gray-700">
-          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead class="bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-900 dark:to-gray-800">
-              <tr>
-                <!-- Dynamic filter columns -->
-                <th 
-                  v-for="(filter, idx) in selectedYAxis" 
-                  :key="'filter-' + idx"
-                  class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
-                >
-                  {{ formatFieldName(filter) }}
-                </th>
-                <!-- Time period columns -->
-                <th 
-                  v-for="period in tableTimePeriods" 
-                  :key="'period-' + period"
-                  class="px-6 py-4 text-center text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider bg-orange-50 dark:bg-orange-900/20"
-                >
-                  {{ period }}
-                </th>
-                <th class="px-6 py-4 text-center text-xs font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider bg-orange-100 dark:bg-orange-900/30">
-                  Total
-                </th>
-              </tr>
-            </thead>
-            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              <tr v-for="(row, rowIdx) in tableData" :key="'row-' + rowIdx" class="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
-                <!-- Filter value cells -->
-                <td 
-                  v-for="(filter, filterIdx) in selectedYAxis" 
-                  :key="'cell-filter-' + filterIdx"
-                  class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100"
-                >
-                  <span class="inline-flex items-center px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-700">
-                    {{ row.filters[filterIdx] || '-' }}
-                  </span>
-                </td>
-                <!-- Count cells for each period -->
-                <td 
-                  v-for="(count, periodIdx) in row.counts" 
-                  :key="'cell-count-' + periodIdx"
-                  class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-900 dark:text-gray-100 font-medium"
-                >
-                  {{ count }}
-                </td>
-                <!-- Total cell -->
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-bold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20">
-                  {{ row.total }}
-                </td>
-              </tr>
-              <!-- Total row -->
-              <tr class="bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-900 dark:to-gray-800 font-bold">
-                <td 
-                  :colspan="selectedYAxis.length"
-                  class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100 uppercase"
-                >
-                  Total
-                </td>
-                <td 
-                  v-for="(total, idx) in columnTotals" 
-                  :key="'total-' + idx"
-                  class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-900 dark:text-gray-100"
-                >
-                  {{ total }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30">
-                  {{ grandTotal }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <!-- Error Display -->
+        <div v-if="error" class="mt-6 p-4 bg-red-900/20 border border-red-600 rounded-lg">
+          <h3 class="text-lg font-semibold text-red-400 mb-2">Error</h3>
+          <p class="text-sm text-gray-300">{{ error }}</p>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref, computed, watch } from 'vue'
-import { useCaseStore } from '@/stores/cases'
-import { useCallStore } from '@/stores/calls'
-import { useQAStore } from '@/stores/qas'
-import { useUserStore } from '@/stores/users'
+<script>
+import { ref, reactive } from 'vue';
+import { useReporterStore } from '@/stores/reporters';
+import BaseSelect from '@/components/base/BaseSelect.vue';
 
-// Store instances
-const caseStore = useCaseStore()
-const callStore = useCallStore()
-const qaStore = useQAStore()
-const userStore = useUserStore()
-
-// State
-const selectedEndpoint = ref('qa')
-const xAxis = ref('') // No default value
-const selectedYAxis = ref([])
-const loading = ref(false)
-const rawData = ref([])
-
-// Time periods for button selection
-const timePeriods = [
-  { label: 'Hour', value: 'h' },
-  { label: 'Day', value: 'dt' },
-  { label: 'Week', value: 'wk' },
-  { label: 'Month', value: 'mn' },
-  { label: 'Year', value: 'yr' }
-]
-
-// Chart dimensions & spacing
-const margin = { top: 20, right: 20, bottom: 50, left: 50 }
-const barWidth = 35
-const barSpacing = 20
-const svgHeight = 400
-
-// Endpoint configurations
-const endpointConfig = {
-  qa: {
-    store: qaStore,
-    method: 'listQA',
-    yAxisFields: ['Extension'],
-    metric: 'qa_count',
-    storeKey: 'qaResults'
+export default {
+  name: 'ReporterFormDemo',
+  components: {
+    BaseSelect
   },
-  cases: {
-    store: caseStore,
-    method: 'listCases',
-    yAxisFields: ['Case', 'Reporter', 'Client', 'Perpetrator', 'Services', 'Referrals', 'Main Category', 'SubCategory 1', 'SubCategory 2', 'SubCategory 3', 'GBV Related', 'Case Source', 'Priority', 'Status', 'Created By', 'Escalated To', 'Escalated By', 'Case Assessment', 'Status in the Justice System'],
-    metric: 'case_count',
-    storeKey: 'cases'
-  },
-  calls: {
-    store: callStore,
-    method: 'listCalls',
-    yAxisFields: ['Direction', 'Extension', 'Hangup Status', 'SLA Band', 'Disposition'],
-    metric: 'call_count',
-    storeKey: 'calls'
-  },
-  users: {
-    store: userStore,
-    method: 'listUsers',
-    yAxisFields: ['Role', 'Department', 'Status', 'Team'],
-    metric: 'user_count',
-    storeKey: 'users'
-  }
-}
+  setup() {
+    const reporterStore = useReporterStore();
 
-// Available fields based on selected endpoint
-const availableYAxisFields = computed(() => {
-  return endpointConfig[selectedEndpoint.value]?.yAxisFields || []
-})
+    const formData = reactive({
+      fname: '',
+      age: '',
+      dob: '',
+      ageGroup: '',
+      sex: '',
+      location: '',
+      landmark: '',
+      nationality: '',
+      language: '',
+      tribe: '',
+      phone: '',
+      phone2: '',
+      email: '',
+      idType: '',
+      idNumber: '',
+      isRefugee: '0'
+    });
 
-const currentMetric = computed(() => {
-  return endpointConfig[selectedEndpoint.value]?.metric || ''
-})
+    const response = ref(null);
+    const error = ref(null);
+    const showPayload = ref(false);
 
-// Toggle Y-Axis selection
-function toggleYAxis(field) {
-  if (!selectedYAxis.value.includes(field)) {
-    selectedYAxis.value.push(field)
-  }
-}
-
-// Remove Y-Axis selection
-function removeYAxis(index) {
-  selectedYAxis.value.splice(index, 1)
-}
-
-// Watch endpoint changes and reset selections
-watch(selectedEndpoint, () => {
-  selectedYAxis.value = []
-})
-
-// Fetch data from appropriate store
-async function fetchData() {
-  if (selectedYAxis.value.length === 0) {
-    alert('Please select at least one filter field')
-    return
-  }
-
-  if (!xAxis.value) {
-    alert('Please select a time period')
-    return
-  }
-
-  loading.value = true
-  try {
-    const config = endpointConfig[selectedEndpoint.value]
-    const store = config.store
-    const method = config.method
-
-    const params = {
-      xaxis: xAxis.value,
-      yaxis: selectedYAxis.value.join(','),
-      metrics: config.metric
-    }
-
-    await store[method](params)
-    rawData.value = store[config.storeKey] || []
-    processData()
-  } catch (err) {
-    console.error('[Reports] fetchData error', err)
-    rawData.value = []
-  } finally {
-    loading.value = false
-  }
-}
-
-// Process raw data for chart
-const chartData = ref([])
-
-function processData() {
-  if (!rawData.value || rawData.value.length === 0) {
-    chartData.value = []
-    return
-  }
-
-  const grouped = {}
-  
-  rawData.value.forEach(row => {
-    if (!Array.isArray(row) || row.length === 0) return
-    
-    const timePeriod = String(row[0])
-    const value = Number(row[row.length - 1]) || 0
-    
-    grouped[timePeriod] = (grouped[timePeriod] || 0) + value
-  })
-
-  const entries = Object.entries(grouped)
-    .map(([label, value]) => ({ label, value }))
-    .sort((a, b) => {
-      const na = Number(a.label), nb = Number(b.label)
-      if (!isNaN(na) && !isNaN(nb)) return na - nb
-      return String(a.label).localeCompare(String(b.label))
-    })
-
-  chartData.value = entries.map(e => ({
-    label: formatLabel(e.label),
-    value: e.value
-  }))
-}
-
-// Process data for table
-const tableData = computed(() => {
-  if (!rawData.value || rawData.value.length === 0) return []
-
-  const groups = {}
-  const periods = new Set()
-
-  rawData.value.forEach(row => {
-    if (!Array.isArray(row) || row.length === 0) return
-
-    const timePeriod = String(row[0])
-    const count = Number(row[row.length - 1]) || 0
-    
-    const filterValues = []
-    for (let i = 1; i < row.length - 1; i++) {
-      filterValues.push(String(row[i] || ''))
-    }
-
-    const filterKey = filterValues.join('|')
-    periods.add(timePeriod)
-
-    if (!groups[filterKey]) {
-      groups[filterKey] = {
-        filters: filterValues,
-        periodCounts: {}
+    // Calculate age from date of birth
+    const calculateAge = (dob) => {
+      if (!dob) return null;
+      const birthDate = new Date(dob);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
       }
-    }
+      
+      return age >= 0 ? Math.floor(age) : null; // Round to whole number
+    };
 
-    groups[filterKey].periodCounts[timePeriod] = 
-      (groups[filterKey].periodCounts[timePeriod] || 0) + count
-  })
+    // Determine age group based on age
+    const getAgeGroupFromAge = (age) => {
+      if (age === null || age < 0) return '';
+      if (age < 6) return '0-5';
+      if (age <= 12) return '6-12';
+      if (age <= 17) return '13-17';
+      if (age <= 24) return '18-24';
+      if (age <= 35) return '25-35';
+      if (age <= 50) return '36-50';
+      return '51+';
+    };
 
-  const sortedPeriods = Array.from(periods).sort((a, b) => {
-    const na = Number(a), nb = Number(b)
-    if (!isNaN(na) && !isNaN(nb)) return na - nb
-    return a.localeCompare(b)
-  })
+    // Map age group text to category ID from backend
+    const getAgeGroupId = (ageGroupText) => {
+      const map = {
+        '0-5': '361950',
+        '6-12': '361951',
+        '13-17': '361952',
+        '18-24': '361953',
+        '25-35': '361954',
+        '36-50': '361955',
+        '51+': '361956'
+      };
+      return map[ageGroupText] || '';
+    };
 
-  return Object.values(groups).map(group => {
-    const counts = sortedPeriods.map(period => group.periodCounts[period] || 0)
-    const total = counts.reduce((sum, val) => sum + val, 0)
-    
+    const getSexId = (sex) => {
+      const map = {
+        'Male': '121',
+        'Female': '122',
+        'Other': '123'
+      };
+      return map[sex] || '';
+    };
+
+    // Handle DOB change - auto-calculate age and age group
+    const handleDobChange = () => {
+      if (formData.dob) {
+        const calculatedAge = calculateAge(formData.dob);
+        
+        if (calculatedAge !== null) {
+          formData.age = calculatedAge.toString();
+          const ageGroupText = getAgeGroupFromAge(calculatedAge);
+          const ageGroupId = getAgeGroupId(ageGroupText);
+          
+          // Set the age group ID which BaseSelect uses
+          formData.ageGroup = ageGroupId;
+          
+          console.log('DOB changed:', {
+            dob: formData.dob,
+            age: formData.age,
+            ageGroupText: ageGroupText,
+            ageGroupId: ageGroupId
+          });
+        }
+      } else {
+        // Clear age and age group if DOB is removed
+        formData.age = '';
+        formData.ageGroup = '';
+      }
+    };
+
+    const handleSubmit = async () => {
+      // Validate only name is required
+      if (!formData.fname || !formData.fname.trim()) {
+        error.value = 'Reporter name is required';
+        return;
+      }
+
+      error.value = null;
+      response.value = null;
+      showPayload.value = false;
+
+      try {
+        // Generate unique identifiers
+        const timestamp = Date.now();
+        const timestampSeconds = (timestamp / 1000).toFixed(3);
+        const userId = "100";
+        const srcUid = `walkin-${userId}-${timestamp}`;
+        const srcUid2 = `${srcUid}-1`;
+        const srcCallId = srcUid2;
+
+        // Convert DOB to Unix timestamp
+        const dobTimestamp = formData.dob ? Math.floor(new Date(formData.dob).getTime() / 1000) : '';
+
+        // Helper function to only include non-empty values
+        const getValueOrDefault = (value, defaultValue = "") => {
+          return value !== null && value !== undefined && value !== "" ? value : defaultValue;
+        };
+
+        // Build payload
+        const payload = {
+          ".id": "",
+          src: "walkin",
+          src_ts: timestampSeconds,
+          src_uid: srcUid,
+          src_uid2: srcUid2,
+          src_callid: srcCallId,
+          src_usr: userId,
+          src_vector: "2",
+          src_address: getValueOrDefault(formData.phone),
+          
+          fname: formData.fname,
+          age_t: "0",
+          age: getValueOrDefault(formData.age),
+          dob: dobTimestamp.toString(),
+          age_group: getAgeGroupFromAge(parseInt(formData.age)),
+          age_group_id: getValueOrDefault(formData.ageGroup),
+          
+          sex: formData.sex ? `^${formData.sex}` : "",
+          sex_id: getSexId(formData.sex),
+          
+          location_id: getValueOrDefault(formData.location),
+          landmark: getValueOrDefault(formData.landmark),
+          nationality_id: getValueOrDefault(formData.nationality),
+          lang_id: getValueOrDefault(formData.language),
+          tribe_id: getValueOrDefault(formData.tribe),
+          
+          phone: getValueOrDefault(formData.phone),
+          phone2: getValueOrDefault(formData.phone2),
+          email: getValueOrDefault(formData.email),
+          
+          national_id_type_id: getValueOrDefault(formData.idType),
+          national_id: getValueOrDefault(formData.idNumber),
+          
+          is_refugee: getValueOrDefault(formData.isRefugee, "0"),
+          
+          contact_uuid_id: "-1",
+          disposition_id: "363034",
+          activity_id: "",
+          activity_ca_id: ""
+        };
+
+        console.log('Submitting payload:', JSON.stringify(payload, null, 2));
+
+        // Use the reporter store to create reporter
+        const result = await reporterStore.createReporter(payload);
+        
+        if (result) {
+          response.value = result;
+          console.log('Reporter created successfully:', result);
+          alert('Reporter created successfully!');
+        } else {
+          throw new Error('No response from server');
+        }
+
+      } catch (err) {
+        console.error('Error creating reporter:', err);
+        error.value = err.message || 'Failed to create reporter';
+      }
+    };
+
+    const handleReset = () => {
+      Object.assign(formData, {
+        fname: '',
+        age: '',
+        dob: '',
+        ageGroup: '',
+        sex: '',
+        location: '',
+        landmark: '',
+        nationality: '',
+        language: '',
+        tribe: '',
+        phone: '',
+        phone2: '',
+        email: '',
+        idType: '',
+        idNumber: '',
+        isRefugee: '0'
+      });
+      response.value = null;
+      error.value = null;
+      showPayload.value = false;
+    };
+
     return {
-      filters: group.filters,
-      counts,
-      total
-    }
-  })
-})
-
-// Time periods for table headers - use formatted labels
-const tableTimePeriods = computed(() => {
-  if (!rawData.value || rawData.value.length === 0) return []
-
-  const periods = new Set()
-  rawData.value.forEach(row => {
-    if (Array.isArray(row) && row.length > 0) {
-      periods.add(String(row[0]))
-    }
-  })
-
-  return Array.from(periods).sort((a, b) => {
-    const na = Number(a), nb = Number(b)
-    if (!isNaN(na) && !isNaN(nb)) return na - nb
-    return a.localeCompare(b)
-  }).map(period => formatLabel(period))
-})
-
-// Column totals for table
-const columnTotals = computed(() => {
-  if (tableData.value.length === 0) return []
-  
-  const numColumns = tableData.value[0]?.counts.length || 0
-  const totals = new Array(numColumns).fill(0)
-  
-  tableData.value.forEach(row => {
-    row.counts.forEach((count, idx) => {
-      totals[idx] += count
-    })
-  })
-  
-  return totals
-})
-
-const grandTotal = computed(() => {
-  return columnTotals.value.reduce((sum, val) => sum + val, 0)
-})
-
-// Chart calculations
-const svgWidth = computed(() =>
-  Math.max(chartData.value.length * (barWidth + barSpacing) + margin.left + margin.right, 500)
-)
-
-const maxValue = computed(() => Math.max(...chartData.value.map(d => d.value), 1))
-
-const yScale = (value) =>
-  svgHeight - margin.bottom - (value / maxValue.value) * (svgHeight - margin.top - margin.bottom)
-
-const yTicks = computed(() => {
-  const steps = 5
-  const stepValue = Math.ceil(maxValue.value / steps)
-  return Array.from({ length: steps + 1 }, (_, i) => i * stepValue)
-})
-
-// Format label based on timeframe
-function formatLabel(label) {
-  if (xAxis.value === 'h') {
-    return label
+      reporterStore,
+      formData,
+      response,
+      error,
+      showPayload,
+      handleDobChange,
+      handleSubmit,
+      handleReset,
+      JSON
+    };
   }
-
-  const timestamp = Number(label) * 1000
-  const date = new Date(timestamp)
-
-  switch (xAxis.value) {
-    case 'dt':
-      return date.toLocaleDateString('en-US', {
-        day: '2-digit', month: 'short', year: 'numeric'
-      })
-
-    case 'wk':
-      const weekStart = new Date(date)
-      weekStart.setDate(date.getDate() - date.getDay())
-      return `W${getWeekNumber(date)} (${weekStart.toLocaleDateString('en-US', {
-        month: 'short', day: '2-digit'
-      })})`
-
-    case 'mn':
-      return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
-
-    case 'yr':
-      return date.getFullYear()
-
-    default:
-      return label
-  }
-}
-
-function getWeekNumber(d) {
-  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()))
-  const dayNum = date.getUTCDay() || 7
-  date.setUTCDate(date.getUTCDate() + 4 - dayNum)
-  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1))
-  return Math.ceil((((date - yearStart) / 86400000) + 1) / 7)
-}
-
-function formatFieldName(field) {
-  return field
-    .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
-}
+};
 </script>

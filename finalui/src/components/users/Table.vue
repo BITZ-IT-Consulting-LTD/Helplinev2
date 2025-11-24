@@ -22,7 +22,7 @@
             <td class="px-6 py-4 text-gray-300 text-sm">{{ getValue(user, 'contact_fname') }}</td>
             <td class="px-6 py-4 text-sm">
               <span class="px-3 py-1 rounded-full bg-blue-600/20 text-blue-400 text-xs font-medium uppercase border border-blue-600/30">
-                {{ getValue(user, 'role') }}
+                {{ getRoleName(getValue(user, 'role')) }}
               </span>
             </td>
             <td class="px-6 py-4 text-gray-400 text-sm">{{ formatDate(getValue(user, 'created_on')) }}</td>
@@ -38,9 +38,23 @@
 import { useUserStore } from "@/stores/users";
 const store = useUserStore();
 
+const roleMap = {
+  "1": "Counsellor",
+  "2": "Supervisor",
+  "3": "Case Manager",
+  "4": "Case Worker",
+  "5": "Partner",
+  "6": "Media Account",
+  "99": "Administrator"
+};
+
 const getValue = (user, key) => {
   if (!store.users_k?.[key]) return null;
   return user[store.users_k[key][0]];
+};
+
+const getRoleName = (roleId) => {
+  return roleMap[String(roleId)] || roleId || 'N/A';
 };
 
 const formatDate = (timestamp) => {
