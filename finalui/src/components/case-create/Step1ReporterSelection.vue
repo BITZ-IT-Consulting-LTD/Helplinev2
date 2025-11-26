@@ -98,7 +98,7 @@
         </div>
 
         <!-- Combined Selected Reporter Summary & ID Display -->
-        <div v-if="(selectedReporter || reporterId) && !showCreateForm" class="mt-5 p-4 bg-blue-900/20 border border-blue-600/30 rounded-lg">
+        <div v-if="(selectedReporter || (extractedReporterId && extractedContactId)) && !showCreateForm" class="mt-5 p-4 bg-blue-900/20 border border-blue-600/30 rounded-lg">
           <div class="flex items-start justify-between mb-3">
             <div class="text-sm font-semibold text-blue-400">Selected Reporter:</div>
             <button type="button" @click="clearSelection" class="p-1.5 rounded-md border border-gray-600 hover:bg-gray-700 hover:border-red-500 text-gray-400 hover:text-red-400 transition-colors">
@@ -124,12 +124,22 @@
                 </div>
               </div>
 
-              <!-- Reporter ID -->
-              <div v-if="reporterId" class="flex items-center gap-2 p-2 bg-green-900/30 border border-green-600/40 rounded-md">
-                <i-mdi-check-circle class="w-5 h-5 text-green-400 flex-shrink-0" />
-                <div class="flex-1">
-                  <div class="text-xs font-medium text-green-400">Reporter ID</div>
-                  <div class="text-sm font-bold text-green-300">{{ reporterId }}</div>
+              <!-- Reporter IDs Display -->
+              <div class="space-y-2">
+                <div v-if="extractedReporterId" class="flex items-center gap-2 p-2 bg-green-900/30 border border-green-600/40 rounded-md">
+                  <i-mdi-check-circle class="w-5 h-5 text-green-400 flex-shrink-0" />
+                  <div class="flex-1">
+                    <div class="text-xs font-medium text-green-400">Reporter ID (Index 0)</div>
+                    <div class="text-sm font-bold text-green-300">{{ extractedReporterId }}</div>
+                  </div>
+                </div>
+                
+                <div v-if="extractedContactId" class="flex items-center gap-2 p-2 bg-blue-900/30 border border-blue-600/40 rounded-md">
+                  <i-mdi-check-circle class="w-5 h-5 text-blue-400 flex-shrink-0" />
+                  <div class="flex-1">
+                    <div class="text-xs font-medium text-blue-400">Contact ID (Index 5)</div>
+                    <div class="text-sm font-bold text-blue-300">{{ extractedContactId }}</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -396,7 +406,7 @@
           <button 
             type="button" 
             class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
-            :disabled="!reporterId"
+            :disabled="!extractedReporterId || !extractedContactId"
             @click="$emit('validate-and-proceed')"
           >
             Continue
@@ -416,8 +426,7 @@ const props = defineProps({
   currentStep: { type: Number, required: true },
   searchQuery: { type: String, default: '' },
   filteredContacts: { type: Array, default: () => [] },
-  selectedReporter: { type: Object, default: null },
-  reporterId: { type: String, default: null }
+  selectedReporter: { type: Object, default: null }
 })
 
 const emit = defineEmits([
@@ -437,6 +446,10 @@ const selectedReporter = ref(props.selectedReporter)
 const isLoading = ref(false)
 const showCreateForm = ref(false)
 const isCreating = ref(false)
+
+// Store extracted IDs locally for display
+const extractedReporterId = ref(null)  // Index 0
+const extractedContactId = ref(null)   // Index 5
 
 const reporterForm = reactive({
   fname: '',
@@ -512,31 +525,11 @@ const getValue = (contact, fieldName) => {
   return ""
 }
 
+// Simple helper to get contact ID for UI purposes (search results)
 const getContactId = (contact) => {
   if (!contact || !Array.isArray(contact)) return null
-  
-  // Try to get the actual ID field first (these are most reliable)
-  const idFields = ['id', '_id', 'reporter_id', 'contact_id']
-  for (const fieldName of idFields) {
-    const value = getValue(contact, fieldName)
-    if (value) {
-      console.log(`Found reporter ID from field ${fieldName}:`, value)
-      return value.toString()
-    }
-  }
-  
-  // If no ID found, try to get the first element (often the ID in array structures)
-  if (contact.length > 0 && contact[0]) {
-    console.log('Using first array element as reporter ID:', contact[0])
-    return contact[0].toString()
-  }
-  
-  // Fallback to name-phone combination (last resort)
-  const name = getValue(contact, 'fullname')
-  const phone = getValue(contact, 'phone')
-  const fallbackId = `${name}-${phone}`.replace(/\s+/g, '-')
-  console.log('Using fallback ID:', fallbackId)
-  return fallbackId
+  const contactId = getValue(contact, 'contact_id')
+  return contactId ? contactId.toString() : null
 }
 
 const shouldShowResults = computed(() => {
@@ -561,33 +554,46 @@ const handleSearchInput = (event) => {
   showCreateForm.value = false
 }
 
+// ✅ CRITICAL FIX: Direct array access for existing reporter
 const selectExistingReporter = (contact) => {
   selectedReporter.value = contact
   showCreateForm.value = false
   
-  // CRITICAL FIX: Extract the reporter ID from the selected contact
-  const extractedId = getContactId(contact)
+  console.log('='.repeat(80))
+  console.log('🔍 EXTRACTING IDs FROM EXISTING REPORTER')
+  console.log('Full reporter array:', contact)
   
-  console.log('Selected existing reporter:', {
-    contact,
-    extractedId,
-    fullname: getValue(contact, 'fullname')
+  // ✅ DIRECT ACCESS: Index 0 is ALWAYS the reporter record ID
+  const reporterId = contact[0]
+  console.log('📌 Index 0 (Reporter Record ID):', reporterId)
+  
+  // ✅ DIRECT ACCESS: Index 5 is ALWAYS the contact ID
+  const contactId = contact[5]
+  console.log('📌 Index 5 (Contact ID):', contactId)
+  
+  // Store locally for display
+  extractedReporterId.value = reporterId
+  extractedContactId.value = contactId
+  
+  console.log('✅ Extracted IDs:', {
+    reporterId: reporterId,
+    contactId: contactId
   })
+  console.log('='.repeat(80))
   
-  // Emit both the reporter data AND the reporter ID
+  // Emit to parent
   emit('select-reporter', contact)
-  
-  // This is the key fix - emit the reporter ID for existing reporters too!
-  if (extractedId) {
-    emit('reporter-created', extractedId)
-  } else {
-    console.error('Could not extract reporter ID from contact')
-  }
+  emit('reporter-created', {
+    reporterId: reporterId,
+    contactId: contactId
+  })
 }
 
 const openCreateReporterForm = () => {
   showCreateForm.value = true
   selectedReporter.value = null
+  extractedReporterId.value = null
+  extractedContactId.value = null
   searchQuery.value = ''
   emit('create-new-reporter')
 }
@@ -616,8 +622,10 @@ const closeCreateForm = () => {
 
 const clearSelection = () => {
   selectedReporter.value = null
+  extractedReporterId.value = null
+  extractedContactId.value = null
   emit('select-reporter', null)
-  emit('reporter-created', null)
+  emit('reporter-created', { reporterId: null, contactId: null })
 }
 
 const isSelected = (contact) => {
@@ -696,6 +704,7 @@ const getSexId = (sex) => {
   return map[sex] || ''
 }
 
+// ✅ CRITICAL FIX: Direct array access for new reporter
 const handleCreateReporter = async () => {
   if (!reporterForm.fname || !reporterForm.fname.trim()) {
     alert('Reporter name is required')
@@ -762,27 +771,42 @@ const handleCreateReporter = async () => {
 
     const result = await reportersStore.createReporter(payload)
     
-    if (result) {
-      let extractedId = null
+    console.log('='.repeat(80))
+    console.log('🔍 EXTRACTING IDs FROM NEW REPORTER RESPONSE')
+    console.log('Full response:', result)
+    
+    if (result && result.reporters && Array.isArray(result.reporters) && result.reporters.length > 0) {
+      const reporterArray = result.reporters[0]
+      console.log('Reporter array:', reporterArray)
       
-      // Extract ID from response
-      if (result.reporters && Array.isArray(result.reporters) && result.reporters.length > 0) {
-        extractedId = result.reporters[0][0]
-      } else if (result.id) {
-        extractedId = result.id
-      }
+      // ✅ DIRECT ACCESS: Index 0 is ALWAYS the reporter record ID
+      const reporterId = reporterArray[0]
+      console.log('📌 Index 0 (Reporter Record ID):', reporterId)
       
-      console.log('New reporter created with ID:', extractedId)
+      // ✅ DIRECT ACCESS: Index 5 is ALWAYS the contact ID
+      const contactId = reporterArray[5]
+      console.log('📌 Index 5 (Contact ID):', contactId)
       
-      if (extractedId) {
-        emit('reporter-created', extractedId)
-        showCreateForm.value = false
-        closeCreateForm()
-      } else {
-        throw new Error('No reporter ID returned from server')
-      }
+      // Store locally for display
+      extractedReporterId.value = reporterId
+      extractedContactId.value = contactId
+      
+      console.log('✅ Extracted IDs:', {
+        reporterId: reporterId,
+        contactId: contactId
+      })
+      console.log('='.repeat(80))
+      
+      // Emit to parent
+      emit('reporter-created', {
+        reporterId: reporterId,
+        contactId: contactId
+      })
+      
+      showCreateForm.value = false
+      closeCreateForm()
     } else {
-      throw new Error('No response from server')
+      throw new Error('No reporter array returned from server')
     }
 
   } catch (error) {
