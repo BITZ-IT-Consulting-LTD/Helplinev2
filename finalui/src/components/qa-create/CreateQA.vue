@@ -1,7 +1,10 @@
 <template>
-  <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
-    <!-- Remove debug warning banner -->
-    
+  <div 
+    class="rounded-lg shadow-xl p-6 border"
+    :class="isDarkMode 
+      ? 'bg-gray-800 border-gray-700' 
+      : 'bg-white border-gray-200'"
+  >
     <form @submit.prevent="handleSubmit">
       <!-- Active Section Display -->
       <div v-if="activeSection < qaData.sections.length" class="animate-fadeIn">
@@ -40,12 +43,18 @@
       </div>
 
       <!-- Navigation Buttons -->
-      <div class="flex items-center justify-between pt-6 border-t border-gray-700 mt-6">
+      <div 
+        class="flex items-center justify-between pt-6 border-t mt-6"
+        :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+      >
         <button
           v-if="activeSection > 0"
           type="button"
           @click="previousSection"
-          class="px-6 py-3 bg-gray-700 text-gray-300 border border-gray-600 rounded-lg font-semibold hover:bg-gray-600 transition-all flex items-center gap-2"
+          class="px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 border"
+          :class="isDarkMode 
+            ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
+            : 'bg-white text-gray-700 border-gray-300 hover:border-amber-600 hover:text-amber-700'"
         >
           <i-mdi-chevron-left class="w-5 h-5" />
           Previous
@@ -57,7 +66,10 @@
           v-if="activeSection < qaData.sections.length"
           type="button"
           @click="nextSection"
-          class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all shadow-lg flex items-center gap-2"
+          class="px-6 py-3 text-white rounded-lg font-semibold transition-all shadow-lg flex items-center gap-2"
+          :class="isDarkMode 
+            ? 'bg-blue-600 hover:bg-blue-700' 
+            : 'bg-amber-700 hover:bg-amber-800'"
         >
           Next
           <i-mdi-chevron-right class="w-5 h-5" />
@@ -67,26 +79,29 @@
           v-else
           type="submit"
           :disabled="qaStore.loading || !isFormValid"
-          class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          class="px-8 py-3 text-white rounded-lg font-bold transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          :class="isDarkMode 
+            ? 'bg-green-600 hover:bg-green-700' 
+            : 'bg-green-600 hover:bg-green-700'"
         >
           <span v-if="qaStore.loading" class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
           <i-mdi-check v-else class="w-5 h-5" />
           <span>{{ qaStore.loading ? 'Submitting...' : 'Submit QA' }}</span>
         </button>
       </div>
-
-      
     </form>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch, onMounted } from 'vue'
+import { ref, reactive, computed, watch, onMounted, inject } from 'vue'
 import { toast } from 'vue-sonner'
 import { useQAStore } from '@/stores/qas'
 import QASection from './QASection.vue'
 import QARatingField from './QARatingField.vue'
 import QACommentField from './QACommentField.vue'
+
+const isDarkMode = inject('isDarkMode')
 
 const props = defineProps({
   activeSection: {

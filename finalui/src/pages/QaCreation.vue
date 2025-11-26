@@ -1,21 +1,41 @@
 <template>
-  <div class="min-h-screen bg-gray-900 py-6 px-4">
+  <div 
+    class="min-h-screen py-6 px-4"
+    :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'"
+  >
     <div class="max-w-[1800px] mx-auto flex flex-col gap-6">
       <!-- Page Header -->
-      <div class="bg-gray-800 rounded-lg shadow-xl p-6 border-l-4 border-blue-500">
+      <div 
+        class="rounded-lg shadow-xl p-6 border-l-4"
+        :class="isDarkMode 
+          ? 'bg-gray-800 border-blue-500' 
+          : 'bg-white border-amber-600'"
+      >
         <div class="flex items-center gap-4 mb-2">
           <button 
             @click="goBack"
-            class="p-2 hover:bg-blue-900/30 rounded-lg transition-all"
+            class="p-2 rounded-lg transition-all"
+            :class="isDarkMode 
+              ? 'hover:bg-blue-900/30' 
+              : 'hover:bg-amber-100'"
           >
-            <i-mdi-arrow-left class="w-6 h-6 text-blue-400" />
+            <i-mdi-arrow-left 
+              class="w-6 h-6"
+              :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+            />
           </button>
           <div>
-            <h1 class="text-3xl font-bold text-blue-400 flex items-center gap-3">
+            <h1 
+              class="text-3xl font-bold flex items-center gap-3"
+              :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+            >
               <i-mdi-clipboard-check class="w-8 h-8" />
               Quality Assurance Evaluation
             </h1>
-            <p class="text-sm text-gray-400 mt-1">
+            <p 
+              class="text-sm mt-1"
+              :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+            >
               Review and evaluate call quality based on established criteria
             </p>
           </div>
@@ -25,14 +45,27 @@
       <!-- Loading State -->
       <div v-if="loading" class="flex items-center justify-center py-12">
         <div class="flex flex-col items-center gap-4">
-          <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-900/30 border-t-blue-500"></div>
-          <div class="text-gray-400">Loading call data...</div>
+          <div 
+            class="animate-spin rounded-full h-12 w-12 border-4"
+            :class="isDarkMode 
+              ? 'border-blue-900/30 border-t-blue-500' 
+              : 'border-amber-200 border-t-amber-700'"
+          ></div>
+          <div :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'">
+            Loading call data...
+          </div>
         </div>
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error" class="bg-red-600/20 border border-red-600/50 rounded-lg p-6">
-        <p class="text-red-400">{{ error }}</p>
+      <div 
+        v-else-if="error" 
+        class="rounded-lg p-6 border"
+        :class="isDarkMode 
+          ? 'bg-red-600/20 border-red-600/50 text-red-400' 
+          : 'bg-red-50 border-red-300 text-red-700'"
+      >
+        <p>{{ error }}</p>
       </div>
 
       <!-- Main Content -->
@@ -68,12 +101,14 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, inject } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useCallStore } from '@/stores/calls'
 import CallDetailsCard from '@/components/qa-create/CallDetailsCard.vue'
 import QASectionNav from '@/components/qa-create/QASectionNav.vue'
 import CreateQA from '@/components/qa-create/CreateQA.vue'
+
+const isDarkMode = inject('isDarkMode')
 
 const router = useRouter()
 const route = useRoute()
