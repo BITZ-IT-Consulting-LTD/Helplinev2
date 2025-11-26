@@ -1,7 +1,17 @@
 <template>
   <div class="space-y-6">
-    <div v-if="Object.keys(groupedMessagesByDate).length === 0" class="text-center py-12 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
-      <p class="text-gray-500">No chats to display</p>
+    <div 
+      v-if="Object.keys(groupedMessagesByDate).length === 0" 
+      class="text-center py-12 rounded-lg shadow-xl border"
+      :class="isDarkMode 
+        ? 'bg-gray-800 border-gray-700' 
+        : 'bg-white border-gray-200'"
+    >
+      <p 
+        :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+      >
+        No chats to display
+      </p>
     </div>
 
     <div
@@ -9,17 +19,26 @@
       :key="label"
       class="space-y-3"
     >
-      <h2 class="text-base font-semibold text-blue-400 uppercase tracking-wide">{{ label }}</h2>
+      <h2 
+        class="text-base font-semibold uppercase tracking-wide"
+        :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+      >
+        {{ label }}
+      </h2>
 
       <div class="space-y-2">
         <div
           v-for="message in group"
           :key="getValue(message, 'id')"
           :class="[
-            'bg-gray-800 rounded-lg p-4 shadow-xl border transition-all duration-200 cursor-pointer',
+            'rounded-lg p-4 shadow-xl border transition-all duration-200 cursor-pointer',
             selectedMessageId === getValue(message, 'id') 
-              ? 'ring-2 ring-blue-500 border-blue-500 bg-blue-600/10' 
-              : 'border-gray-700 hover:border-blue-500/50 hover:shadow-2xl'
+              ? isDarkMode
+                ? 'ring-2 ring-blue-500 border-blue-500 bg-blue-600/10' 
+                : 'ring-2 ring-amber-600 border-amber-600 bg-amber-100'
+              : isDarkMode
+                ? 'bg-gray-800 border-gray-700 hover:border-blue-500/50 hover:shadow-2xl'
+                : 'bg-white border-gray-200 hover:border-amber-600/50 hover:shadow-2xl'
           ]"
           @click="openChatPanel(message)"
         >
@@ -35,24 +54,43 @@
             <!-- Content -->
             <div class="flex-1 min-w-0">
               <div class="flex justify-between items-baseline mb-1">
-                <span class="text-sm font-medium text-gray-200">
+                <span 
+                  class="text-sm font-medium"
+                  :class="isDarkMode ? 'text-gray-200' : 'text-gray-900'"
+                >
                   {{ getValue(message, 'created_by') || 'Unknown' }}
                 </span>
-                <span class="text-xs text-gray-500 ml-2">
+                <span 
+                  class="text-xs ml-2"
+                  :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+                >
                   {{ formatTime(getValue(message, 'dth')) }}
                 </span>
               </div>
 
               <div class="flex gap-2 mb-2">
-                <span class="px-2 py-0.5 rounded-full bg-blue-600/20 text-blue-400 text-xs font-medium uppercase border border-blue-600/30">
+                <span 
+                  class="px-2 py-0.5 rounded-full text-xs font-medium uppercase border"
+                  :class="isDarkMode 
+                    ? 'bg-blue-600/20 text-blue-400 border-blue-600/30' 
+                    : 'bg-amber-100 text-amber-700 border-amber-300'"
+                >
                   {{ getValue(message, 'src') || 'Chat' }}
                 </span>
-                <span class="px-2 py-0.5 rounded-full bg-green-600/20 text-green-400 text-xs font-medium uppercase border border-green-600/30">
+                <span 
+                  class="px-2 py-0.5 rounded-full text-xs font-medium uppercase border"
+                  :class="isDarkMode 
+                    ? 'bg-green-600/20 text-green-400 border-green-600/30' 
+                    : 'bg-green-100 text-green-700 border-green-300'"
+                >
                   {{ getValue(message, 'src_status') || 'Active' }}
                 </span>
               </div>
 
-              <p class="text-sm text-gray-400 truncate">
+              <p 
+                class="text-sm truncate"
+                :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+              >
                 {{ getValue(message, 'src_msg') || '' }}
               </p>
             </div>
@@ -60,7 +98,10 @@
             <!-- Chat Action Button -->
             <button 
               @click.stop="openChatPanel(message)" 
-              class="p-2 rounded transition-all duration-200 flex-shrink-0 bg-blue-600 text-white hover:bg-blue-700 active:scale-95"
+              class="p-2 rounded transition-all duration-200 flex-shrink-0 text-white active:scale-95"
+              :class="isDarkMode 
+                ? 'bg-blue-600 hover:bg-blue-700' 
+                : 'bg-amber-700 hover:bg-amber-800'"
               title="Open Chat"
             >
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -76,6 +117,7 @@
 </template>
 
 <script setup>
+import { inject } from 'vue'
 import { useMessagesStore } from '@/stores/messages'
 
 const props = defineProps({
@@ -89,6 +131,9 @@ const props = defineProps({
 const emit = defineEmits(['openChat'])
 
 const messagesStore = useMessagesStore()
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 const getValue = (message, key) => {
   if (!messagesStore.pmessages_k?.[key]) return null
@@ -107,7 +152,9 @@ const openChatPanel = (message) => {
 }
 
 const getAvatarColor = (name) => {
-  const colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
+  const colors = isDarkMode.value 
+    ? ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
+    : ['#B45309', '#059669', '#DC2626', '#7C3AED', '#DB2777']
   const index = name?.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) || 0
   return colors[index % colors.length]
 }

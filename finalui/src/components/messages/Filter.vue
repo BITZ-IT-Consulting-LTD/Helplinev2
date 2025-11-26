@@ -3,12 +3,7 @@
     <button
       v-for="platform in channelFilters"
       :key="platform.id"
-      :class="[
-        'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 text-sm flex items-center gap-2',
-        activePlatform === platform.id 
-          ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
-          : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
-      ]"
+      :class="getFilterButtonClass(activePlatform === platform.id)"
       @click="$emit('update:activePlatform', platform.id)"
     >
       <!-- All -->
@@ -41,6 +36,8 @@
 </template>
 
 <script setup>
+import { inject } from 'vue'
+
 defineProps({
   channelFilters: {
     type: Array,
@@ -53,4 +50,22 @@ defineProps({
 })
 
 defineEmits(['update:activePlatform'])
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
+
+// Dynamic button class for filter pills
+const getFilterButtonClass = (isActive) => {
+  const baseClasses = 'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 text-sm flex items-center gap-2'
+  
+  if (isActive) {
+    return isDarkMode.value
+      ? `${baseClasses} bg-blue-600 text-white shadow-lg shadow-blue-900/50`
+      : `${baseClasses} bg-amber-700 text-white shadow-lg shadow-amber-900/30`
+  } else {
+    return isDarkMode.value
+      ? `${baseClasses} bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400`
+      : `${baseClasses} bg-white text-gray-700 border border-gray-300 hover:border-amber-600 hover:text-amber-700`
+  }
+}
 </script>

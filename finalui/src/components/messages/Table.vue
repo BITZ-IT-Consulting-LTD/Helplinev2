@@ -1,25 +1,74 @@
 <template>
-  <div class="bg-gray-800 rounded-lg shadow-xl border border-gray-700 overflow-hidden">
+  <div 
+    class="rounded-lg shadow-xl border overflow-hidden"
+    :class="isDarkMode 
+      ? 'bg-gray-800 border-gray-700' 
+      : 'bg-white border-gray-200'"
+  >
     <div class="overflow-x-auto">
       <table class="w-full">
         <thead>
-          <tr class="bg-gray-900/60 border-b border-gray-700">
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300 whitespace-nowrap">Contact</th>
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300 whitespace-nowrap">Platform</th>
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300 whitespace-nowrap">Message</th>
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300 whitespace-nowrap">Time</th>
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300 whitespace-nowrap">Status</th>
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300 whitespace-nowrap">Actions</th>
+          <tr 
+            class="border-b"
+            :class="isDarkMode 
+              ? 'bg-gray-900/60 border-gray-700' 
+              : 'bg-gray-50 border-gray-200'"
+          >
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Contact
+            </th>
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Platform
+            </th>
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Message
+            </th>
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Time
+            </th>
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Status
+            </th>
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Actions
+            </th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-700">
+        <tbody 
+          class="divide-y"
+          :class="isDarkMode ? 'divide-gray-700' : 'divide-gray-200'"
+        >
           <tr
             v-for="message in messages"
             :key="getValue(message, 'id')"
-            :class="{
-              'bg-blue-600/10 border-l-4 border-l-blue-500': selectedMessageId === getValue(message, 'id')
-            }"
-            class="hover:bg-gray-700/30 transition-all duration-200 cursor-pointer"
+            :class="[
+              'cursor-pointer transition-all duration-200',
+              selectedMessageId === getValue(message, 'id')
+                ? isDarkMode 
+                  ? 'bg-blue-600/10 border-l-4 border-l-blue-500' 
+                  : 'bg-amber-100 border-l-4 border-l-amber-600'
+                : isDarkMode
+                  ? 'hover:bg-gray-700/30'
+                  : 'hover:bg-gray-50'
+            ]"
             @click="openChatPanel(message)"
           >
             <!-- Contact -->
@@ -31,32 +80,53 @@
                 >
                   {{ (getValue(message, 'created_by') || '?').charAt(0).toUpperCase() }}
                 </div>
-                <span class="text-sm font-medium text-gray-200">{{ getValue(message, 'created_by') || 'Unknown' }}</span>
+                <span 
+                  class="text-sm font-medium"
+                  :class="isDarkMode ? 'text-gray-200' : 'text-gray-900'"
+                >
+                  {{ getValue(message, 'created_by') || 'Unknown' }}
+                </span>
               </div>
             </td>
 
             <!-- Platform -->
             <td class="px-6 py-4 whitespace-nowrap">
-              <span class="px-3 py-1 rounded-full bg-blue-600/20 text-blue-400 text-xs font-medium uppercase border border-blue-600/30">
+              <span 
+                class="px-3 py-1 rounded-full text-xs font-medium uppercase border"
+                :class="isDarkMode 
+                  ? 'bg-blue-600/20 text-blue-400 border-blue-600/30' 
+                  : 'bg-amber-100 text-amber-700 border-amber-300'"
+              >
                 {{ getValue(message, 'src') || 'All' }}
               </span>
             </td>
 
             <!-- Message -->
             <td class="px-6 py-4">
-              <div class="text-sm text-gray-300 max-w-md truncate">
+              <div 
+                class="text-sm max-w-md truncate"
+                :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
                 {{ getValue(message, 'src_msg') || '' }}
               </div>
             </td>
 
             <!-- Time -->
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+            <td 
+              class="px-6 py-4 whitespace-nowrap text-sm"
+              :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+            >
               {{ formatDateTime(getValue(message, 'dth')) }}
             </td>
 
             <!-- Status -->
             <td class="px-6 py-4 whitespace-nowrap">
-              <span class="px-3 py-1 rounded-full bg-green-600/20 text-green-400 text-xs font-semibold uppercase border border-green-600/30">
+              <span 
+                class="px-3 py-1 rounded-full text-xs font-semibold uppercase border"
+                :class="isDarkMode 
+                  ? 'bg-green-600/20 text-green-400 border-green-600/30' 
+                  : 'bg-green-100 text-green-700 border-green-300'"
+              >
                 {{ getValue(message, 'src_status') || 'Active' }}
               </span>
             </td>
@@ -64,7 +134,10 @@
             <!-- Actions -->
             <td class="px-6 py-4 whitespace-nowrap text-sm">
               <button
-                class="p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-all duration-200"
+                class="p-2 rounded-lg text-white transition-all duration-200"
+                :class="isDarkMode 
+                  ? 'bg-blue-600 hover:bg-blue-700' 
+                  : 'bg-amber-700 hover:bg-amber-800'"
                 @click.stop="openChatPanel(message)"
                 title="Open Chat"
               >
@@ -77,7 +150,11 @@
           </tr>
 
           <tr v-if="!messages || messages.length === 0">
-            <td colspan="6" class="text-center py-12 text-gray-500">
+            <td 
+              colspan="6" 
+              class="text-center py-12"
+              :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+            >
               No messages to display
             </td>
           </tr>
@@ -88,6 +165,7 @@
 </template>
 
 <script setup>
+import { inject } from 'vue'
 import { useMessagesStore } from '@/stores/messages'
 
 const props = defineProps({
@@ -101,6 +179,9 @@ const props = defineProps({
 const emit = defineEmits(['openChat'])
 
 const messagesStore = useMessagesStore()
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 const getValue = (message, key) => {
   if (!messagesStore.pmessages_k?.[key]) return null
@@ -125,7 +206,9 @@ const openChatPanel = (message) => {
 }
 
 const getAvatarColor = (name) => {
-  const colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
+  const colors = isDarkMode.value 
+    ? ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
+    : ['#B45309', '#059669', '#DC2626', '#7C3AED', '#DB2777']
   const index = name?.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) || 0
   return colors[index % colors.length]
 }
