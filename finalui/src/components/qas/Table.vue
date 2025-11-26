@@ -1,83 +1,215 @@
 <template>
-  <div class="bg-gray-800 rounded-lg shadow-xl border border-gray-700 overflow-hidden">
+  <div 
+    class="rounded-lg shadow-xl border overflow-hidden"
+    :class="isDarkMode 
+      ? 'bg-gray-800 border-gray-700' 
+      : 'bg-white border-gray-200'"
+  >
     <div class="overflow-x-auto">
       <table class="w-full min-w-[1400px]">
         <thead>
-          <tr class="bg-gray-900/60 border-b border-gray-700">
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Call Date</th>
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">User</th>
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Talk Time</th>
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Opening</th>
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Listening</th>
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Proactive</th>
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Resolution</th>
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Holding</th>
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Closing</th>
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Total Score</th>
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Supervisor</th>
-            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-300">Created On</th>
+          <tr 
+            class="border-b"
+            :class="isDarkMode 
+              ? 'bg-gray-900/60 border-gray-700' 
+              : 'bg-gray-50 border-gray-200'"
+          >
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Call Date
+            </th>
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              User
+            </th>
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Talk Time
+            </th>
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Opening
+            </th>
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Listening
+            </th>
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Proactive
+            </th>
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Resolution
+            </th>
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Holding
+            </th>
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Closing
+            </th>
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Total Score
+            </th>
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Supervisor
+            </th>
+            <th 
+              class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Created On
+            </th>
           </tr>
         </thead>
 
-        <tbody class="divide-y divide-gray-700">
+        <tbody 
+          class="divide-y"
+          :class="isDarkMode ? 'divide-gray-700' : 'divide-gray-200'"
+        >
           <tr
             v-for="(qa, i) in qas"
             :key="i"
-            class="hover:bg-gray-700/30 transition-all duration-200"
+            class="transition-all duration-200"
+            :class="isDarkMode 
+              ? 'hover:bg-gray-700/30' 
+              : 'hover:bg-gray-50'"
           >
             <!-- Call Date -->
-            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">
+            <td 
+              class="px-6 py-4 text-sm whitespace-nowrap"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
               {{ formatTimestamp(qa[qas_k.chan_chan_ts[0]]) }}
             </td>
 
             <!-- User -->
-            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">{{ qa[qas_k.chan_user_name[0]] }}</td>
+            <td 
+              class="px-6 py-4 text-sm whitespace-nowrap"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              {{ qa[qas_k.chan_user_name[0]] }}
+            </td>
 
             <!-- Talk Time -->
-            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">{{ formatTalkTime(qa[qas_k.chan_talk_time[0]]) }}</td>
+            <td 
+              class="px-6 py-4 text-sm whitespace-nowrap"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              {{ formatTalkTime(qa[qas_k.chan_talk_time[0]]) }}
+            </td>
 
             <!-- Scores -->
-            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">
-              <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
+            <td class="px-6 py-4 text-sm whitespace-nowrap">
+              <span 
+                class="px-2 py-1 rounded font-medium"
+                :class="isDarkMode 
+                  ? 'bg-blue-600/20 text-blue-400' 
+                  : 'bg-amber-100 text-amber-700'"
+              >
                 {{ qa[qas_k.opening_phrase[0]] }}%
               </span>
             </td>
-            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">
-              <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
+            <td class="px-6 py-4 text-sm whitespace-nowrap">
+              <span 
+                class="px-2 py-1 rounded font-medium"
+                :class="isDarkMode 
+                  ? 'bg-blue-600/20 text-blue-400' 
+                  : 'bg-amber-100 text-amber-700'"
+              >
                 {{ qa[qas_k.listening_score_p[0]] }}%
               </span>
             </td>
-            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">
-              <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
+            <td class="px-6 py-4 text-sm whitespace-nowrap">
+              <span 
+                class="px-2 py-1 rounded font-medium"
+                :class="isDarkMode 
+                  ? 'bg-blue-600/20 text-blue-400' 
+                  : 'bg-amber-100 text-amber-700'"
+              >
                 {{ qa[qas_k.proactive_score_p[0]] }}%
               </span>
             </td>
-            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">
-              <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
+            <td class="px-6 py-4 text-sm whitespace-nowrap">
+              <span 
+                class="px-2 py-1 rounded font-medium"
+                :class="isDarkMode 
+                  ? 'bg-blue-600/20 text-blue-400' 
+                  : 'bg-amber-100 text-amber-700'"
+              >
                 {{ qa[qas_k.resolution_score_p[0]] }}%
               </span>
             </td>
-            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">
-              <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
+            <td class="px-6 py-4 text-sm whitespace-nowrap">
+              <span 
+                class="px-2 py-1 rounded font-medium"
+                :class="isDarkMode 
+                  ? 'bg-blue-600/20 text-blue-400' 
+                  : 'bg-amber-100 text-amber-700'"
+              >
                 {{ qa[qas_k.holding_score_p[0]] }}%
               </span>
             </td>
-            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">
-              <span class="px-2 py-1 rounded bg-blue-600/20 text-blue-400 font-medium">
+            <td class="px-6 py-4 text-sm whitespace-nowrap">
+              <span 
+                class="px-2 py-1 rounded font-medium"
+                :class="isDarkMode 
+                  ? 'bg-blue-600/20 text-blue-400' 
+                  : 'bg-amber-100 text-amber-700'"
+              >
                 {{ qa[qas_k.closing_score_p[0]] }}%
               </span>
             </td>
             <td class="px-6 py-4 text-sm whitespace-nowrap">
-              <span class="px-3 py-1 rounded-full bg-green-600/20 text-green-400 font-semibold border border-green-600/30">
+              <span 
+                class="px-3 py-1 rounded-full font-semibold border"
+                :class="isDarkMode 
+                  ? 'bg-green-600/20 text-green-400 border-green-600/30' 
+                  : 'bg-green-100 text-green-700 border-green-300'"
+              >
                 {{ qa[qas_k.total_score_p[0]] }}%
               </span>
             </td>
 
             <!-- Supervisor -->
-            <td class="px-6 py-4 text-gray-300 text-sm whitespace-nowrap">{{ qa[qas_k.created_by[0]] }}</td>
+            <td 
+              class="px-6 py-4 text-sm whitespace-nowrap"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              {{ qa[qas_k.created_by[0]] }}
+            </td>
 
             <!-- Created On -->
-            <td class="px-6 py-4 text-gray-400 text-sm whitespace-nowrap">
+            <td 
+              class="px-6 py-4 text-sm whitespace-nowrap"
+              :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+            >
               {{ formatTimestamp(qa[qas_k.created_on[0]]) }}
             </td>
           </tr>
@@ -86,14 +218,26 @@
     </div>
 
     <!-- Empty State -->
-    <div v-if="!qas || qas.length === 0" class="text-center py-12">
-      <i-mdi-clipboard-check-outline class="w-16 h-16 mx-auto text-gray-600 mb-4" />
-      <p class="text-gray-500">No QA records found</p>
+    <div 
+      v-if="!qas || qas.length === 0" 
+      class="text-center py-12"
+    >
+      <i-mdi-clipboard-check-outline 
+        class="w-16 h-16 mx-auto mb-4"
+        :class="isDarkMode ? 'text-gray-600' : 'text-gray-400'"
+      />
+      <p 
+        :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+      >
+        No QA records found
+      </p>
     </div>
   </div>
 </template>
 
 <script setup>
+import { inject } from 'vue'
+
 defineProps({
   qas: {
     type: Array,
@@ -104,6 +248,9 @@ defineProps({
     required: true,
   },
 })
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 /**
  * Convert numeric timestamp (seconds or milliseconds)

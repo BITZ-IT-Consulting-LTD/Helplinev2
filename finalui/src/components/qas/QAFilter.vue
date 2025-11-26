@@ -1,79 +1,140 @@
 <template>
-  <div class="w-full bg-gray-800 rounded-lg p-4 shadow-xl border border-gray-700 mb-4">
+  <div 
+    class="w-full rounded-lg p-4 shadow-xl border mb-4"
+    :class="isDarkMode 
+      ? 'bg-gray-800 border-gray-700' 
+      : 'bg-white border-gray-200'"
+  >
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
       <!-- Call Date From -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1 text-gray-300">Call Date From</label>
+        <label 
+          class="text-sm font-medium mb-1"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          Call Date From
+        </label>
         <input 
           type="date" 
           v-model="filters.callDateFrom" 
-          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="rounded-lg px-3 py-2 focus:outline-none focus:ring-2"
+          :class="isDarkMode 
+            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
+            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
         />
       </div>
 
       <!-- Call Date To -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1 text-gray-300">Call Date To</label>
+        <label 
+          class="text-sm font-medium mb-1"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          Call Date To
+        </label>
         <input 
           type="date" 
           v-model="filters.callDateTo" 
-          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="rounded-lg px-3 py-2 focus:outline-none focus:ring-2"
+          :class="isDarkMode 
+            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
+            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
         />
       </div>
 
       <!-- User -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1 text-gray-300">User</label>
+        <label 
+          class="text-sm font-medium mb-1"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          User
+        </label>
         <input 
           type="text" 
           v-model="filters.user" 
           placeholder="Enter user name"
-          class="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
+          :class="isDarkMode 
+            ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+            : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
         />
       </div>
 
       <!-- Supervisor -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1 text-gray-300">Supervisor</label>
+        <label 
+          class="text-sm font-medium mb-1"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          Supervisor
+        </label>
         <input 
           type="text" 
           v-model="filters.supervisor" 
           placeholder="Enter supervisor name"
-          class="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
+          :class="isDarkMode 
+            ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+            : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
         />
       </div>
 
       <!-- Minimum Total Score -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1 text-gray-300">Min Total Score (%)</label>
+        <label 
+          class="text-sm font-medium mb-1"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          Min Total Score (%)
+        </label>
         <input 
           type="number" 
           v-model="filters.minScore" 
           placeholder="0-100"
           min="0"
           max="100"
-          class="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
+          :class="isDarkMode 
+            ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+            : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
         />
       </div>
 
       <!-- Created Date From -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1 text-gray-300">Created Date From</label>
+        <label 
+          class="text-sm font-medium mb-1"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          Created Date From
+        </label>
         <input 
           type="date" 
           v-model="filters.createdDateFrom" 
-          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="rounded-lg px-3 py-2 focus:outline-none focus:ring-2"
+          :class="isDarkMode 
+            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
+            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
         />
       </div>
 
       <!-- Created Date To -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1 text-gray-300">Created Date To</label>
+        <label 
+          class="text-sm font-medium mb-1"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          Created Date To
+        </label>
         <input 
           type="date" 
           v-model="filters.createdDateTo" 
-          class="bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="rounded-lg px-3 py-2 focus:outline-none focus:ring-2"
+          :class="isDarkMode 
+            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
+            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
         />
       </div>
 
@@ -83,7 +144,10 @@
     <div class="flex gap-2 mt-4">
       <button
         @click="applyFilters"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-all duration-200 font-medium flex items-center gap-2"
+        class="text-white px-6 py-2 rounded-lg transition-all duration-200 font-medium flex items-center gap-2"
+        :class="isDarkMode 
+          ? 'bg-blue-600 hover:bg-blue-700' 
+          : 'bg-amber-700 hover:bg-amber-800'"
       >
         <i-mdi-filter class="w-4 h-4" />
         Apply Filters
@@ -91,7 +155,10 @@
       
       <button
         @click="resetFilters"
-        class="bg-gray-700 text-gray-300 px-6 py-2 rounded-lg hover:bg-gray-600 transition-all duration-200 font-medium border border-gray-600"
+        class="px-6 py-2 rounded-lg transition-all duration-200 font-medium border"
+        :class="isDarkMode 
+          ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
+          : 'bg-gray-200 text-gray-700 border-gray-300 hover:bg-gray-300'"
       >
         Reset
       </button>
@@ -100,9 +167,12 @@
 </template>
 
 <script setup>
-import { reactive, defineEmits } from 'vue'
+import { reactive, defineEmits, inject } from 'vue'
 
 const emit = defineEmits(['update:filters'])
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 const filters = reactive({
   callDateFrom: '',

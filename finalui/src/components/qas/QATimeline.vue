@@ -1,69 +1,154 @@
 <template>
   <div class="space-y-6">
-    <div v-for="(group, date) in groupedQAs" :key="date" class="bg-gray-800 rounded-lg shadow-xl border border-gray-700 overflow-hidden">
+    <div 
+      v-for="(group, date) in groupedQAs" 
+      :key="date" 
+      class="rounded-lg shadow-xl border overflow-hidden"
+      :class="isDarkMode 
+        ? 'bg-gray-800 border-gray-700' 
+        : 'bg-white border-gray-200'"
+    >
       <!-- Date Header -->
-      <div class="bg-gray-900/60 px-6 py-3 border-b border-gray-700">
-        <h3 class="text-sm font-semibold text-blue-400 flex items-center gap-2">
+      <div 
+        class="px-6 py-3 border-b"
+        :class="isDarkMode 
+          ? 'bg-gray-900/60 border-gray-700' 
+          : 'bg-gray-50 border-gray-200'"
+      >
+        <h3 
+          class="text-sm font-semibold flex items-center gap-2"
+          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+        >
           <i-mdi-calendar class="w-4 h-4" />
           {{ date }}
         </h3>
       </div>
 
       <!-- QA Records List -->
-      <div class="divide-y divide-gray-700">
+      <div 
+        class="divide-y"
+        :class="isDarkMode ? 'divide-gray-700' : 'divide-gray-200'"
+      >
         <div 
           v-for="qa in group" 
           :key="getFieldValue(qa, 'id')"
-          class="p-6 hover:bg-gray-700/30 transition-all duration-200 cursor-pointer"
+          class="p-6 transition-all duration-200 cursor-pointer"
+          :class="isDarkMode 
+            ? 'hover:bg-gray-700/30' 
+            : 'hover:bg-gray-50'"
           @click="viewQADetails(qa)"
         >
           <div class="flex items-start gap-4">
             <!-- Icon & Score -->
-            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-lg flex flex-col items-center justify-center border border-blue-600/30">
-              <span class="text-2xl font-bold text-blue-400">{{ calculateScore(qa) }}%</span>
+            <div 
+              class="flex-shrink-0 w-16 h-16 rounded-lg flex flex-col items-center justify-center border"
+              :class="isDarkMode 
+                ? 'bg-gradient-to-br from-blue-600/20 to-purple-600/20 border-blue-600/30' 
+                : 'bg-gradient-to-br from-amber-100 to-orange-100 border-amber-300'"
+            >
+              <span 
+                class="text-2xl font-bold"
+                :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+              >
+                {{ calculateScore(qa) }}%
+              </span>
             </div>
 
             <!-- Content -->
             <div class="flex-1 min-w-0">
               <div class="flex items-start justify-between gap-4 mb-2">
                 <div>
-                  <h4 class="text-sm font-semibold text-gray-100">
+                  <h4 
+                    class="text-sm font-semibold"
+                    :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+                  >
                     QA #{{ getFieldValue(qa, 'id') }}
                   </h4>
-                  <p class="text-xs text-gray-400 mt-1">
+                  <p 
+                    class="text-xs mt-1"
+                    :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+                  >
                     Call: {{ getFieldValue(qa, 'chan_uniqueid') }}
                   </p>
                 </div>
                 <div class="text-right">
-                  <p class="text-xs text-gray-500">Evaluated on</p>
-                  <p class="text-sm text-gray-300">{{ formatTimestamp(getFieldValue(qa, 'created_on')) }}</p>
+                  <p 
+                    class="text-xs"
+                    :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+                  >
+                    Evaluated on
+                  </p>
+                  <p 
+                    class="text-sm"
+                    :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+                  >
+                    {{ formatTimestamp(getFieldValue(qa, 'created_on')) }}
+                  </p>
                 </div>
               </div>
 
               <div class="grid grid-cols-3 gap-4 mt-3">
                 <div>
-                  <p class="text-xs text-gray-500 mb-1">Opening</p>
-                  <p class="text-sm font-medium" :class="getRatingColor(getFieldValue(qa, 'opening_phrase'))">
+                  <p 
+                    class="text-xs mb-1"
+                    :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+                  >
+                    Opening
+                  </p>
+                  <p 
+                    class="text-sm font-medium" 
+                    :class="getRatingColor(getFieldValue(qa, 'opening_phrase'))"
+                  >
                     {{ getRatingText(getFieldValue(qa, 'opening_phrase')) }}
                   </p>
                 </div>
                 <div>
-                  <p class="text-xs text-gray-500 mb-1">Communication</p>
-                  <p class="text-sm font-medium" :class="getRatingColor(getFieldValue(qa, 'courteous'))">
+                  <p 
+                    class="text-xs mb-1"
+                    :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+                  >
+                    Communication
+                  </p>
+                  <p 
+                    class="text-sm font-medium" 
+                    :class="getRatingColor(getFieldValue(qa, 'courteous'))"
+                  >
                     {{ getRatingText(getFieldValue(qa, 'courteous')) }}
                   </p>
                 </div>
                 <div>
-                  <p class="text-xs text-gray-500 mb-1">Resolution</p>
-                  <p class="text-sm font-medium" :class="getRatingColor(getFieldValue(qa, 'accuracy'))">
+                  <p 
+                    class="text-xs mb-1"
+                    :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+                  >
+                    Resolution
+                  </p>
+                  <p 
+                    class="text-sm font-medium" 
+                    :class="getRatingColor(getFieldValue(qa, 'accuracy'))"
+                  >
                     {{ getRatingText(getFieldValue(qa, 'accuracy')) }}
                   </p>
                 </div>
               </div>
 
-              <div v-if="getFieldValue(qa, 'feedback')" class="mt-3 pt-3 border-t border-gray-700">
-                <p class="text-xs text-gray-500 mb-1">Feedback</p>
-                <p class="text-sm text-gray-300 line-clamp-2">{{ getFieldValue(qa, 'feedback') }}</p>
+              <div 
+                v-if="getFieldValue(qa, 'feedback')" 
+                class="mt-3 pt-3 border-t"
+                :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+              >
+                <p 
+                  class="text-xs mb-1"
+                  :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+                >
+                  Feedback
+                </p>
+                <p 
+                  class="text-sm line-clamp-2"
+                  :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+                >
+                  {{ getFieldValue(qa, 'feedback') }}
+                </p>
               </div>
             </div>
           </div>
@@ -72,15 +157,28 @@
     </div>
 
     <!-- Empty State -->
-    <div v-if="Object.keys(groupedQAs).length === 0" class="bg-gray-800 rounded-lg shadow-xl border border-gray-700 p-12 text-center">
-      <i-mdi-clipboard-check-outline class="w-16 h-16 mx-auto text-gray-600 mb-4" />
-      <p class="text-gray-500">No QA records found</p>
+    <div 
+      v-if="Object.keys(groupedQAs).length === 0" 
+      class="rounded-lg shadow-xl border p-12 text-center"
+      :class="isDarkMode 
+        ? 'bg-gray-800 border-gray-700' 
+        : 'bg-white border-gray-200'"
+    >
+      <i-mdi-clipboard-check-outline 
+        class="w-16 h-16 mx-auto mb-4"
+        :class="isDarkMode ? 'text-gray-600' : 'text-gray-400'"
+      />
+      <p 
+        :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+      >
+        No QA records found
+      </p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -95,6 +193,9 @@ const props = defineProps({
     default: () => ({})
   }
 })
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 // Helper to get field value from array
 const getFieldValue = (qa, fieldName) => {
@@ -159,9 +260,13 @@ const calculateScore = (qa) => {
 
 // Get rating color class
 const getRatingColor = (value) => {
-  if (value === '2') return 'text-green-400'
-  if (value === '1') return 'text-yellow-400'
-  return 'text-red-400'
+  if (value === '2') {
+    return isDarkMode.value ? 'text-green-400' : 'text-green-700'
+  }
+  if (value === '1') {
+    return isDarkMode.value ? 'text-yellow-400' : 'text-yellow-700'
+  }
+  return isDarkMode.value ? 'text-red-400' : 'text-red-700'
 }
 
 // Get rating text
