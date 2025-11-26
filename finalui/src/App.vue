@@ -1,8 +1,8 @@
 <template>
-  <div id="app" class="min-h-screen font-sans text-gray-900 bg-gray-900">
+  <div id="app" class="min-h-screen font-sans" :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'">
     <Toaster 
       position="top-center" 
-      theme="dark"
+      :theme="isDarkMode ? 'dark' : 'light'"
       :rich-colors="false"
       :expand="false"
       :duration="4000"
@@ -16,10 +16,14 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { Toaster } from 'vue-sonner'
+import { useTheme } from '@/composables/useTheme'
 import DefaultLayout from '@/layout/DefaultLayout.vue'
 import { RouterView } from 'vue-router'
 
 const route = useRoute()
+
+// Use the same theme composable - it shares state with DefaultLayout
+const { isDarkMode } = useTheme()
 
 const layout = computed(() => {
   if (route.meta.layout === 'none') return RouterView
@@ -45,7 +49,9 @@ const layout = computed(() => {
   transform: translateX(-50%) !important;
 }
 
-/* Base toast - Horizontal layout */
+/* ============================================
+   BASE TOAST - HORIZONTAL LAYOUT
+   ============================================ */
 [data-sonner-toast] {
   display: flex !important;
   flex-direction: row !important;
@@ -53,7 +59,6 @@ const layout = computed(() => {
   gap: 12px !important;
   padding: 14px 16px !important;
   border-radius: 8px !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4) !important;
   min-width: 400px !important;
   max-width: 600px !important;
   margin-bottom: 12px !important;
@@ -61,73 +66,161 @@ const layout = computed(() => {
   position: relative !important;
 }
 
-/* SUCCESS - Blue background */
-[data-sonner-toast][data-type="success"] {
+/* ============================================
+   DARK MODE STYLES
+   ============================================ */
+
+/* SUCCESS - Blue (Dark Mode) */
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="success"] {
   background: #2563eb !important;
   border-color: #3b82f6 !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4) !important;
 }
 
-[data-sonner-toast][data-type="success"] [data-icon] {
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="success"] [data-icon] {
   color: #ffffff !important;
   flex-shrink: 0 !important;
 }
 
-[data-sonner-toast][data-type="success"] [data-content],
-[data-sonner-toast][data-type="success"] [data-title],
-[data-sonner-toast][data-type="success"] [data-description] {
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="success"] [data-content],
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="success"] [data-title],
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="success"] [data-description] {
   color: #ffffff !important;
 }
 
-/* ERROR - Red background */
-[data-sonner-toast][data-type="error"] {
+/* ERROR - Red (Dark Mode) */
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="error"] {
   background: #dc2626 !important;
   border-color: #ef4444 !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4) !important;
 }
 
-[data-sonner-toast][data-type="error"] [data-icon] {
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="error"] [data-icon] {
   color: #ffffff !important;
   flex-shrink: 0 !important;
 }
 
-[data-sonner-toast][data-type="error"] [data-content],
-[data-sonner-toast][data-type="error"] [data-title],
-[data-sonner-toast][data-type="error"] [data-description] {
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="error"] [data-content],
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="error"] [data-title],
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="error"] [data-description] {
   color: #ffffff !important;
 }
 
-/* WARNING - Orange/Amber background */
-[data-sonner-toast][data-type="warning"] {
+/* WARNING - Orange (Dark Mode) */
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="warning"] {
   background: #ea580c !important;
   border-color: #f97316 !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4) !important;
 }
 
-[data-sonner-toast][data-type="warning"] [data-icon] {
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="warning"] [data-icon] {
   color: #ffffff !important;
   flex-shrink: 0 !important;
 }
 
-[data-sonner-toast][data-type="warning"] [data-content],
-[data-sonner-toast][data-type="warning"] [data-title],
-[data-sonner-toast][data-type="warning"] [data-description] {
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="warning"] [data-content],
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="warning"] [data-title],
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="warning"] [data-description] {
   color: #ffffff !important;
 }
 
-/* INFO - Blue-gray background */
-[data-sonner-toast][data-type="info"] {
+/* INFO - Cyan (Dark Mode) */
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="info"] {
   background: #0284c7 !important;
   border-color: #0ea5e9 !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4) !important;
 }
 
-[data-sonner-toast][data-type="info"] [data-icon] {
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="info"] [data-icon] {
   color: #ffffff !important;
   flex-shrink: 0 !important;
 }
 
-[data-sonner-toast][data-type="info"] [data-content],
-[data-sonner-toast][data-type="info"] [data-title],
-[data-sonner-toast][data-type="info"] [data-description] {
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="info"] [data-content],
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="info"] [data-title],
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="info"] [data-description] {
   color: #ffffff !important;
 }
+
+/* ============================================
+   LIGHT MODE STYLES
+   ============================================ */
+
+/* SUCCESS - Emerald/Green (Light Mode) */
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="success"] {
+  background: #059669 !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.3), 0 8px 10px -6px rgba(5, 150, 105, 0.2) !important;
+}
+
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="success"] [data-icon] {
+  color: #ffffff !important;
+  flex-shrink: 0 !important;
+}
+
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="success"] [data-content],
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="success"] [data-title],
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="success"] [data-description] {
+  color: #ffffff !important;
+}
+
+/* ERROR - Red (Light Mode) */
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="error"] {
+  background: #dc2626 !important;
+  border-color: #ef4444 !important;
+  box-shadow: 0 10px 25px -5px rgba(220, 38, 38, 0.3), 0 8px 10px -6px rgba(220, 38, 38, 0.2) !important;
+}
+
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="error"] [data-icon] {
+  color: #ffffff !important;
+  flex-shrink: 0 !important;
+}
+
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="error"] [data-content],
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="error"] [data-title],
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="error"] [data-description] {
+  color: #ffffff !important;
+}
+
+/* WARNING - Amber/Orange (Light Mode) */
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="warning"] {
+  background: #d97706 !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 10px 25px -5px rgba(217, 119, 6, 0.3), 0 8px 10px -6px rgba(217, 119, 6, 0.2) !important;
+}
+
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="warning"] [data-icon] {
+  color: #ffffff !important;
+  flex-shrink: 0 !important;
+}
+
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="warning"] [data-content],
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="warning"] [data-title],
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="warning"] [data-description] {
+  color: #ffffff !important;
+}
+
+/* INFO - Amber (Light Mode) */
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="info"] {
+  background: #b45309 !important;
+  border-color: #d97706 !important;
+  box-shadow: 0 10px 25px -5px rgba(180, 83, 9, 0.3), 0 8px 10px -6px rgba(180, 83, 9, 0.2) !important;
+}
+
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="info"] [data-icon] {
+  color: #ffffff !important;
+  flex-shrink: 0 !important;
+}
+
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="info"] [data-content],
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="info"] [data-title],
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast][data-type="info"] [data-description] {
+  color: #ffffff !important;
+}
+
+/* ============================================
+   SHARED STYLES (BOTH MODES)
+   ============================================ */
 
 /* Icon styling */
 [data-sonner-toast] [data-icon] {
@@ -196,9 +289,18 @@ const layout = computed(() => {
 
 /* Hover effect */
 [data-sonner-toast]:hover {
-  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.6), 0 10px 15px -8px rgba(0, 0, 0, 0.5) !important;
   transform: translateY(-2px) !important;
   transition: all 0.2s ease !important;
+}
+
+/* Dark mode hover shadow */
+[data-sonner-toaster][data-theme='dark'] [data-sonner-toast]:hover {
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.6), 0 10px 15px -8px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Light mode hover shadow */
+[data-sonner-toaster][data-theme='light'] [data-sonner-toast]:hover {
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.3), 0 10px 15px -8px rgba(0, 0, 0, 0.2) !important;
 }
 
 /* Animation */

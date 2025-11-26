@@ -2,39 +2,116 @@
   <div class="space-y-6">
     <div class="max-w-md mx-auto">
       <!-- Loading state -->
-      <div v-if="loadingExtension" class="p-6 border border-gray-700 rounded-lg bg-gray-800 shadow-xl">
+      <div 
+        v-if="loadingExtension" 
+        class="p-6 border rounded-lg shadow-xl"
+        :class="isDarkMode 
+          ? 'border-gray-700 bg-gray-800' 
+          : 'border-gray-200 bg-white'"
+      >
         <div class="flex items-center justify-center py-8">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-          <span class="ml-3 text-gray-400">Loading extension...</span>
+          <div 
+            class="animate-spin rounded-full h-8 w-8 border-b-2"
+            :class="isDarkMode ? 'border-blue-500' : 'border-amber-600'"
+          ></div>
+          <span 
+            class="ml-3"
+            :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+          >
+            Loading extension...
+          </span>
         </div>
       </div>
 
       <!-- Error state -->
-      <div v-else-if="extensionError" class="p-6 border border-red-700 rounded-lg bg-red-900/20 shadow-xl">
-        <p class="text-red-400 text-center">{{ extensionError }}</p>
+      <div 
+        v-else-if="extensionError" 
+        class="p-6 border rounded-lg shadow-xl"
+        :class="isDarkMode 
+          ? 'border-red-700 bg-red-900/20' 
+          : 'border-red-300 bg-red-50'"
+      >
+        <p 
+          class="text-center"
+          :class="isDarkMode ? 'text-red-400' : 'text-red-700'"
+        >
+          {{ extensionError }}
+        </p>
       </div>
 
       <!-- SIP Agent -->
-      <div v-else class="p-6 border border-gray-700 rounded-lg bg-gray-800 shadow-xl">
-        <h3 class="mb-4 text-xl font-semibold text-center text-gray-100">
+      <div 
+        v-else 
+        class="p-6 border rounded-lg shadow-xl"
+        :class="isDarkMode 
+          ? 'border-gray-700 bg-gray-800' 
+          : 'border-gray-200 bg-white'"
+      >
+        <h3 
+          class="mb-4 text-xl font-semibold text-center"
+          :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+        >
           SIP Agent - Extension {{ agent.extension }}
         </h3>
 
         <div class="space-y-2 mb-6 text-sm">
-          <div class="flex justify-between items-center bg-gray-900/40 p-3 rounded border border-gray-700">
-            <span class="text-gray-400 font-medium">Registered:</span>
-            <span :class="agent.registered ? 'text-green-400 font-semibold' : 'text-red-400 font-semibold'">
+          <div 
+            class="flex justify-between items-center p-3 rounded border"
+            :class="isDarkMode 
+              ? 'bg-gray-900/40 border-gray-700' 
+              : 'bg-gray-50 border-gray-200'"
+          >
+            <span 
+              class="font-medium"
+              :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+            >
+              Registered:
+            </span>
+            <span 
+              class="font-semibold"
+              :class="agent.registered 
+                ? (isDarkMode ? 'text-green-400' : 'text-green-700') 
+                : (isDarkMode ? 'text-red-400' : 'text-red-700')"
+            >
               {{ agent.registered ? 'Yes' : 'No' }}
             </span>
           </div>
-          <div class="flex justify-between items-center bg-gray-900/40 p-3 rounded border border-gray-700">
-            <span class="text-gray-400 font-medium">Connection:</span>
-            <span :class="agent.connected ? 'text-green-400 font-semibold' : 'text-red-400 font-semibold'">
+          
+          <div 
+            class="flex justify-between items-center p-3 rounded border"
+            :class="isDarkMode 
+              ? 'bg-gray-900/40 border-gray-700' 
+              : 'bg-gray-50 border-gray-200'"
+          >
+            <span 
+              class="font-medium"
+              :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+            >
+              Connection:
+            </span>
+            <span 
+              class="font-semibold"
+              :class="agent.connected 
+                ? (isDarkMode ? 'text-green-400' : 'text-green-700') 
+                : (isDarkMode ? 'text-red-400' : 'text-red-700')"
+            >
               {{ agent.connected ? 'Connected' : 'Disconnected' }}
             </span>
           </div>
-          <div v-if="agent.callStatus" class="bg-blue-600/20 border border-blue-600/50 p-3 rounded">
-            <p class="text-sm font-medium text-blue-400">{{ agent.callStatus }}</p>
+          
+          <div 
+            v-if="agent.callStatus" 
+            class="p-3 rounded border"
+            :class="isDarkMode 
+              ? 'bg-blue-600/20 border-blue-600/50' 
+              : 'bg-blue-50 border-blue-300'"
+          >
+            <p 
+              class="text-sm font-medium"
+              :class="isDarkMode ? 'text-blue-400' : 'text-blue-700'"
+            >
+              {{ agent.callStatus }}
+            </p>
           </div>
         </div>
 
@@ -42,7 +119,10 @@
           <button 
             @click="startAgent" 
             :disabled="agent.registered || agent.starting"
-            class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-700 disabled:cursor-not-allowed transition font-medium flex items-center justify-center gap-2"
+            class="px-6 py-3 text-white rounded-lg transition font-medium flex items-center justify-center gap-2 disabled:cursor-not-allowed"
+            :class="agent.registered || agent.starting
+              ? (isDarkMode ? 'bg-gray-700' : 'bg-gray-300')
+              : (isDarkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-amber-700 hover:bg-amber-800')"
           >
             <i-mdi-play class="w-5 h-5" />
             {{ agent.starting ? 'Starting...' : 'Start (Register)' }}
@@ -52,6 +132,7 @@
             @click="hangup" 
             :disabled="!agent.inCall"
             class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-gray-700 disabled:cursor-not-allowed transition font-medium flex items-center justify-center gap-2"
+            :class="!agent.inCall && !isDarkMode ? 'disabled:bg-gray-300' : ''"
           >
             <i-mdi-phone-hangup class="w-5 h-5" />
             Hang Up
@@ -60,7 +141,10 @@
           <button 
             @click="stopAgent" 
             :disabled="!agent.registered || agent.stopping"
-            class="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:bg-gray-700 disabled:cursor-not-allowed transition font-medium flex items-center justify-center gap-2"
+            class="px-6 py-3 text-white rounded-lg transition font-medium flex items-center justify-center gap-2 disabled:cursor-not-allowed"
+            :class="!agent.registered || agent.stopping
+              ? (isDarkMode ? 'bg-gray-700' : 'bg-gray-300')
+              : (isDarkMode ? 'bg-gray-600 hover:bg-gray-700' : 'bg-gray-500 hover:bg-gray-600')"
           >
             <i-mdi-stop class="w-5 h-5" />
             {{ agent.stopping ? 'Stopping...' : 'Stop (Unregister)' }}
@@ -77,9 +161,14 @@
 import * as SIP from "sip.js";
 import { useAuthStore } from '@/stores/auth';
 import { useUserStore } from '@/stores/users';
+import { inject } from 'vue';
 
 export default {
   name: "SipAgentView",
+  setup() {
+    const isDarkMode = inject('isDarkMode');
+    return { isDarkMode };
+  },
   data() {
     return {
       agent: {
@@ -104,63 +193,63 @@ export default {
   },
   methods: {
     async fetchUserExtension() {
-  this.loadingExtension = true;
-  this.extensionError = null;
+      this.loadingExtension = true;
+      this.extensionError = null;
 
-  try {
-    const authStore = useAuthStore();
-    const userStore = useUserStore();
+      try {
+        const authStore = useAuthStore();
+        const userStore = useUserStore();
 
-    const userId = authStore.userId;
-    
-    if (!userId) {
-      throw new Error('User ID not found. Please log in again.');
-    }
+        const userId = authStore.userId;
+        
+        if (!userId) {
+          throw new Error('User ID not found. Please log in again.');
+        }
 
-    console.log('📞 Fetching extension for user ID:', userId);
+        console.log('📞 Fetching extension for user ID:', userId);
 
-    // Fetch user details
-    const userData = await userStore.viewUser(userId);
-    
-    console.log('👤 User data received:', userData);
+        // Fetch user details
+        const userData = await userStore.viewUser(userId);
+        
+        console.log('👤 User data received:', userData);
 
-    // FIXED: Access first user from users array
-    const user = userData?.users?.[0];
-    
-    if (!user) {
-      throw new Error('User data not found.');
-    }
+        // Access first user from users array
+        const user = userData?.users?.[0];
+        
+        if (!user) {
+          throw new Error('User data not found.');
+        }
 
-    console.log('📋 User array:', user);
+        console.log('📋 User array:', user);
 
-    // Get the extension index from users_k mapping
-    const extenIndex = userData?.users_k?.exten?.[0];
-    
-    console.log('🔢 Extension index from users_k:', extenIndex);
+        // Get the extension index from users_k mapping
+        const extenIndex = userData?.users_k?.exten?.[0];
+        
+        console.log('🔢 Extension index from users_k:', extenIndex);
 
-    if (!extenIndex) {
-      throw new Error('Extension mapping not found.');
-    }
+        if (!extenIndex) {
+          throw new Error('Extension mapping not found.');
+        }
 
-    // Access extension value from user array using the index
-    const extension = user[extenIndex];
-    
-    console.log('📱 Extension value:', extension);
+        // Access extension value from user array using the index
+        const extension = user[extenIndex];
+        
+        console.log('📱 Extension value:', extension);
 
-    if (!extension) {
-      throw new Error('Extension not assigned to this user.');
-    }
+        if (!extension) {
+          throw new Error('Extension not assigned to this user.');
+        }
 
-    this.agent.extension = extension;
-    console.log('✅ SIP Extension set to:', extension);
+        this.agent.extension = extension;
+        console.log('✅ SIP Extension set to:', extension);
 
-  } catch (err) {
-    console.error('❌ Error fetching extension:', err);
-    this.extensionError = err.message || 'Failed to load extension';
-  } finally {
-    this.loadingExtension = false;
-  }
-},
+      } catch (err) {
+        console.error('❌ Error fetching extension:', err);
+        this.extensionError = err.message || 'Failed to load extension';
+      } finally {
+        this.loadingExtension = false;
+      }
+    },
 
     setupMediaStreams(session, audioRef) {
       const pc = session.sessionDescriptionHandler.peerConnection;

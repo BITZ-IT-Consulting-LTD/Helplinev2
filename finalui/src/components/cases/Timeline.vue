@@ -1,21 +1,41 @@
 <template>
-  <div class="relative border-l-2 border-gray-700 pl-6 space-y-6">
+  <div 
+    class="relative border-l-2 pl-6 space-y-6"
+    :class="isDarkMode ? 'border-gray-700' : 'border-gray-300'"
+  >
     <div
       v-for="caseItem in cases"
       :key="cases_k.id ? caseItem[cases_k.id[0]] : caseItem.id"
-      class="relative bg-gray-800 shadow-xl rounded-lg p-6 border border-gray-700"
+      class="relative shadow-xl rounded-lg p-6 border"
+      :class="isDarkMode 
+        ? 'bg-gray-800 border-gray-700' 
+        : 'bg-white border-gray-200'"
     >
       <!-- Timeline Dot -->
-      <div class="absolute -left-[1.875rem] top-6 w-6 h-6 bg-blue-500 rounded-full border-4 border-gray-900"></div>
+      <div 
+        class="absolute -left-[1.875rem] top-6 w-6 h-6 rounded-full border-4"
+        :class="isDarkMode 
+          ? 'bg-blue-500 border-gray-900' 
+          : 'bg-amber-600 border-gray-50'"
+      ></div>
 
       <!-- Case Info -->
-      <h3 class="text-lg font-semibold text-gray-100">
+      <h3 
+        class="text-lg font-semibold"
+        :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+      >
         Case #{{ getValue(caseItem, 'id') }}
       </h3>
-      <p class="text-sm text-gray-400 mt-1">
+      <p 
+        class="text-sm mt-1"
+        :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+      >
         Created on: {{ formatDate(getValue(caseItem, 'dt')) }}
       </p>
-      <p class="text-sm text-gray-300 mt-1">
+      <p 
+        class="text-sm mt-1"
+        :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+      >
         Created by: {{ getValue(caseItem, 'created_by') || 'N/A' }}
       </p>
 
@@ -46,70 +66,85 @@
 </template>
 
 <script setup>
+import { inject } from 'vue'
+
 const props = defineProps({
   cases: Array,
   cases_k: Object,
-});
+})
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 // Map the array-style structure
 const getValue = (caseItem, key) => {
-  if (!props.cases_k?.[key]) return null;
-  return caseItem[props.cases_k[key][0]];
-};
+  if (!props.cases_k?.[key]) return null
+  return caseItem[props.cases_k[key][0]]
+}
 
 // Format timestamps nicely
 const formatDate = (timestamp) => {
-  if (!timestamp) return 'N/A';
+  if (!timestamp) return 'N/A'
   const value =
-    timestamp < 10000000000 ? timestamp * 1000 : timestamp * 3600 * 1000;
-  return new Date(value).toLocaleString();
-};
+    timestamp < 10000000000 ? timestamp * 1000 : timestamp * 3600 * 1000
+  return new Date(value).toLocaleString()
+}
 
 // --- Priority ---
 const getPriorityClass = (priority) => {
   switch (String(priority)) {
     case '3':
-      return 'bg-red-600/20 text-red-400 border-red-600/30'; // High
+      return isDarkMode.value
+        ? 'bg-red-600/20 text-red-400 border-red-600/30'
+        : 'bg-red-100 text-red-700 border-red-300'
     case '2':
-      return 'bg-amber-600/20 text-amber-400 border-amber-600/30'; // Medium
+      return isDarkMode.value
+        ? 'bg-amber-600/20 text-amber-400 border-amber-600/30'
+        : 'bg-amber-100 text-amber-700 border-amber-300'
     case '1':
     default:
-      return 'bg-green-600/20 text-green-400 border-green-600/30'; // Low
+      return isDarkMode.value
+        ? 'bg-green-600/20 text-green-400 border-green-600/30'
+        : 'bg-green-100 text-green-700 border-green-300'
   }
-};
+}
 
 const getPriorityText = (priority) => {
   switch (String(priority)) {
     case '3':
-      return 'High';
+      return 'High'
     case '2':
-      return 'Medium';
+      return 'Medium'
     case '1':
-      return 'Low';
+      return 'Low'
     default:
-      return 'Unknown';
+      return 'Unknown'
   }
-};
+}
 
 // --- Status ---
 const getStatusClass = (status) => {
   switch (String(status)) {
     case '2':
-      return 'bg-green-600/20 text-green-400 border-green-600/30'; // Closed
+      return isDarkMode.value
+        ? 'bg-green-600/20 text-green-400 border-green-600/30'
+        : 'bg-green-100 text-green-700 border-green-300'
     case '1':
     default:
-      return 'bg-amber-600/20 text-amber-400 border-amber-600/30'; // Open
+      return isDarkMode.value
+        ? 'bg-amber-600/20 text-amber-400 border-amber-600/30'
+        : 'bg-amber-100 text-amber-700 border-amber-300'
   }
-};
+}
 
 const getStatusText = (status) => {
   switch (String(status)) {
     case '2':
-      return 'Closed';
+      return 'Closed'
     case '1':
-      return 'Open';
+      return 'Open'
     default:
-      return 'Unknown';
+      return 'Unknown'
   }
-};
+}
 </script>

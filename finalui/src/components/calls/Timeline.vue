@@ -3,9 +3,17 @@
     <div
       v-for="(group, label) in groupedCalls"
       :key="label"
-      class="bg-gray-800 shadow-xl rounded-lg p-4 border border-gray-700"
+      class="shadow-xl rounded-lg p-4 border"
+      :class="isDarkMode 
+        ? 'bg-gray-800 border-gray-700' 
+        : 'bg-white border-gray-200'"
     >
-      <h2 class="text-base font-semibold text-blue-400 mb-3 border-b border-gray-700 pb-2 uppercase tracking-wide">
+      <h2 
+        class="text-base font-semibold mb-3 border-b pb-2 uppercase tracking-wide"
+        :class="isDarkMode 
+          ? 'text-blue-400 border-gray-700' 
+          : 'text-amber-700 border-gray-200'"
+      >
         {{ label }}
       </h2>
 
@@ -14,20 +22,34 @@
           v-for="(call, index) in group"
           :key="index"
           @click="handleSelect(call)"
-          class="flex items-center gap-4 p-3 bg-gray-700/50 hover:bg-gray-700 rounded-lg shadow-sm cursor-pointer transition-all duration-200 border border-gray-600 hover:border-blue-500"
+          class="flex items-center gap-4 p-3 rounded-lg shadow-sm cursor-pointer transition-all duration-200 border"
+          :class="isDarkMode 
+            ? 'bg-gray-700/50 hover:bg-gray-700 border-gray-600 hover:border-blue-500' 
+            : 'bg-gray-50 hover:bg-gray-100 border-gray-200 hover:border-amber-600'"
         >
           <!-- Icon -->
-          <div class="text-blue-400 w-10 h-10 flex items-center justify-center bg-gray-800 rounded-lg flex-shrink-0">
+          <div 
+            class="w-10 h-10 flex items-center justify-center rounded-lg flex-shrink-0"
+            :class="isDarkMode 
+              ? 'text-blue-400 bg-gray-800' 
+              : 'text-amber-700 bg-white border border-gray-200'"
+          >
             <i-mdi-phone class="w-6 h-6" />
           </div>
 
           <!-- Details -->
           <div class="flex-1">
-            <div class="font-medium text-gray-200 text-sm">
+            <div 
+              class="font-medium text-sm"
+              :class="isDarkMode ? 'text-gray-200' : 'text-gray-900'"
+            >
               Call ID: {{ call[callsStore.calls_k?.uniqueid?.[0]] || 'N/A' }}
             </div>
 
-            <div class="text-xs text-gray-400 mt-1">
+            <div 
+              class="text-xs mt-1"
+              :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+            >
               {{
                 call[callsStore.calls_k?.dth?.[0]]
                   ? new Date(call[callsStore.calls_k.dth[0]] * 1000).toLocaleString()
@@ -35,9 +57,15 @@
               }}
             </div>
 
-            <div class="text-xs text-gray-300 mt-1">
+            <div 
+              class="text-xs mt-1"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
               Agent:
-              <span class="font-medium text-blue-400">
+              <span 
+                class="font-medium"
+                :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+              >
                 {{ call[callsStore.calls_k?.user_name?.[0]] || 'Unknown' }}
               </span>
             </div>
@@ -50,8 +78,12 @@
             :class="[
               'p-2 rounded transition-all duration-200 flex-shrink-0',
               isAnswered(call) 
-                ? 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95' 
-                : 'bg-gray-700 text-gray-500 cursor-not-allowed opacity-50'
+                ? (isDarkMode 
+                    ? 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95' 
+                    : 'bg-amber-700 text-white hover:bg-amber-800 active:scale-95')
+                : (isDarkMode
+                    ? 'bg-gray-700 text-gray-500 cursor-not-allowed opacity-50'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed opacity-50')
             ]"
             :title="isAnswered(call) ? 'Create QA Evaluation' : 'Only available for answered calls'"
           >
@@ -61,14 +93,23 @@
       </div>
     </div>
 
-    <div v-if="Object.keys(groupedCalls).length === 0" class="text-center text-gray-500 py-12 bg-gray-800 rounded-lg border border-gray-700">
+    <div 
+      v-if="Object.keys(groupedCalls).length === 0" 
+      class="text-center py-12 rounded-lg border"
+      :class="isDarkMode 
+        ? 'text-gray-500 bg-gray-800 border-gray-700' 
+        : 'text-gray-500 bg-white border-gray-200'"
+    >
       No calls to show.
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, inject } from 'vue'
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 const props = defineProps({
   groupedCalls: { type: Object, required: true },
@@ -91,12 +132,11 @@ function emitCreateQA(call) {
   if (uniqueid !== null) emit('create-qa', uniqueid)
 }
 
-// Check if call status is 5 (answered in backend)
+// Check if call status is answered
 function isAnswered(call) {
   const statusIndex = props.callsStore.calls_k?.hangup_status?.[0]
   if (statusIndex === undefined) return false
   const status = call[statusIndex]
-  // Check for both numeric 5 and string '5'
-  return status === 5 || status === '5'
+  return status === 'answered'
 }
 </script>

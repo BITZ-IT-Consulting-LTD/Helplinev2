@@ -1,34 +1,111 @@
 <template>
-  <div class="bg-gray-800 rounded-lg shadow-xl overflow-auto border border-gray-700">
+  <div 
+    class="rounded-lg shadow-xl overflow-auto border"
+    :class="isDarkMode 
+      ? 'bg-gray-800 border-gray-700' 
+      : 'bg-white border-gray-200'"
+  >
     <table class="min-w-full text-sm text-left">
-      <thead class="bg-gray-900/60 border-b border-gray-700">
+      <thead 
+        class="border-b"
+        :class="isDarkMode 
+          ? 'bg-gray-900/60 border-gray-700' 
+          : 'bg-gray-50 border-gray-200'"
+      >
         <tr>
-          <th class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-gray-300">Date</th>
-          <th class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-gray-300">Direction</th>
-          <th class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-gray-300">Phone</th>
-          <th class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-gray-300">Extension</th>
-          <th class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-gray-300">Wait Time</th>
-          <th class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-gray-300">Talk Time</th>
-          <th class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-gray-300">Hangup Status</th>
-          <th class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-gray-300">Hangup By</th>
-          <th class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-gray-300">QA Score</th>
-          <th class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-gray-300">Disposition</th>
-          <th class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-gray-300 text-center">QA</th>
+          <th 
+            class="px-4 py-4 text-xs font-semibold uppercase tracking-wider"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            Date
+          </th>
+          <th 
+            class="px-4 py-4 text-xs font-semibold uppercase tracking-wider"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            Direction
+          </th>
+          <th 
+            class="px-4 py-4 text-xs font-semibold uppercase tracking-wider"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            Phone
+          </th>
+          <th 
+            class="px-4 py-4 text-xs font-semibold uppercase tracking-wider"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            Extension
+          </th>
+          <th 
+            class="px-4 py-4 text-xs font-semibold uppercase tracking-wider"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            Wait Time
+          </th>
+          <th 
+            class="px-4 py-4 text-xs font-semibold uppercase tracking-wider"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            Talk Time
+          </th>
+          <th 
+            class="px-4 py-4 text-xs font-semibold uppercase tracking-wider"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            Hangup Status
+          </th>
+          <th 
+            class="px-4 py-4 text-xs font-semibold uppercase tracking-wider"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            Hangup By
+          </th>
+          <th 
+            class="px-4 py-4 text-xs font-semibold uppercase tracking-wider"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            QA Score
+          </th>
+          <th 
+            class="px-4 py-4 text-xs font-semibold uppercase tracking-wider"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            Disposition
+          </th>
+          <th 
+            class="px-4 py-4 text-xs font-semibold uppercase tracking-wider text-center"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            QA
+          </th>
         </tr>
       </thead>
 
-      <tbody class="divide-y divide-gray-700">
+      <tbody 
+        class="divide-y"
+        :class="isDarkMode ? 'divide-gray-700' : 'divide-gray-200'"
+      >
         <tr
           v-for="(call, idx) in calls"
           :key="call[callsStore.calls_k?.uniqueid?.[0]] || idx"
           :class="[
-            'hover:bg-gray-700/30 cursor-pointer transition-all duration-200',
-            call[callsStore.calls_k?.uniqueid?.[0]] === selectedCallId ? 'bg-blue-600/10 border-l-4 border-l-blue-500' : ''
+            'cursor-pointer transition-all duration-200',
+            call[callsStore.calls_k?.uniqueid?.[0]] === selectedCallId 
+              ? (isDarkMode 
+                  ? 'bg-blue-600/10 border-l-4 border-l-blue-500' 
+                  : 'bg-amber-100 border-l-4 border-l-amber-600')
+              : (isDarkMode
+                  ? 'hover:bg-gray-700/30'
+                  : 'hover:bg-gray-50')
           ]"
           @click="emitSelect(call)"
         >
           <!-- Date -->
-          <td class="px-4 py-3 text-gray-300">
+          <td 
+            class="px-4 py-3"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
             {{
               call[callsStore.calls_k?.chan_ts?.[0]]
                 ? formatDateTime(call[callsStore.calls_k.chan_ts[0]])
@@ -44,25 +121,41 @@
           </td>
 
           <!-- Phone -->
-          <td class="px-4 py-3 font-medium text-gray-200">
+          <td 
+            class="px-4 py-3 font-medium"
+            :class="isDarkMode ? 'text-gray-200' : 'text-gray-900'"
+          >
             {{ call[callsStore.calls_k?.phone?.[0]] || 'N/A' }}
           </td>
 
           <!-- Extension -->
-          <td class="px-4 py-3 text-gray-300">
+          <td 
+            class="px-4 py-3"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
             {{ call[callsStore.calls_k?.usr?.[0]] || 'N/A' }}
-            <span v-if="call[callsStore.calls_k?.usr_name?.[0]]" class="text-gray-500 text-xs block">
+            <span 
+              v-if="call[callsStore.calls_k?.usr_name?.[0]]" 
+              class="text-xs block"
+              :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+            >
               {{ call[callsStore.calls_k.usr_name[0]] }}
             </span>
           </td>
 
           <!-- Wait Time -->
-          <td class="px-4 py-3 text-gray-400">
+          <td 
+            class="px-4 py-3"
+            :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+          >
             {{ formatDuration(call[callsStore.calls_k?.wait_time_tot?.[0]]) }}
           </td>
 
           <!-- Talk Time -->
-          <td class="px-4 py-3 text-gray-400">
+          <td 
+            class="px-4 py-3"
+            :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+          >
             {{ formatDuration(call[callsStore.calls_k?.talk_time?.[0]]) }}
           </td>
 
@@ -74,17 +167,26 @@
           </td>
 
           <!-- Hangup By -->
-          <td class="px-4 py-3 text-gray-400">
+          <td 
+            class="px-4 py-3"
+            :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+          >
             {{ getHangupReasonLabel(call[callsStore.calls_k?.hangup_reason?.[0]]) }}
           </td>
 
           <!-- QA Score -->
-          <td class="px-4 py-3 font-medium text-blue-400">
+          <td 
+            class="px-4 py-3 font-medium"
+            :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          >
             {{ call[callsStore.calls_k?.qa_score?.[0]] || '-' }}
           </td>
 
           <!-- Disposition -->
-          <td class="px-4 py-3 text-xs text-gray-400">
+          <td 
+            class="px-4 py-3 text-xs"
+            :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+          >
             {{ call[callsStore.calls_k?.dispositions?.[0]] || '-' }}
           </td>
 
@@ -96,8 +198,12 @@
               :class="[
                 'p-2 rounded transition-all duration-200',
                 isAnswered(call) 
-                  ? 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95' 
-                  : 'bg-gray-700 text-gray-500 cursor-not-allowed opacity-50'
+                  ? (isDarkMode 
+                      ? 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95' 
+                      : 'bg-amber-700 text-white hover:bg-amber-800 active:scale-95')
+                  : (isDarkMode
+                      ? 'bg-gray-700 text-gray-500 cursor-not-allowed opacity-50'
+                      : 'bg-gray-200 text-gray-400 cursor-not-allowed opacity-50')
               ]"
               :title="isAnswered(call) ? 'Create QA Evaluation' : 'Only available for answered calls'"
             >
@@ -108,14 +214,21 @@
       </tbody>
     </table>
 
-    <div v-if="!calls || calls.length === 0" class="p-4 text-center text-gray-500">
+    <div 
+      v-if="!calls || calls.length === 0" 
+      class="p-4 text-center"
+      :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+    >
       No calls available.
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, inject } from 'vue'
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 const props = defineProps({
   calls: { type: Array, required: true },
@@ -207,42 +320,76 @@ function formatDuration(value) {
   return minutes.toFixed(2)
 }
 
-// Direction styling
+// Direction styling - theme aware
 function directionClass(direction) {
-  if (!direction) return 'bg-gray-700/50 text-gray-400 border-gray-600'
+  if (!direction) {
+    return isDarkMode.value 
+      ? 'bg-gray-700/50 text-gray-400 border-gray-600'
+      : 'bg-gray-100 text-gray-600 border-gray-300'
+  }
   const d = String(direction)
-  if (d === '1') return 'bg-blue-600/20 text-blue-400 border-blue-600/30'
-  if (d === '2') return 'bg-green-600/20 text-green-400 border-green-600/30'
-  return 'bg-gray-700/50 text-gray-400 border-gray-600'
+  if (d === '1') {
+    return isDarkMode.value
+      ? 'bg-blue-600/20 text-blue-400 border-blue-600/30'
+      : 'bg-blue-100 text-blue-700 border-blue-300'
+  }
+  if (d === '2') {
+    return isDarkMode.value
+      ? 'bg-green-600/20 text-green-400 border-green-600/30'
+      : 'bg-green-100 text-green-700 border-green-300'
+  }
+  return isDarkMode.value
+    ? 'bg-gray-700/50 text-gray-400 border-gray-600'
+    : 'bg-gray-100 text-gray-600 border-gray-300'
 }
 
-// Status styling
+// Status styling - theme aware
 function statusClass(status) {
-  if (!status) return 'bg-gray-700/50 text-gray-400 border-gray-600'
+  if (!status) {
+    return isDarkMode.value
+      ? 'bg-gray-700/50 text-gray-400 border-gray-600'
+      : 'bg-gray-100 text-gray-600 border-gray-300'
+  }
   const s = String(status).toLowerCase()
   
   if (s === 'answered' || s === 'xfer_ok' || s === 'sched') {
-    return 'bg-green-600/20 text-green-400 border-green-600/30'
+    return isDarkMode.value
+      ? 'bg-green-600/20 text-green-400 border-green-600/30'
+      : 'bg-green-100 text-green-700 border-green-300'
   }
   if (s === 'abandoned' || s === 'missed' || s === 'no-answer' || s === 'noanswer' || s === 'busy' || s === 'xfer_noanswer' || s === 'xfer_offline') {
-    return 'bg-amber-600/20 text-amber-400 border-amber-600/30'
+    return isDarkMode.value
+      ? 'bg-amber-600/20 text-amber-400 border-amber-600/30'
+      : 'bg-amber-100 text-amber-700 border-amber-300'
   }
   if (s === 'dump') {
-    return 'bg-red-600/20 text-red-400 border-red-600/30'
+    return isDarkMode.value
+      ? 'bg-red-600/20 text-red-400 border-red-600/30'
+      : 'bg-red-100 text-red-700 border-red-300'
   }
   if (s === 'ivr' || s === 'xfer_consult') {
-    return 'bg-blue-600/20 text-blue-400 border-blue-600/30'
+    return isDarkMode.value
+      ? 'bg-blue-600/20 text-blue-400 border-blue-600/30'
+      : 'bg-blue-100 text-blue-700 border-blue-300'
   }
   if (s === 'voicemail') {
-    return 'bg-green-600/20 text-green-400 border-green-600/30'
+    return isDarkMode.value
+      ? 'bg-green-600/20 text-green-400 border-green-600/30'
+      : 'bg-green-100 text-green-700 border-green-300'
   }
   if (s === 'networkerror') {
-    return 'bg-purple-600/20 text-purple-400 border-purple-600/30'
+    return isDarkMode.value
+      ? 'bg-purple-600/20 text-purple-400 border-purple-600/30'
+      : 'bg-purple-100 text-purple-700 border-purple-300'
   }
   if (s === 'reattempt') {
-    return 'bg-cyan-600/20 text-cyan-400 border-cyan-600/30'
+    return isDarkMode.value
+      ? 'bg-cyan-600/20 text-cyan-400 border-cyan-600/30'
+      : 'bg-cyan-100 text-cyan-700 border-cyan-300'
   }
   
-  return 'bg-gray-700/50 text-gray-400 border-gray-600'
+  return isDarkMode.value
+    ? 'bg-gray-700/50 text-gray-400 border-gray-600'
+    : 'bg-gray-100 text-gray-600 border-gray-300'
 }
 </script>

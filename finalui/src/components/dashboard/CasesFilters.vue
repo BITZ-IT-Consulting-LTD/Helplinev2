@@ -1,10 +1,26 @@
 <template>
-  <div class="w-full bg-gray-800 rounded-lg p-4 shadow-xl border border-gray-700 mb-4 flex flex-wrap gap-4">
+  <div 
+    class="w-full rounded-lg p-4 shadow-xl border mb-4 flex flex-wrap gap-4"
+    :class="isDarkMode 
+      ? 'bg-gray-800 border-gray-700' 
+      : 'bg-white border-gray-200'"
+  >
 
     <!-- Duration Filter -->
     <div class="flex flex-col">
-      <label class="text-sm font-medium mb-1 text-gray-300">Duration</label>
-      <select v-model="filters.period" class="bg-gray-700 border border-gray-600 text-gray-100 rounded px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+      <label 
+        class="text-sm font-medium mb-1"
+        :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+      >
+        Duration
+      </label>
+      <select 
+        v-model="filters.period" 
+        class="rounded px-3 py-2 text-sm focus:ring-1 outline-none"
+        :class="isDarkMode 
+          ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:border-blue-500 focus:ring-blue-500' 
+          : 'bg-gray-50 border border-gray-300 text-gray-900 focus:border-amber-600 focus:ring-amber-600'"
+      >
         <option value="all">All</option>
         <option value="today">Today</option>
         <option value="this_week">This Week</option>
@@ -18,8 +34,19 @@
 
     <!-- GBV Filter -->
     <div class="flex flex-col">
-      <label class="text-sm font-medium mb-1 text-gray-300">GBV</label>
-      <select v-model="filters.gbv" class="bg-gray-700 border border-gray-600 text-gray-100 rounded px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+      <label 
+        class="text-sm font-medium mb-1"
+        :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+      >
+        GBV
+      </label>
+      <select 
+        v-model="filters.gbv" 
+        class="rounded px-3 py-2 text-sm focus:ring-1 outline-none"
+        :class="isDarkMode 
+          ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:border-blue-500 focus:ring-blue-500' 
+          : 'bg-gray-50 border border-gray-300 text-gray-900 focus:border-amber-600 focus:ring-amber-600'"
+      >
         <option value="both">Both</option>
         <option value="vac">VAC</option>
         <option value="gbv">GBV</option>
@@ -28,8 +55,19 @@
 
     <!-- Source Filter -->
     <div class="flex flex-col">
-      <label class="text-sm font-medium mb-1 text-gray-300">Source</label>
-      <select v-model="filters.source" class="bg-gray-700 border border-gray-600 text-gray-100 rounded px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+      <label 
+        class="text-sm font-medium mb-1"
+        :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+      >
+        Source
+      </label>
+      <select 
+        v-model="filters.source" 
+        class="rounded px-3 py-2 text-sm focus:ring-1 outline-none"
+        :class="isDarkMode 
+          ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:border-blue-500 focus:ring-blue-500' 
+          : 'bg-gray-50 border border-gray-300 text-gray-900 focus:border-amber-600 focus:ring-amber-600'"
+      >
         <option value="all">All</option>
         <option value="call">Call</option>
         <option value="sms">SMS</option>
@@ -43,14 +81,20 @@
     <div class="flex items-end gap-2">
       <button
         @click="emitFilters"
-        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all duration-200 text-sm shadow-lg flex items-center gap-2 active:scale-95 active:shadow-md"
+        class="text-white px-4 py-2 rounded transition-all duration-200 text-sm shadow-lg flex items-center gap-2 active:scale-95 active:shadow-md"
+        :class="isDarkMode 
+          ? 'bg-blue-600 hover:bg-blue-700' 
+          : 'bg-amber-700 hover:bg-amber-800'"
       >
         <i-mdi-filter class="w-4 h-4" />
         Apply Filters
       </button>
       <button
         @click="resetFilters"
-        class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500 transition-all duration-200 text-sm shadow-lg flex items-center gap-2 active:scale-95 active:shadow-md"
+        class="text-white px-4 py-2 rounded transition-all duration-200 text-sm shadow-lg flex items-center gap-2 active:scale-95 active:shadow-md"
+        :class="isDarkMode 
+          ? 'bg-gray-600 hover:bg-gray-500' 
+          : 'bg-gray-500 hover:bg-gray-600'"
       >
         <i-mdi-refresh class="w-4 h-4" />
         Reset
@@ -61,7 +105,10 @@
 </template>
 
 <script setup>
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, inject } from 'vue'
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 const emit = defineEmits(['update:filters'])
 
