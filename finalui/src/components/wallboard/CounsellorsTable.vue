@@ -1,11 +1,32 @@
 <template>
-  <div class="bg-gray-800 rounded-lg shadow-xl border border-gray-700">
+  <div 
+    class="rounded-lg shadow-xl border"
+    :class="isDarkMode 
+      ? 'bg-gray-800 border-gray-700' 
+      : 'bg-white border-gray-200'"
+  >
     <!-- Header -->
-    <div class="px-4 py-3 bg-gray-900/60 border-b border-gray-700 flex items-center justify-between">
-      <h2 class="text-sm font-bold text-gray-100 flex items-center gap-2">
-        <i-mdi-account-group class="w-5 h-5 text-blue-400" />
+    <div 
+      class="px-4 py-3 border-b flex items-center justify-between"
+      :class="isDarkMode 
+        ? 'bg-gray-900/60 border-gray-700' 
+        : 'bg-gray-50 border-gray-200'"
+    >
+      <h2 
+        class="text-sm font-bold flex items-center gap-2"
+        :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+      >
+        <i-mdi-account-group 
+          class="w-5 h-5"
+          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+        />
         Counsellors Online
-        <span class="px-2 py-0.5 rounded-full bg-blue-600/20 text-blue-400 text-xs font-semibold border border-blue-600/30">
+        <span 
+          class="px-2 py-0.5 rounded-full text-xs font-semibold border"
+          :class="isDarkMode 
+            ? 'bg-blue-600/20 text-blue-400 border-blue-600/30' 
+            : 'bg-amber-100 text-amber-700 border-amber-300'"
+        >
           {{ onlineCount }}
         </span>
       </h2>
@@ -14,9 +35,17 @@
     <!-- Table Container with Fixed Height -->
     <div class="overflow-hidden" style="height: 280px;">
       <!-- Table Headers -->
-      <div class="bg-gray-900/40 border-b border-gray-700 px-4 py-2">
-        <div class="grid gap-3 text-xs font-semibold text-gray-400 uppercase tracking-wide"
-             style="grid-template-columns: 60px 140px 90px 70px 70px 90px 120px 1fr;">
+      <div 
+        class="border-b px-4 py-2"
+        :class="isDarkMode 
+          ? 'bg-gray-900/40 border-gray-700' 
+          : 'bg-gray-50 border-gray-200'"
+      >
+        <div 
+          class="grid gap-3 text-xs font-semibold uppercase tracking-wide"
+          :class="isDarkMode ? 'text-gray-400' : 'text-gray-700'"
+          style="grid-template-columns: 60px 140px 90px 70px 70px 90px 120px 1fr;"
+        >
           <div>Ext.</div>
           <div>Name</div>
           <div>Caller</div>
@@ -32,33 +61,67 @@
       <div 
         ref="tableContainer"
         class="overflow-y-auto"
+        :class="isDarkMode ? 'scrollbar-dark' : 'scrollbar-light'"
         style="height: 236px; scroll-behavior: smooth;"
       >
         <!-- Empty State -->
         <div v-if="counsellors.length === 0" class="flex items-center justify-center h-full">
-          <div class="text-gray-500 italic text-sm">No counsellors currently online</div>
+          <div 
+            class="italic text-sm"
+            :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+          >
+            No counsellors currently online
+          </div>
         </div>
 
         <!-- Table Rows -->
         <div 
           v-for="counsellor in counsellors" 
           :key="counsellor.id"
-          class="px-4 py-2 border-b border-gray-700/50 hover:bg-gray-700/30 transition-all duration-200"
+          class="px-4 py-2 border-b transition-all duration-200"
+          :class="isDarkMode 
+            ? 'border-gray-700/50 hover:bg-gray-700/30' 
+            : 'border-gray-200 hover:bg-gray-50'"
         >
-          <div class="grid gap-3 text-sm items-center"
-               style="grid-template-columns: 60px 140px 90px 70px 70px 90px 120px 1fr;">
-            <div class="text-gray-300 font-medium">{{ counsellor.extension }}</div>
-            <div class="text-gray-300 truncate">{{ counsellor.name }}</div>
-            <div class="text-gray-400 truncate">{{ counsellor.caller || '--' }}</div>
-            <div class="text-gray-300">{{ counsellor.answered || '0' }}</div>
-            <div class="text-gray-300">{{ counsellor.missed || '0' }}</div>
-            <div class="text-gray-400">{{ counsellor.talkTime || '--' }}</div>
+          <div 
+            class="grid gap-3 text-sm items-center"
+            style="grid-template-columns: 60px 140px 90px 70px 70px 90px 120px 1fr;"
+          >
+            <div 
+              class="font-medium"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-900'"
+            >
+              {{ counsellor.extension }}
+            </div>
+            <div 
+              class="truncate"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-900'"
+            >
+              {{ counsellor.name }}
+            </div>
+            <div 
+              class="truncate"
+              :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+            >
+              {{ counsellor.caller || '--' }}
+            </div>
+            <div :class="isDarkMode ? 'text-gray-300' : 'text-gray-900'">
+              {{ counsellor.answered || '0' }}
+            </div>
+            <div :class="isDarkMode ? 'text-gray-300' : 'text-gray-900'">
+              {{ counsellor.missed || '0' }}
+            </div>
+            <div :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'">
+              {{ counsellor.talkTime || '--' }}
+            </div>
             <div>
               <span :class="['text-xs font-semibold px-2 py-1 rounded-full', getStatusClass(counsellor.queueStatus)]">
                 {{ counsellor.queueStatus || 'Offline' }}
               </span>
             </div>
-            <div class="text-gray-400">{{ counsellor.duration || '--' }}</div>
+            <div :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'">
+              {{ counsellor.duration || '--' }}
+            </div>
           </div>
         </div>
       </div>
@@ -67,7 +130,7 @@
 </template>
 
 <script>
-import { ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, nextTick, inject } from 'vue'
 
 export default {
   name: 'CounsellorsTable',
@@ -84,6 +147,7 @@ export default {
     }
   },
   setup(props) {
+    const isDarkMode = inject('isDarkMode')
     const tableContainer = ref(null)
     let scrollInterval = null
 
@@ -144,39 +208,84 @@ export default {
     })
 
     return {
+      isDarkMode,
       tableContainer
     }
   },
   methods: {
     getStatusClass(status) {
       const s = (status || 'Available').toString().toLowerCase()
-      if (s.includes('on call')) return 'bg-emerald-600/20 text-emerald-400 border border-emerald-600/30'
-      if (s.includes('ring')) return 'bg-amber-600/20 text-amber-400 border border-amber-600/30 animate-pulse'
-      if (s.includes('queue')) return 'bg-blue-600/20 text-blue-400 border border-blue-600/30'
-      if (s.includes('available')) return 'bg-gray-600/20 text-gray-400 border border-gray-600/30'
-      if (s.includes('offline')) return 'bg-red-600/20 text-red-400 border border-red-600/30'
-      return 'bg-gray-600/20 text-gray-400'
+      
+      if (s.includes('on call')) {
+        return this.isDarkMode 
+          ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-600/30'
+          : 'bg-emerald-100 text-emerald-700 border border-emerald-300'
+      }
+      if (s.includes('ring')) {
+        return this.isDarkMode 
+          ? 'bg-amber-600/20 text-amber-400 border border-amber-600/30 animate-pulse'
+          : 'bg-amber-100 text-amber-700 border border-amber-300 animate-pulse'
+      }
+      if (s.includes('queue')) {
+        return this.isDarkMode 
+          ? 'bg-blue-600/20 text-blue-400 border border-blue-600/30'
+          : 'bg-blue-100 text-blue-700 border border-blue-300'
+      }
+      if (s.includes('available')) {
+        return this.isDarkMode 
+          ? 'bg-gray-600/20 text-gray-400 border border-gray-600/30'
+          : 'bg-gray-100 text-gray-700 border border-gray-300'
+      }
+      if (s.includes('offline')) {
+        return this.isDarkMode 
+          ? 'bg-red-600/20 text-red-400 border border-red-600/30'
+          : 'bg-red-100 text-red-700 border border-red-300'
+      }
+      
+      return this.isDarkMode 
+        ? 'bg-gray-600/20 text-gray-400'
+        : 'bg-gray-100 text-gray-700'
     }
   }
 }
 </script>
 
 <style scoped>
-.overflow-y-auto::-webkit-scrollbar {
+/* Dark mode scrollbar */
+.scrollbar-dark::-webkit-scrollbar {
   width: 6px;
 }
 
-.overflow-y-auto::-webkit-scrollbar-track {
+.scrollbar-dark::-webkit-scrollbar-track {
   background: rgba(31, 41, 55, 0.5);
   border-radius: 3px;
 }
 
-.overflow-y-auto::-webkit-scrollbar-thumb {
+.scrollbar-dark::-webkit-scrollbar-thumb {
   background: rgba(75, 85, 99, 0.5);
   border-radius: 3px;
 }
 
-.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+.scrollbar-dark::-webkit-scrollbar-thumb:hover {
   background: rgba(75, 85, 99, 0.7);
+}
+
+/* Light mode scrollbar */
+.scrollbar-light::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-light::-webkit-scrollbar-track {
+  background: rgba(229, 231, 235, 0.5);
+  border-radius: 3px;
+}
+
+.scrollbar-light::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 3px;
+}
+
+.scrollbar-light::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
 }
 </style>

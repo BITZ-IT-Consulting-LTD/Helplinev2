@@ -1,12 +1,31 @@
 <template>
-  <div class="bg-gray-800 rounded-lg shadow-xl border border-gray-700 p-4">
-    <h3 class="text-lg font-bold text-gray-100 mb-4 flex items-center gap-2">
-      <i-mdi-chart-box class="w-5 h-5 text-blue-400" />
+  <div 
+    class="rounded-lg shadow-xl border p-4"
+    :class="isDarkMode 
+      ? 'bg-gray-800 border-gray-700' 
+      : 'bg-white border-gray-200'"
+  >
+    <h3 
+      class="text-lg font-bold mb-4 flex items-center gap-2"
+      :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+    >
+      <i-mdi-chart-box 
+        class="w-5 h-5"
+        :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+      />
       Cases Overview
     </h3>
     
-    <div v-if="!tiles || tiles.length === 0" class="flex items-center justify-center py-12">
-      <div class="text-gray-500 text-sm">No case data available</div>
+    <div 
+      v-if="!tiles || tiles.length === 0" 
+      class="flex items-center justify-center py-12"
+    >
+      <div 
+        class="text-sm"
+        :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+      >
+        No case data available
+      </div>
     </div>
     
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -14,7 +33,7 @@
         v-for="tile in tiles"
         :key="tile.id"
         :class="[
-          'rounded-lg p-4 relative overflow-hidden transition-all duration-200 hover:scale-[1.02]',
+          'rounded-lg p-4 relative overflow-hidden transition-all duration-200 hover:scale-[1.02] border',
           getBgClass(tile.variant)
         ]"
       >
@@ -36,7 +55,10 @@
               <i-mdi-database v-else-if="tile.icon === 'database'" class="w-6 h-6" />
             </div>
           </div>
-          <div class="text-xs font-semibold uppercase tracking-wide text-gray-300">
+          <div 
+            class="text-xs font-semibold uppercase tracking-wide"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
             {{ tile.label }}
           </div>
         </div>
@@ -46,6 +68,8 @@
 </template>
 
 <script>
+import { inject } from 'vue'
+
 export default {
   name: 'CasesTiles',
   props: {
@@ -55,20 +79,39 @@ export default {
       default: () => []
     }
   },
+  setup() {
+    const isDarkMode = inject('isDarkMode')
+    
+    return {
+      isDarkMode
+    }
+  },
   methods: {
     getBgClass(variant) {
-      const bgMap = {
-        'blue': 'bg-blue-600/10 border border-blue-600/20',
-        'amber': 'bg-amber-600/10 border border-amber-600/20',
-        'red': 'bg-red-600/10 border border-red-600/20',
-        'green': 'bg-emerald-600/10 border border-emerald-600/20',
-        'purple': 'bg-purple-600/10 border border-purple-600/20',
-        'indigo': 'bg-indigo-600/10 border border-indigo-600/20'
+      const darkBgMap = {
+        'blue': 'bg-blue-600/10 border-blue-600/20',
+        'amber': 'bg-amber-600/10 border-amber-600/20',
+        'red': 'bg-red-600/10 border-red-600/20',
+        'green': 'bg-emerald-600/10 border-emerald-600/20',
+        'purple': 'bg-purple-600/10 border-purple-600/20',
+        'indigo': 'bg-indigo-600/10 border-indigo-600/20'
       }
-      return bgMap[variant] || 'bg-gray-700/30'
+      
+      const lightBgMap = {
+        'blue': 'bg-blue-50 border-blue-200',
+        'amber': 'bg-amber-50 border-amber-200',
+        'red': 'bg-red-50 border-red-200',
+        'green': 'bg-emerald-50 border-emerald-200',
+        'purple': 'bg-purple-50 border-purple-200',
+        'indigo': 'bg-indigo-50 border-indigo-200'
+      }
+      
+      return this.isDarkMode 
+        ? (darkBgMap[variant] || 'bg-gray-700/30')
+        : (lightBgMap[variant] || 'bg-gray-100')
     },
     getTextClass(variant) {
-      const textMap = {
+      const darkTextMap = {
         'blue': 'text-blue-400',
         'amber': 'text-amber-400',
         'red': 'text-red-400',
@@ -76,7 +119,19 @@ export default {
         'purple': 'text-purple-400',
         'indigo': 'text-indigo-400'
       }
-      return textMap[variant] || 'text-gray-100'
+      
+      const lightTextMap = {
+        'blue': 'text-blue-700',
+        'amber': 'text-amber-700',
+        'red': 'text-red-700',
+        'green': 'text-emerald-700',
+        'purple': 'text-purple-700',
+        'indigo': 'text-indigo-700'
+      }
+      
+      return this.isDarkMode 
+        ? (darkTextMap[variant] || 'text-gray-100')
+        : (lightTextMap[variant] || 'text-gray-900')
     },
     getGradientClass(variant) {
       const gradientMap = {
@@ -90,7 +145,7 @@ export default {
       return gradientMap[variant] || 'bg-gray-700'
     },
     getIconBgClass(variant) {
-      const iconBgMap = {
+      const darkIconBgMap = {
         'blue': 'bg-blue-600/20 text-blue-400',
         'amber': 'bg-amber-600/20 text-amber-400',
         'red': 'bg-red-600/20 text-red-400',
@@ -98,7 +153,19 @@ export default {
         'purple': 'bg-purple-600/20 text-purple-400',
         'indigo': 'bg-indigo-600/20 text-indigo-400'
       }
-      return iconBgMap[variant] || 'bg-gray-700 text-gray-400'
+      
+      const lightIconBgMap = {
+        'blue': 'bg-blue-100 text-blue-700',
+        'amber': 'bg-amber-100 text-amber-700',
+        'red': 'bg-red-100 text-red-700',
+        'green': 'bg-emerald-100 text-emerald-700',
+        'purple': 'bg-purple-100 text-purple-700',
+        'indigo': 'bg-indigo-100 text-indigo-700'
+      }
+      
+      return this.isDarkMode 
+        ? (darkIconBgMap[variant] || 'bg-gray-700 text-gray-400')
+        : (lightIconBgMap[variant] || 'bg-gray-200 text-gray-700')
     }
   }
 }

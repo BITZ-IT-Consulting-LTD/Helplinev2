@@ -1,21 +1,53 @@
 <template>
-  <div class="bg-gray-800 rounded-lg shadow-xl border border-gray-700 px-6 py-4">
+  <div 
+    class="rounded-lg shadow-xl border px-6 py-4"
+    :class="isDarkMode 
+      ? 'bg-gray-800 border-gray-700' 
+      : 'bg-white border-gray-200'"
+  >
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <!-- Title Section -->
       <div class="flex-1">
-        <h1 class="text-2xl font-bold text-gray-100 mb-1 flex items-center gap-2">
-          <i-mdi-monitor-dashboard class="w-7 h-7 text-blue-400" />
+        <h1 
+          class="text-2xl font-bold mb-1 flex items-center gap-2"
+          :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+        >
+          <i-mdi-monitor-dashboard 
+            class="w-7 h-7"
+            :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          />
           Helpline Wallboard
         </h1>
-        <p class="text-gray-400 text-sm">Real-time counselling and support monitoring</p>
+        <p 
+          class="text-sm"
+          :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+        >
+          Real-time counselling and support monitoring
+        </p>
       </div>
       
       <!-- Connection Status -->
-      <div class="flex items-center gap-2 px-3 py-2 bg-gray-900/60 rounded-lg border border-gray-700">
+      <div 
+        class="flex items-center gap-2 px-3 py-2 rounded-lg border"
+        :class="isDarkMode 
+          ? 'bg-gray-900/60 border-gray-700' 
+          : 'bg-gray-50 border-gray-300'"
+      >
         <span :class="['w-2 h-2 rounded-full flex-shrink-0', dotClass]"></span>
         <div class="flex flex-col">
-          <span class="text-xs font-semibold text-gray-300">{{ connectionLabel }}</span>
-          <span v-if="lastUpdate" class="text-[0.65rem] text-gray-500">{{ lastUpdate }}</span>
+          <span 
+            class="text-xs font-semibold"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            {{ connectionLabel }}
+          </span>
+          <span 
+            v-if="lastUpdate" 
+            class="text-[0.65rem]"
+            :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+          >
+            {{ lastUpdate }}
+          </span>
         </div>
       </div>
     </div>
@@ -23,6 +55,8 @@
 </template>
 
 <script>
+import { inject } from 'vue'
+
 export default {
   name: 'WallboardHeader',
   props: {
@@ -37,6 +71,13 @@ export default {
     lastUpdate: {
       type: String,
       default: null
+    }
+  },
+  setup() {
+    const isDarkMode = inject('isDarkMode')
+    
+    return {
+      isDarkMode
     }
   },
   computed: {
