@@ -144,7 +144,10 @@ export default {
     const currentStep = ref(1);
     const totalSteps = 4;
     const isSubmittingCase = ref(false);
-    const reporterId = ref(null);
+    
+    // ✅ Store BOTH reporter IDs separately
+    const reporterRecordId = ref(null);  // Index 0 - for reporter_uuid_id
+    const reporterContactId = ref(null); // Index 5 - for contact_uuid_id
     
     const stepStatus = reactive({
       1: "active",
@@ -174,7 +177,6 @@ export default {
         filteredContacts: []
       },
       step2: {
-        // IDs for backend
         narrative: '',
         plan: '',
         isGBVRelated: '',
@@ -186,8 +188,6 @@ export default {
         clientPassportNumber: '',
         justiceSystemState: '',
         generalAssessment: '',
-        
-        // Text for display (NEW)
         isGBVRelatedText: '',
         categoriesText: '',
         priorityText: '',
@@ -204,9 +204,9 @@ export default {
         servicesOffered: [],
         servicesOfferedText: [],
         referralSource: '',
-        referralSourceText: '', // NEW
+        referralSourceText: '',
         referralsType: [],
-        referralsTypeText: [], // NEW
+        referralsTypeText: [],
         policeDetails: '',
         otherServicesDetails: ''
       }
@@ -310,7 +310,6 @@ export default {
     // Methods
     const updateFormData = (step, data) => {
       if (step === 'step2') {
-        // Merge all data including text fields
         Object.keys(data).forEach(key => {
           formData.step2[key] = data[key];
         });
@@ -352,7 +351,7 @@ export default {
     
     const validateAndProceed = (step) => {
       if (step === 1) {
-        if (!reporterId.value) {
+        if (!reporterRecordId.value || !reporterContactId.value) {
           toast.error('Please select or create a reporter before proceeding');
           return;
         }
@@ -394,28 +393,25 @@ export default {
     
     const selectExistingReporter = (reporter) => {
       formData.step1.selectedReporter = reporter;
-      
-      // Extract reporter ID from selected reporter
-      if (reporter && Array.isArray(reporter)) {
-        const idIndex = getReporterFieldIndex('id');
-        if (idIndex !== null && reporter[idIndex]) {
-          reporterId.value = reporter[idIndex];
-          console.log('Selected existing reporter with ID:', reporterId.value);
-        }
-      }
     };
     
     const createNewReporter = () => {
       formData.step1.selectedReporter = null;
-      reporterId.value = null;
+      reporterRecordId.value = null;
+      reporterContactId.value = null;
     };
     
-    const handleReporterCreated = (id) => {
-      reporterId.value = id;
-      console.log('New reporter created with ID:', id);
-      toast.success('Reporter created successfully!', {
-        description: `Reporter ID: ${id}`
+    // ✅ FIXED: Receive BOTH IDs from child component
+    const handleReporterCreated = (ids) => {
+      reporterRecordId.value = ids.reporterId;   // Index 0
+      reporterContactId.value = ids.contactId;   // Index 5
+      
+      console.log('✅ Reporter IDs stored in parent:', {
+        reporterRecordId: reporterRecordId.value,
+        reporterContactId: reporterContactId.value
       });
+      
+      toast.success('Reporter selected successfully!');
     };
     
     // Client Modal Methods
@@ -726,30 +722,21 @@ export default {
           return gbvRelatedIds.includes(String(gbvId)) ? '1' : '0';
         };
         
-        // CRITICAL FIX: Extract reporter details from selected reporter
-        let reporterDetails = {};
-        if (formData.step1.selectedReporter && Array.isArray(formData.step1.selectedReporter)) {
-          reporterDetails = {
-            reporter_contact_id: reporterId.value || "",
-            reporter_fullname: getReporterValue(formData.step1.selectedReporter, 'fullname') || "",
-            reporter_age_group_id: getReporterValue(formData.step1.selectedReporter, 'age_group_id') || "",
-            reporter_sex_id: getReporterValue(formData.step1.selectedReporter, 'sex_id') || ""
-          };
-          
-          console.log('Extracted reporter details:', reporterDetails);
-        }
+        console.log('='.repeat(80));
+        console.log('📤 SUBMITTING CASE WITH IDs:');
+        console.log('reporter_uuid_id (Index 0):', reporterRecordId.value);
+        console.log('contact_uuid_id (Index 5):', reporterContactId.value);
+        console.log('='.repeat(80));
         
+        // ✅ FIXED: Use the correct IDs
         const casePayload = {
           ".id": "",
           ...baseSourceFields,
           src_address: getValueOrDefault(formData.step3.clients[0]?.phone || ""),
           
-          // Reporter IDs
-          reporter_uuid_id: reporterId.value || "",
-          contact_uuid_id: reporterId.value || "",
-          
-          // ADD REPORTER DETAILS HERE (CRITICAL FIX)
-          ...reporterDetails,
+          // ✅ CRITICAL FIX: Use DIFFERENT IDs for each field
+          reporter_uuid_id: reporterRecordId.value || "",  // Index 0
+          contact_uuid_id: reporterContactId.value || "",  // Index 5
           
           case_category_id: getValueOrDefault(formData.step2.categories),
           narrative: getValueOrDefault(formData.step2.narrative),
@@ -763,7 +750,6 @@ export default {
           priority: getValueOrDefault(formData.step2.priority) || "1",
           status: getValueOrDefault(formData.step2.status) || "1",
           
-          // NEW FIELDS
           national_id_: getValueOrDefault(formData.step2.clientPassportNumber),
           justice_id: getValueOrDefault(formData.step2.justiceSystemState),
           assessment_id: getValueOrDefault(formData.step2.generalAssessment),
@@ -786,7 +772,8 @@ export default {
           }
         });
         
-        console.log('Submitting payload:', JSON.stringify(casePayload, null, 2));
+        console.log('✅ Final payload:', casePayload);
+        
         await casesStore.createCase(casePayload);
         
         toast.success('Case created successfully!', {
@@ -814,7 +801,8 @@ export default {
       stepLabels,
       stepDescriptions,
       formData,
-      reporterId,
+      reporterRecordId,
+      reporterContactId,
       clientModalOpen,
       perpetratorModalOpen,
       currentClientStep,
@@ -853,3 +841,5 @@ export default {
   }
 };
 </script>
+
+
