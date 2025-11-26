@@ -158,7 +158,7 @@
           >
             <option value="0">None</option>
             <option 
-              v-for="user in users" 
+              v-for="user in filteredUsers" 
               :key="getUserId(user)" 
               :value="getUserId(user)"
             >
@@ -185,6 +185,7 @@
 
 <script setup>
 import { reactive, watch, computed, onMounted } from "vue"
+import { useAuthStore } from "@/stores/auth"
 import { useUserStore } from "@/stores/users"
 import { useCategoryStore } from "@/stores/categories"
 import BaseSelect from "@/components/base/BaseSelect.vue"
@@ -201,6 +202,7 @@ const emit = defineEmits([
   "step-change"
 ])
 
+const authStore = useAuthStore()
 const userStore = useUserStore()
 const categoryStore = useCategoryStore()
 
@@ -242,7 +244,7 @@ const users = computed(() => userStore.users || [])
 const getFieldIndex = (fieldName) => {
   const mapping = userStore.users_k?.[fieldName]
   if (mapping && Array.isArray(mapping) && mapping.length > 0) {
-    return mapping[0]
+    return parseInt(mapping[0])
   }
   return null
 }
@@ -257,23 +259,79 @@ const getValue = (user, fieldName) => {
 }
 
 const getUserId = (user) => {
-  return getValue(user, 'id') || getValue(user, 'user_id') || ""
+  return getValue(user, 'id')
 }
 
 const getUserName = (user) => {
-  const fullname = getValue(user, 'fullname') || getValue(user, 'name')
-  const fname = getValue(user, 'fname') || getValue(user, 'first_name')
-  const lname = getValue(user, 'lname') || getValue(user, 'last_name')
+  const fullname = getValue(user, 'contact_fullname')
+  const fname = getValue(user, 'contact_fname')
+  const lname = getValue(user, 'contact_lname')
+  const username = getValue(user, 'usn')
   
   if (fullname) return fullname
   if (fname && lname) return `${fname} ${lname}`
   if (fname) return fname
+  if (username) return username
   return "Unnamed User"
 }
 
 const getUserRole = (user) => {
-  return getValue(user, 'role') || getValue(user, 'user_role') || getValue(user, 'role_name') || "No Role"
+  const roleId = getValue(user, 'role')
+  
+  const roleMap = {
+    '1': 'Counsellor',
+    '2': 'Supervisor',
+    '3': 'Case Manager',
+    '4': 'Case Worker',
+    '5': 'Partner',
+    '6': 'Media Account',
+    '99': 'Administrator'
+  }
+  
+  return roleMap[roleId] || roleId || "No Role"
 }
+
+// ROLE-BASED FILTERING: Show only users with higher authority
+const filteredUsers = computed(() => {
+  const currentUserRole = parseInt(authStore.userRole)
+  
+  console.log('🔑 Current user role:', currentUserRole)
+  
+  if (!currentUserRole) {
+    console.warn('⚠️ No current user role found')
+    return []
+  }
+  
+  // Administrator (99) can escalate to everyone
+  if (currentUserRole === 99) {
+    console.log('👑 Admin user - showing all users')
+    return users.value
+  }
+  
+  // Filter users with higher role numbers
+  const filtered = users.value.filter(user => {
+    const userRoleId = parseInt(getValue(user, 'role'))
+    
+    // Skip invalid roles
+    if (!userRoleId) return false
+    
+    // Skip Partner (5) and Media Account (6) - they're not in the escalation hierarchy
+    if (userRoleId === 5 || userRoleId === 6) return false
+    
+    // Show users with higher role numbers (higher authority)
+    const hasHigherRole = userRoleId > currentUserRole
+    
+    if (hasHigherRole) {
+      console.log(`✅ Including user ${getUserName(user)} (role ${userRoleId}) - higher than ${currentUserRole}`)
+    }
+    
+    return hasHigherRole
+  })
+  
+  console.log(`📋 Filtered ${filtered.length} users from ${users.value.length} total`)
+  
+  return filtered
+})
 
 // Helper to get category text
 const getCategoryText = async (categoryId, parentCategoryId) => {
@@ -349,7 +407,7 @@ const handleEscalationChange = (event) => {
   if (value === '0') {
     localForm.escalatedToText = 'None'
   } else {
-    const user = users.value.find(u => getUserId(u) === value)
+    const user = filteredUsers.value.find(u => getUserId(u) === value)
     if (user) {
       localForm.escalatedToText = `${getUserName(user)} - ${getUserRole(user)}`
     } else {

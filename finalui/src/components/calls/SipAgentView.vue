@@ -1,9 +1,24 @@
 <template>
   <div class="space-y-6">
     <div class="max-w-md mx-auto">
-      <!-- Single Agent (Extension 100) -->
-      <div class="p-6 border border-gray-700 rounded-lg bg-gray-800 shadow-xl">
-        <h3 class="mb-4 text-xl font-semibold text-center text-gray-100">SIP Agent - Extension 100</h3>
+      <!-- Loading state -->
+      <div v-if="loadingExtension" class="p-6 border border-gray-700 rounded-lg bg-gray-800 shadow-xl">
+        <div class="flex items-center justify-center py-8">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          <span class="ml-3 text-gray-400">Loading extension...</span>
+        </div>
+      </div>
+
+      <!-- Error state -->
+      <div v-else-if="extensionError" class="p-6 border border-red-700 rounded-lg bg-red-900/20 shadow-xl">
+        <p class="text-red-400 text-center">{{ extensionError }}</p>
+      </div>
+
+      <!-- SIP Agent -->
+      <div v-else class="p-6 border border-gray-700 rounded-lg bg-gray-800 shadow-xl">
+        <h3 class="mb-4 text-xl font-semibold text-center text-gray-100">
+          SIP Agent - Extension {{ agent.extension }}
+        </h3>
 
         <div class="space-y-2 mb-6 text-sm">
           <div class="flex justify-between items-center bg-gray-900/40 p-3 rounded border border-gray-700">
@@ -60,6 +75,8 @@
 
 <script>
 import * as SIP from "sip.js";
+import { useAuthStore } from '@/stores/auth';
+import { useUserStore } from '@/stores/users';
 
 export default {
   name: "SipAgentView",
@@ -76,15 +93,78 @@ export default {
         inCall: false,
         callStatus: '',
         localStream: null,
-        extension: '100'
-      }
+        extension: null
+      },
+      loadingExtension: true,
+      extensionError: null
     };
   },
+  async mounted() {
+    await this.fetchUserExtension();
+  },
   methods: {
+    async fetchUserExtension() {
+  this.loadingExtension = true;
+  this.extensionError = null;
+
+  try {
+    const authStore = useAuthStore();
+    const userStore = useUserStore();
+
+    const userId = authStore.userId;
+    
+    if (!userId) {
+      throw new Error('User ID not found. Please log in again.');
+    }
+
+    console.log('📞 Fetching extension for user ID:', userId);
+
+    // Fetch user details
+    const userData = await userStore.viewUser(userId);
+    
+    console.log('👤 User data received:', userData);
+
+    // FIXED: Access first user from users array
+    const user = userData?.users?.[0];
+    
+    if (!user) {
+      throw new Error('User data not found.');
+    }
+
+    console.log('📋 User array:', user);
+
+    // Get the extension index from users_k mapping
+    const extenIndex = userData?.users_k?.exten?.[0];
+    
+    console.log('🔢 Extension index from users_k:', extenIndex);
+
+    if (!extenIndex) {
+      throw new Error('Extension mapping not found.');
+    }
+
+    // Access extension value from user array using the index
+    const extension = user[extenIndex];
+    
+    console.log('📱 Extension value:', extension);
+
+    if (!extension) {
+      throw new Error('Extension not assigned to this user.');
+    }
+
+    this.agent.extension = extension;
+    console.log('✅ SIP Extension set to:', extension);
+
+  } catch (err) {
+    console.error('❌ Error fetching extension:', err);
+    this.extensionError = err.message || 'Failed to load extension';
+  } finally {
+    this.loadingExtension = false;
+  }
+},
+
     setupMediaStreams(session, audioRef) {
       const pc = session.sessionDescriptionHandler.peerConnection;
 
-      // Setup remote audio (incoming)
       const inboundStream = new MediaStream();
       pc.getReceivers().forEach((receiver) => {
         if (receiver.track && receiver.track.kind === "audio") {
@@ -97,7 +177,6 @@ export default {
         audioRef.play().catch(err => console.error("Play failed:", err));
       }
 
-      // Log track status
       console.log(`[${this.agent.extension}] Local tracks:`, this.agent.localStream.getTracks().map(t => ({ kind: t.kind, enabled: t.enabled })));
       console.log(`[${this.agent.extension}] Remote tracks:`, inboundStream.getTracks().map(t => ({ kind: t.kind, enabled: t.enabled })));
     },
@@ -135,7 +214,6 @@ export default {
           }
         });
 
-        // Manually add local stream to peer connection after accept
         const pc = invitation.sessionDescriptionHandler.peerConnection;
         this.agent.localStream.getTracks().forEach(track => {
           const sender = pc.addTrack(track, this.agent.localStream);
@@ -249,7 +327,6 @@ export default {
     }
   },
   beforeUnmount() {
-    // Cleanup when component is destroyed
     if (this.agent.registered) {
       this.stopAgent();
     }
