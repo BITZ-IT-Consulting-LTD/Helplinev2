@@ -3,23 +3,28 @@
     class="p-6 space-y-6 min-h-screen"
     :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'"
   >
-    
-    <h1 
-      class="text-2xl font-bold mb-2"
-      :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
-    >
-      Cases
-    </h1>
-    <p 
-      class="mb-6"
-      :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
-    >
-      Manage and track all case records and their statuses
-    </p>
+    <!-- Page Header -->
+    <div class="mb-6">
+      <h1 
+        class="text-3xl font-bold flex items-center gap-3"
+        :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+      >
+        <i-mdi-folder-account-outline 
+          class="w-8 h-8"
+          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+        />
+        Cases
+      </h1>
+      <p 
+        class="mt-2"
+        :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+      >
+        Manage and track all case records and their statuses
+      </p>
+    </div>
 
     <!-- Filters -->
     <CasesFilter @update:filters="applyFilters" />
-
     <!-- Loading State -->
     <div 
       v-if="casesStore.loading" 
