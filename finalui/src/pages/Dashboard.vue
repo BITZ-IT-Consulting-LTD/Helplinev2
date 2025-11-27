@@ -5,11 +5,17 @@
   >
 
     <h1 
-      class="text-2xl font-bold mb-4"
+      class="text-2xl font-bold mb-2"
       :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
     >
       Dashboard
     </h1>
+    <p 
+      class="mb-6"
+      :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+    >
+      Overview of case analytics and key performance metrics
+    </p>
 
     <!-- 🔥 Shared Filters Bar -->
     <CasesFilters @update:filters="applyFilters" />

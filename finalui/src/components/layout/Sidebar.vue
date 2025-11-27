@@ -6,26 +6,13 @@
       : 'bg-white border-gray-200'"
   >
 
-    <!-- Header with Theme Toggle - Fixed -->
-    <div class="flex-shrink-0 flex items-center justify-between p-6 pb-4">
-      <h2 
-        class="text-xl font-bold tracking-tight"
-        :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
-      >
-        Helpline System
-      </h2>
-      
-      <!-- Theme Toggle Button -->
-      <button 
-        class="p-2 rounded-lg border transition-all duration-200 flex items-center justify-center"
-        :class="isDarkMode 
-          ? 'bg-gray-700 border-gray-600 hover:bg-gray-600' 
-          : 'bg-gray-100 border-gray-300 hover:bg-gray-200'"
-        @click="$emit('toggle-theme')" 
-        :title="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
-      >
-        <span class="text-base">{{ isDarkMode ? '☀️' : '🌙' }}</span>
-      </button>
+    <!-- Header with Logo - Fixed -->
+    <div class="flex-shrink-0 flex items-center justify-center p-6 pb-4">
+      <img 
+        src="@/assets/images/Openchs logo.png" 
+        alt="OpenCHS Logo" 
+        class="h-32 w-auto object-contain"
+      />
     </div>
 
     <!-- Navigation - Scrollable -->
@@ -156,7 +143,7 @@
       </div>
     </nav>
 
-    <!-- User Profile Section - Fixed at Bottom -->
+    <!-- User Profile Section with Theme Toggle - Fixed at Bottom -->
     <div 
       class="flex-shrink-0 p-6 pt-4 border-t"
       :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
@@ -166,7 +153,7 @@
         :class="isDarkMode ? 'bg-gray-900/40' : 'bg-gray-50'"
       >
         <div 
-          class="w-9 h-9 rounded-full flex items-center justify-center text-white font-semibold text-sm"
+          class="w-9 h-9 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
           :class="isDarkMode ? 'bg-blue-600' : 'bg-amber-700'"
         >
           {{ authStore.userInitials }}
@@ -185,6 +172,18 @@
             {{ authStore.roleDisplayName }}
           </p>
         </div>
+        
+        <!-- Theme Toggle Button -->
+        <button 
+          class="p-2 rounded-lg border transition-all duration-200 flex items-center justify-center flex-shrink-0"
+          :class="isDarkMode 
+            ? 'bg-gray-700 border-gray-600 hover:bg-gray-600' 
+            : 'bg-gray-100 border-gray-300 hover:bg-gray-200'"
+          @click="$emit('toggle-theme')" 
+          :title="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+        >
+          <span class="text-base">{{ isDarkMode ? '☀️' : '🌙' }}</span>
+        </button>
       </div>
       
       <button 

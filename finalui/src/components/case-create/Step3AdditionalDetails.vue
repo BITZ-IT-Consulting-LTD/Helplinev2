@@ -2,34 +2,82 @@
   <div class="min-h-96">
     <form class="flex flex-col gap-3.5" @submit.prevent="handleFormSubmit">
       <div>
-        <div class="text-xl font-semibold text-gray-100 mb-2">Additional Case Information</div>
-        <p class="text-sm text-gray-400 mb-5">
+        <div 
+          class="text-xl font-semibold mb-2"
+          :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+        >
+          Additional Case Information
+        </div>
+        <p 
+          class="text-sm mb-5"
+          :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+        >
           Add clients, perpetrators, and other relevant case information.
         </p>
 
         <!-- Clients Section -->
         <div class="mb-5">
-          <label class="block font-semibold mb-2 text-gray-100">Clients</label>
+          <label 
+            class="block font-semibold mb-2"
+            :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+          >
+            Clients
+          </label>
           <div class="flex flex-col gap-3">
             <div v-if="localForm.clients && localForm.clients.length > 0" class="flex flex-col gap-2">
-              <div v-for="(client, index) in localForm.clients" :key="`client-${index}`" class="flex items-center justify-between p-3 bg-gray-700 border border-gray-600 rounded-lg">
+              <div 
+                v-for="(client, index) in localForm.clients" 
+                :key="`client-${index}`" 
+                class="flex items-center justify-between p-3 border rounded-lg"
+                :class="isDarkMode 
+                  ? 'bg-gray-700 border-gray-600' 
+                  : 'bg-gray-50 border-gray-300'"
+              >
                 <div>
-                  <div class="font-semibold text-gray-100 text-sm">{{ client.name || 'Unnamed Client' }}</div>
-                  <div class="text-xs text-gray-400">{{ client.age ? client.age + ' years' : 'Age unknown' }} • {{ client.sex || 'Gender unknown' }} • {{ client.phone || "No phone" }}</div>
+                  <div 
+                    class="font-semibold text-sm"
+                    :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+                  >
+                    {{ client.name || 'Unnamed Client' }}
+                  </div>
+                  <div 
+                    class="text-xs"
+                    :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+                  >
+                    {{ client.age ? client.age + ' years' : 'Age unknown' }} • {{ client.sex || 'Gender unknown' }} • {{ client.phone || "No phone" }}
+                  </div>
                 </div>
-                <button type="button" class="w-6 h-6 flex items-center justify-center bg-red-600 text-white rounded-full hover:bg-red-700 text-sm transition-all hover:scale-110" @click="handleRemoveClient(index)" title="Remove client">
+                <button 
+                  type="button" 
+                  class="w-6 h-6 flex items-center justify-center bg-red-600 text-white rounded-full hover:bg-red-700 text-sm transition-all hover:scale-110" 
+                  @click="handleRemoveClient(index)" 
+                  title="Remove client"
+                >
                   <i-mdi-close class="w-4 h-4" />
                 </button>
               </div>
             </div>
 
-            <div v-else class="text-center p-5 text-gray-500 bg-gray-800 border border-dashed border-gray-600 rounded-lg">
+            <div 
+              v-else 
+              class="text-center p-5 border border-dashed rounded-lg"
+              :class="isDarkMode 
+                ? 'text-gray-500 bg-gray-800 border-gray-600' 
+                : 'text-gray-500 bg-white border-gray-300'"
+            >
               <i-mdi-account-group class="mx-auto text-3xl mb-2 opacity-50" />
               <p class="text-sm font-medium m-0">No clients added yet</p>
               <p class="text-xs mt-1 opacity-70">Click below to add a client</p>
             </div>
 
-            <button type="button" class="self-start mt-2 px-3 py-1.5 bg-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors flex items-center gap-2" @click="$emit('open-client-modal')">
+            <button 
+              type="button" 
+              class="self-start mt-2 px-3 py-1.5 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+              :class="isDarkMode 
+                ? 'bg-gray-600 hover:bg-gray-700' 
+                : 'bg-gray-700 hover:bg-gray-800'"
+              @click="$emit('open-client-modal')"
+            >
               <i-mdi-plus class="w-4 h-4" />
               {{ localForm.clients.length > 0 ? 'Add Another Client' : 'Add Client' }}
             </button>
@@ -38,23 +86,62 @@
 
         <!-- Perpetrators Section -->
         <div class="mb-5">
-          <label class="block font-semibold mb-2 text-gray-100">Perpetrators</label>
+          <label 
+            class="block font-semibold mb-2"
+            :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+          >
+            Perpetrators
+          </label>
           <div class="flex flex-col gap-3">
             <div v-if="localForm.perpetrators && localForm.perpetrators.length" class="flex flex-col gap-2">
-              <div v-for="(perpetrator, index) in localForm.perpetrators" :key="index" class="flex items-center justify-between p-3 bg-gray-700 border border-gray-600 rounded-lg">
+              <div 
+                v-for="(perpetrator, index) in localForm.perpetrators" 
+                :key="index" 
+                class="flex items-center justify-between p-3 border rounded-lg"
+                :class="isDarkMode 
+                  ? 'bg-gray-700 border-gray-600' 
+                  : 'bg-gray-50 border-gray-300'"
+              >
                 <div>
-                  <div class="font-semibold text-gray-100 text-sm">{{ perpetrator.name || 'Unnamed' }}</div>
-                  <div class="text-xs text-gray-400">{{ perpetrator.age || 'Unknown age' }} • {{ perpetrator.sex || 'Unknown gender' }} • {{ perpetrator.location || 'Unknown location' }}</div>
+                  <div 
+                    class="font-semibold text-sm"
+                    :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+                  >
+                    {{ perpetrator.name || 'Unnamed' }}
+                  </div>
+                  <div 
+                    class="text-xs"
+                    :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+                  >
+                    {{ perpetrator.age || 'Unknown age' }} • {{ perpetrator.sex || 'Unknown gender' }} • {{ perpetrator.location || 'Unknown location' }}
+                  </div>
                 </div>
-                <button type="button" class="w-6 h-6 flex items-center justify-center bg-red-600 text-white rounded-full hover:bg-red-700 text-sm transition-all hover:scale-110" @click="handleRemovePerpetrator(index)">
+                <button 
+                  type="button" 
+                  class="w-6 h-6 flex items-center justify-center bg-red-600 text-white rounded-full hover:bg-red-700 text-sm transition-all hover:scale-110" 
+                  @click="handleRemovePerpetrator(index)"
+                >
                   <i-mdi-close class="w-4 h-4" />
                 </button>
               </div>
             </div>
-            <div v-else class="p-5 text-center text-gray-500 italic bg-gray-800 border border-dashed border-gray-600 rounded-lg">
+            <div 
+              v-else 
+              class="p-5 text-center italic border border-dashed rounded-lg"
+              :class="isDarkMode 
+                ? 'text-gray-500 bg-gray-800 border-gray-600' 
+                : 'text-gray-500 bg-white border-gray-300'"
+            >
               <p class="text-sm m-0">No perpetrators added yet</p>
             </div>
-            <button type="button" class="self-start mt-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-2" @click="$emit('open-perpetrator-modal')">
+            <button 
+              type="button" 
+              class="self-start mt-2 px-3 py-1.5 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+              :class="isDarkMode 
+                ? 'bg-blue-600 hover:bg-blue-700' 
+                : 'bg-amber-700 hover:bg-amber-800'"
+              @click="$emit('open-perpetrator-modal')"
+            >
               <i-mdi-plus class="w-4 h-4" />
               Add Perpetrator
             </button>
@@ -72,7 +159,13 @@
             @selection-change="handleServicesChange"
           />
 
-          <div v-if="showReferralsField" class="mt-4 p-4 bg-gray-800 border border-gray-600 rounded-lg animate-fadeIn">
+          <div 
+            v-if="showReferralsField" 
+            class="mt-4 p-4 border rounded-lg animate-fadeIn"
+            :class="isDarkMode 
+              ? 'bg-gray-800 border-gray-600' 
+              : 'bg-gray-50 border-gray-300'"
+          >
             <BaseOptions
               id="referrals-type"
               label="Referral Types"
@@ -83,14 +176,58 @@
             />
           </div>
 
-          <div v-if="showPoliceField" class="mt-4 p-4 bg-gray-800 border border-gray-600 rounded-lg animate-fadeIn">
-            <label for="police-details" class="block font-semibold mb-2 text-gray-100">Police Report Details</label>
-            <textarea id="police-details" v-model="localForm.policeDetails" class="w-full px-3 py-2 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 resize-vertical" placeholder="Enter police report details, case number, station, etc." rows="3" @input="updateForm"></textarea>
+          <div 
+            v-if="showPoliceField" 
+            class="mt-4 p-4 border rounded-lg animate-fadeIn"
+            :class="isDarkMode 
+              ? 'bg-gray-800 border-gray-600' 
+              : 'bg-gray-50 border-gray-300'"
+          >
+            <label 
+              for="police-details" 
+              class="block font-semibold mb-2"
+              :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+            >
+              Police Report Details
+            </label>
+            <textarea 
+              id="police-details" 
+              v-model="localForm.policeDetails" 
+              class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent resize-vertical"
+              :class="isDarkMode 
+                ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+              placeholder="Enter police report details, case number, station, etc." 
+              rows="3" 
+              @input="updateForm"
+            ></textarea>
           </div>
 
-          <div v-if="showOthersField" class="mt-4 p-4 bg-gray-800 border border-gray-600 rounded-lg animate-fadeIn">
-            <label for="other-services" class="block font-semibold mb-2 text-gray-100">Other Services Details</label>
-            <textarea id="other-services" v-model="localForm.otherServicesDetails" class="w-full px-3 py-2 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 resize-vertical" placeholder="Please specify the other services provided" rows="3" @input="updateForm"></textarea>
+          <div 
+            v-if="showOthersField" 
+            class="mt-4 p-4 border rounded-lg animate-fadeIn"
+            :class="isDarkMode 
+              ? 'bg-gray-800 border-gray-600' 
+              : 'bg-gray-50 border-gray-300'"
+          >
+            <label 
+              for="other-services" 
+              class="block font-semibold mb-2"
+              :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+            >
+              Other Services Details
+            </label>
+            <textarea 
+              id="other-services" 
+              v-model="localForm.otherServicesDetails" 
+              class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent resize-vertical"
+              :class="isDarkMode 
+                ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+              placeholder="Please specify the other services provided" 
+              rows="3" 
+              @input="updateForm"
+            ></textarea>
           </div>
         </div>
 
@@ -119,10 +256,30 @@
         </div>
       </div>
 
-      <div class="flex gap-3 justify-between mt-6 pt-5 border-t border-gray-700">
-        <button type="button" class="px-4 py-2 bg-gray-700 text-gray-300 border border-gray-600 rounded-lg hover:bg-gray-600 transition-colors" @click="goToStep(2)">Back</button>
+      <div 
+        class="flex gap-3 justify-between mt-6 pt-5 border-t"
+        :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+      >
+        <button 
+          type="button" 
+          class="px-4 py-2 border rounded-lg transition-colors"
+          :class="isDarkMode 
+            ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
+            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+          @click="goToStep(2)"
+        >
+          Back
+        </button>
         <div class="flex gap-3">
-          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Continue to Review</button>
+          <button 
+            type="submit" 
+            class="px-4 py-2 text-white rounded-lg transition-colors"
+            :class="isDarkMode 
+              ? 'bg-blue-600 hover:bg-blue-700' 
+              : 'bg-amber-700 hover:bg-amber-800'"
+          >
+            Continue to Review
+          </button>
         </div>
       </div>
     </form>
@@ -130,7 +287,7 @@
 </template>
 
 <script setup>
-import { reactive, watch, computed, ref } from "vue"
+import { reactive, watch, computed, ref, inject } from "vue"
 import BaseSelect from "@/components/base/BaseSelect.vue"
 import BaseOptions from "@/components/base/BaseOptions.vue"
 import AttachmentUpload from "@/components/case-create/AttachmentUpload.vue"
@@ -149,6 +306,9 @@ const emit = defineEmits([
   "save-and-proceed",
   "step-change"
 ])
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 const localForm = reactive({ ...props.formData })
 const selectedServicesOptions = ref([])

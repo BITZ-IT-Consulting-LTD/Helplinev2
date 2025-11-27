@@ -595,10 +595,32 @@ const timePeriods = [
   { label: 'Year', value: 'yr' }
 ]
 
-// Chart dimensions & spacing
+// Chart dimensions & spacing - UPDATED
 const margin = { top: 20, right: 20, bottom: 50, left: 50 }
-const barWidth = 35
-const barSpacing = 20
+
+// Dynamic bar width and spacing based on time period
+const barWidth = computed(() => {
+  // For day view, use wider spacing since dates take more space
+  if (xAxis.value === 'dt') return 60
+  // For week view, also needs more space
+  if (xAxis.value === 'wk') return 55
+  // For month view
+  if (xAxis.value === 'mn') return 50
+  // For hour and year, normal spacing is fine
+  return 35
+})
+
+const barSpacing = computed(() => {
+  // For day view, add more spacing between bars
+  if (xAxis.value === 'dt') return 30
+  // For week view
+  if (xAxis.value === 'wk') return 25
+  // For month view
+  if (xAxis.value === 'mn') return 20
+  // For hour and year
+  return 20
+})
+
 const svgHeight = 400
 
 // Endpoint configurations
@@ -839,7 +861,10 @@ const grandTotal = computed(() => {
 
 // Chart calculations
 const svgWidth = computed(() =>
-  Math.max(chartData.value.length * (barWidth + barSpacing) + margin.left + margin.right, 500)
+  Math.max(
+    chartData.value.length * (barWidth.value + barSpacing.value) + margin.left + margin.right, 
+    500
+  )
 )
 
 const maxValue = computed(() => Math.max(...chartData.value.map(d => d.value), 1))

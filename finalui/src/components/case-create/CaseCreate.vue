@@ -1,5 +1,8 @@
 <template>
-  <div class="min-h-screen bg-gray-900 py-8 px-4 sm:px-6 lg:px-8">
+  <div 
+    class="min-h-screen py-8 px-4 sm:px-6 lg:px-8"
+    :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'"
+  >
     <div class="max-w-5xl mx-auto">
       <!-- Header Section -->
       <div class="mb-8">
@@ -19,7 +22,12 @@
       </div>
       
       <!-- Step Content Area -->
-      <div class="bg-gray-800 rounded-lg shadow-xl border border-gray-700 p-6 sm:p-8 mb-6">
+      <div 
+        class="rounded-lg shadow-xl border p-6 sm:p-8 mb-6"
+        :class="isDarkMode 
+          ? 'bg-gray-800 border-gray-700' 
+          : 'bg-white border-gray-200'"
+      >
         <!-- Step 1: Reporter Selection -->
         <Step1ReporterSelection
           v-if="currentStep === 1"
@@ -105,7 +113,7 @@
 </template>
 
 <script>
-import { ref, reactive } from 'vue';
+import { ref, reactive, inject } from 'vue';
 import { useRouter } from 'vue-router';
 import { toast } from 'vue-sonner';
 import { useCaseStore } from '@/stores/cases';
@@ -140,6 +148,9 @@ export default {
     const reporterStore = useReporterStore();
     const clientStore = useClientStore();
     const perpetratorStore = usePerpetratorStore();
+    
+    // Inject theme
+    const isDarkMode = inject('isDarkMode');
     
     const currentStep = ref(1);
     const totalSteps = 4;
@@ -795,6 +806,7 @@ export default {
     };
 
     return {
+      isDarkMode,
       currentStep,
       totalSteps,
       stepStatus,
@@ -841,5 +853,3 @@ export default {
   }
 };
 </script>
-
-

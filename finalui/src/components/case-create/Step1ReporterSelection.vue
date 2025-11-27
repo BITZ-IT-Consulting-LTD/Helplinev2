@@ -2,27 +2,47 @@
   <div class="min-h-96">
     <div class="flex flex-col gap-5">
       <div>
-        <div class="text-xl font-semibold text-gray-100 mb-2">Select or Create Reporter</div>
-        <p class="text-sm text-gray-400 mb-5">
+        <div 
+          class="text-xl font-semibold mb-2"
+          :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+        >
+          Select or Create Reporter
+        </div>
+        <p 
+          class="text-sm mb-5"
+          :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+        >
           Search for an existing reporter or create a new one. Only the reporter's name is required.
         </p>
 
         <!-- Search Section -->
         <div class="mb-5">
           <div class="flex gap-3 items-center mb-4">
-            <div class="relative flex items-center gap-2 border border-gray-600 rounded-lg px-3 py-2.5 bg-gray-700 flex-1 max-w-xs focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/50">
-              <i-mdi-magnify class="w-5 h-5 text-gray-400" />
+            <div 
+              class="relative flex items-center gap-2 border rounded-lg px-3 py-2.5 flex-1 max-w-xs focus-within:ring-2 transition-all"
+              :class="isDarkMode 
+                ? 'border-gray-600 bg-gray-700 focus-within:border-blue-500 focus-within:ring-blue-500/50' 
+                : 'border-gray-300 bg-gray-50 focus-within:border-amber-600 focus-within:ring-amber-600/50'"
+            >
+              <i-mdi-magnify 
+                class="w-5 h-5"
+                :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'"
+              />
               <input
                 v-model="searchQuery"
                 type="text"
                 placeholder="Search by name or phone..."
-                class="border-0 outline-none w-full text-sm bg-transparent text-gray-100 placeholder-gray-500"
+                class="border-0 outline-none w-full text-sm bg-transparent placeholder-gray-500"
+                :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
                 @input="handleSearchInput"
               />
             </div>
             <button
               type="button"
-              class="h-10 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap"
+              class="h-10 px-4 text-white rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap"
+              :class="isDarkMode 
+                ? 'bg-blue-600 hover:bg-blue-700' 
+                : 'bg-amber-700 hover:bg-amber-800'"
               @click="openCreateReporterForm"
             >
               <i-mdi-plus class="w-5 h-5" />
@@ -32,42 +52,93 @@
         </div>
 
         <!-- Loading State -->
-        <div v-if="isLoading" class="flex items-center gap-3 p-5 text-center text-gray-400">
-          <div class="w-5 h-5 border-2 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
+        <div 
+          v-if="isLoading" 
+          class="flex items-center gap-3 p-5 text-center"
+          :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+        >
+          <div 
+            class="w-5 h-5 border-2 rounded-full animate-spin"
+            :class="isDarkMode 
+              ? 'border-gray-600 border-t-blue-500' 
+              : 'border-gray-300 border-t-amber-700'"
+          ></div>
           <span>Searching reporters...</span>
         </div>
 
         <!-- Search Results -->
         <div class="flex flex-col gap-2 max-h-96 overflow-y-auto" v-else-if="shouldShowResults && filteredContacts.length">
-          <div class="py-2 text-sm text-gray-400 border-b border-gray-700 mb-3">
+          <div 
+            class="py-2 text-sm border-b mb-3"
+            :class="isDarkMode 
+              ? 'text-gray-400 border-gray-700' 
+              : 'text-gray-600 border-gray-200'"
+          >
             <span>{{ filteredContacts.length }} reporter(s) found</span>
           </div>
           <div
             v-for="contact in filteredContacts"
             :key="getContactId(contact)"
-            class="flex items-center gap-3 border rounded-lg p-3 bg-gray-800 cursor-pointer transition-all hover:bg-gray-700 hover:border-blue-500"
-            :class="{ 'border-blue-500 bg-blue-900/20': isSelected(contact), 'border-gray-700': !isSelected(contact) }"
+            class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer transition-all"
+            :class="isSelected(contact)
+              ? isDarkMode 
+                ? 'border-blue-500 bg-blue-900/20' 
+                : 'border-amber-600 bg-amber-100'
+              : isDarkMode
+                ? 'border-gray-700 bg-gray-800 hover:bg-gray-700 hover:border-blue-500'
+                : 'border-gray-200 bg-white hover:bg-gray-50 hover:border-amber-600'"
             @click="selectExistingReporter(contact)"
           >
-            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-blue-600 text-white font-semibold text-sm flex-shrink-0">
+            <div 
+              class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
+              :class="isDarkMode ? 'bg-blue-600' : 'bg-amber-700'"
+            >
               <span>{{ getInitials(getValue(contact, 'fullname') || 'NA') }}</span>
             </div>
 
             <div class="flex-1 min-w-0">
               <div class="flex flex-col gap-2">
                 <div class="flex flex-col gap-1">
-                  <div class="font-semibold text-base text-gray-100 leading-tight truncate">
+                  <div 
+                    class="font-semibold text-base leading-tight truncate"
+                    :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+                  >
                     {{ getValue(contact, 'fullname') || "Unnamed Reporter" }}
                   </div>
-                  <div class="text-gray-400 text-sm leading-tight">
+                  <div 
+                    class="text-sm leading-tight"
+                    :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+                  >
                     {{ getValue(contact, 'phone') || 'No phone' }}
                   </div>
                 </div>
                 <div class="flex items-center gap-2 mt-1">
                   <div class="flex gap-2 flex-wrap">
-                    <span v-if="getValue(contact, 'age')" class="border border-gray-600 rounded-full px-2.5 py-1 text-xs font-medium bg-gray-700 text-gray-300 whitespace-nowrap">{{ getValue(contact, 'age') }}y</span>
-                    <span v-if="getValue(contact, 'sex')" class="border border-gray-600 rounded-full px-2.5 py-1 text-xs font-medium bg-gray-700 text-gray-300 whitespace-nowrap">{{ getValue(contact, 'sex') }}</span>
-                    <span v-if="getValue(contact, 'location')" class="bg-blue-600/20 text-blue-400 border border-blue-600/30 rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap flex items-center gap-1">
+                    <span 
+                      v-if="getValue(contact, 'age')" 
+                      class="border rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap"
+                      :class="isDarkMode 
+                        ? 'border-gray-600 bg-gray-700 text-gray-300' 
+                        : 'border-gray-300 bg-gray-100 text-gray-700'"
+                    >
+                      {{ getValue(contact, 'age') }}y
+                    </span>
+                    <span 
+                      v-if="getValue(contact, 'sex')" 
+                      class="border rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap"
+                      :class="isDarkMode 
+                        ? 'border-gray-600 bg-gray-700 text-gray-300' 
+                        : 'border-gray-300 bg-gray-100 text-gray-700'"
+                    >
+                      {{ getValue(contact, 'sex') }}
+                    </span>
+                    <span 
+                      v-if="getValue(contact, 'location')" 
+                      class="border rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap flex items-center gap-1"
+                      :class="isDarkMode 
+                        ? 'bg-blue-600/20 text-blue-400 border-blue-600/30' 
+                        : 'bg-amber-100 text-amber-700 border-amber-300'"
+                    >
                       <i-mdi-map-marker class="w-3 h-3" />
                       {{ getValue(contact, 'location') }}
                     </span>
@@ -77,46 +148,92 @@
             </div>
 
             <div class="flex-shrink-0">
-              <i-mdi-check-circle v-if="isSelected(contact)" class="w-5 h-5 text-blue-400" />
-              <i-mdi-chevron-right v-else class="w-5 h-5 text-gray-500" />
+              <i-mdi-check-circle 
+                v-if="isSelected(contact)" 
+                class="w-5 h-5"
+                :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+              />
+              <i-mdi-chevron-right 
+                v-else 
+                class="w-5 h-5 text-gray-500"
+              />
             </div>
           </div>
         </div>
 
         <!-- No Results -->
-        <div v-else-if="shouldShowResults && !filteredContacts.length" class="text-center p-10 text-gray-400 bg-gray-800 rounded-lg border border-gray-700">
+        <div 
+          v-else-if="shouldShowResults && !filteredContacts.length" 
+          class="text-center p-10 rounded-lg border"
+          :class="isDarkMode 
+            ? 'text-gray-400 bg-gray-800 border-gray-700' 
+            : 'text-gray-500 bg-white border-gray-200'"
+        >
           <i-mdi-account-search class="mx-auto text-5xl mb-3 opacity-50" />
           <div class="text-base font-medium mb-1">No reporters found</div>
           <div class="text-sm opacity-70">Try searching with a different name or phone number</div>
         </div>
 
         <!-- Search Prompt -->
-        <div v-else-if="!searchQuery.trim() && !showCreateForm" class="text-center p-10 text-gray-400 bg-gray-800 rounded-lg border border-gray-700">
+        <div 
+          v-else-if="!searchQuery.trim() && !showCreateForm" 
+          class="text-center p-10 rounded-lg border"
+          :class="isDarkMode 
+            ? 'text-gray-400 bg-gray-800 border-gray-700' 
+            : 'text-gray-500 bg-white border-gray-200'"
+        >
           <i-mdi-account-group class="mx-auto text-5xl mb-3 opacity-50" />
           <div class="text-base font-medium mb-1">Start typing to search for existing reporters</div>
           <div class="text-sm opacity-70">Or click "New Reporter" to create a new one</div>
         </div>
 
         <!-- Combined Selected Reporter Summary & ID Display -->
-        <div v-if="(selectedReporter || (extractedReporterId && extractedContactId)) && !showCreateForm" class="mt-5 p-4 bg-blue-900/20 border border-blue-600/30 rounded-lg">
+        <div 
+          v-if="(selectedReporter || (extractedReporterId && extractedContactId)) && !showCreateForm" 
+          class="mt-5 p-4 border rounded-lg"
+          :class="isDarkMode 
+            ? 'bg-blue-900/20 border-blue-600/30' 
+            : 'bg-amber-50 border-amber-300'"
+        >
           <div class="flex items-start justify-between mb-3">
-            <div class="text-sm font-semibold text-blue-400">Selected Reporter:</div>
-            <button type="button" @click="clearSelection" class="p-1.5 rounded-md border border-gray-600 hover:bg-gray-700 hover:border-red-500 text-gray-400 hover:text-red-400 transition-colors">
+            <div 
+              class="text-sm font-semibold"
+              :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+            >
+              Selected Reporter:
+            </div>
+            <button 
+              type="button" 
+              @click="clearSelection" 
+              class="p-1.5 rounded-md border transition-colors"
+              :class="isDarkMode 
+                ? 'border-gray-600 hover:bg-gray-700 hover:border-red-500 text-gray-400 hover:text-red-400' 
+                : 'border-gray-300 hover:bg-gray-100 hover:border-red-500 text-gray-600 hover:text-red-600'"
+            >
               <i-mdi-close class="w-4 h-4" />
             </button>
           </div>
           
           <div class="flex items-start gap-3">
-            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-blue-600 text-white font-semibold text-sm flex-shrink-0">
+            <div 
+              class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
+              :class="isDarkMode ? 'bg-blue-600' : 'bg-amber-700'"
+            >
               <span>{{ getInitials(getValue(selectedReporter, 'fullname') || 'NR') }}</span>
             </div>
             
             <div class="flex-1 min-w-0">
-              <div class="font-semibold text-base text-gray-100 mb-1">
+              <div 
+                class="font-semibold text-base mb-1"
+                :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+              >
                 {{ getValue(selectedReporter, 'fullname') || 'Reporter' }}
               </div>
               
-              <div class="text-sm text-gray-400 space-y-1 mb-3">
+              <div 
+                class="text-sm space-y-1 mb-3"
+                :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+              >
                 <div>{{ getValue(selectedReporter, 'phone') || 'No phone' }}</div>
                 <div>
                   {{ getValue(selectedReporter, 'age') || 'Age unknown' }} • 
@@ -126,19 +243,57 @@
 
               <!-- Reporter IDs Display -->
               <div class="space-y-2">
-                <div v-if="extractedReporterId" class="flex items-center gap-2 p-2 bg-green-900/30 border border-green-600/40 rounded-md">
-                  <i-mdi-check-circle class="w-5 h-5 text-green-400 flex-shrink-0" />
+                <div 
+                  v-if="extractedReporterId" 
+                  class="flex items-center gap-2 p-2 border rounded-md"
+                  :class="isDarkMode 
+                    ? 'bg-green-900/30 border-green-600/40' 
+                    : 'bg-green-50 border-green-300'"
+                >
+                  <i-mdi-check-circle 
+                    class="w-5 h-5 flex-shrink-0"
+                    :class="isDarkMode ? 'text-green-400' : 'text-green-600'"
+                  />
                   <div class="flex-1">
-                    <div class="text-xs font-medium text-green-400">Reporter ID (Index 0)</div>
-                    <div class="text-sm font-bold text-green-300">{{ extractedReporterId }}</div>
+                    <div 
+                      class="text-xs font-medium"
+                      :class="isDarkMode ? 'text-green-400' : 'text-green-700'"
+                    >
+                      Reporter ID (Index 0)
+                    </div>
+                    <div 
+                      class="text-sm font-bold"
+                      :class="isDarkMode ? 'text-green-300' : 'text-green-800'"
+                    >
+                      {{ extractedReporterId }}
+                    </div>
                   </div>
                 </div>
                 
-                <div v-if="extractedContactId" class="flex items-center gap-2 p-2 bg-blue-900/30 border border-blue-600/40 rounded-md">
-                  <i-mdi-check-circle class="w-5 h-5 text-blue-400 flex-shrink-0" />
+                <div 
+                  v-if="extractedContactId" 
+                  class="flex items-center gap-2 p-2 border rounded-md"
+                  :class="isDarkMode 
+                    ? 'bg-blue-900/30 border-blue-600/40' 
+                    : 'bg-blue-50 border-blue-300'"
+                >
+                  <i-mdi-check-circle 
+                    class="w-5 h-5 flex-shrink-0"
+                    :class="isDarkMode ? 'text-blue-400' : 'text-blue-600'"
+                  />
                   <div class="flex-1">
-                    <div class="text-xs font-medium text-blue-400">Contact ID (Index 5)</div>
-                    <div class="text-sm font-bold text-blue-300">{{ extractedContactId }}</div>
+                    <div 
+                      class="text-xs font-medium"
+                      :class="isDarkMode ? 'text-blue-400' : 'text-blue-700'"
+                    >
+                      Contact ID (Index 5)
+                    </div>
+                    <div 
+                      class="text-sm font-bold"
+                      :class="isDarkMode ? 'text-blue-300' : 'text-blue-800'"
+                    >
+                      {{ extractedContactId }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -147,48 +302,93 @@
         </div>
 
         <!-- Create Reporter Form -->
-        <div v-if="showCreateForm" class="mt-5 p-5 bg-gray-800 border border-gray-700 rounded-lg">
+        <div 
+          v-if="showCreateForm" 
+          class="mt-5 p-5 border rounded-lg"
+          :class="isDarkMode 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'"
+        >
           <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-gray-100">Create New Reporter</h3>
-            <button type="button" @click="closeCreateForm" class="text-gray-400 hover:text-gray-100 transition-colors">
+            <h3 
+              class="text-lg font-semibold"
+              :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+            >
+              Create New Reporter
+            </h3>
+            <button 
+              type="button" 
+              @click="closeCreateForm" 
+              class="transition-colors"
+              :class="isDarkMode 
+                ? 'text-gray-400 hover:text-gray-100' 
+                : 'text-gray-500 hover:text-gray-900'"
+            >
               <i-mdi-close class="w-5 h-5" />
             </button>
           </div>
 
           <div class="space-y-6">
             <!-- Basic Information -->
-            <div class="border-b border-gray-700 pb-4">
-              <h4 class="text-md font-semibold text-gray-100 mb-4">Basic Information</h4>
+            <div 
+              class="border-b pb-4"
+              :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+            >
+              <h4 
+                class="text-md font-semibold mb-4"
+                :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+              >
+                Basic Information
+              </h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-300 mb-2">
+                  <label 
+                    class="block text-sm font-medium mb-2"
+                    :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+                  >
                     Reporter Name *
                   </label>
                   <input
                     v-model="reporterForm.fname"
                     type="text"
-                    class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
+                    :class="isDarkMode 
+                      ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
+                      : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
                     placeholder="Enter reporter's full name"
                   />
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-300 mb-2">
+                  <label 
+                    class="block text-sm font-medium mb-2"
+                    :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+                  >
                     Date of Birth
                   </label>
                   <input
                     v-model="reporterForm.dob"
                     type="date"
                     @change="handleDobChange"
-                    class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
+                    :class="isDarkMode 
+                      ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
+                      : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
                   />
-                  <p v-if="reporterForm.dob" class="text-xs text-gray-400 mt-1">
+                  <p 
+                    v-if="reporterForm.dob" 
+                    class="text-xs mt-1"
+                    :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'"
+                  >
                     Auto-fills Age and Age Group
                   </p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-300 mb-2">
+                  <label 
+                    class="block text-sm font-medium mb-2"
+                    :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+                  >
                     Age
                   </label>
                   <input
@@ -196,8 +396,14 @@
                     type="number"
                     :readonly="!!reporterForm.dob"
                     :class="[
-                      'w-full px-3 py-2 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50',
-                      reporterForm.dob ? 'bg-gray-600 cursor-not-allowed' : 'bg-gray-700'
+                      'w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all',
+                      reporterForm.dob 
+                        ? isDarkMode
+                          ? 'bg-gray-600 border-gray-600 text-gray-400 cursor-not-allowed'
+                          : 'bg-gray-200 border-gray-300 text-gray-500 cursor-not-allowed'
+                        : isDarkMode
+                          ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500'
+                          : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'
                     ]"
                     placeholder="Age"
                   />
@@ -212,7 +418,11 @@
                     :category-id="101"
                     :disabled="!!reporterForm.dob"
                   />
-                  <p v-if="reporterForm.dob" class="text-xs text-gray-400 mt-1">
+                  <p 
+                    v-if="reporterForm.dob" 
+                    class="text-xs mt-1"
+                    :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'"
+                  >
                     Auto-selected based on DOB
                   </p>
                 </div>
@@ -240,53 +450,85 @@
             </div>
 
             <!-- Contact Information -->
-            <div class="border-b border-gray-700 pb-4">
-              <h4 class="text-md font-semibold text-gray-100 mb-4">Contact Information</h4>
+            <div 
+              class="border-b pb-4"
+              :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+            >
+              <h4 
+                class="text-md font-semibold mb-4"
+                :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+              >
+                Contact Information
+              </h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-300 mb-2">
+                  <label 
+                    class="block text-sm font-medium mb-2"
+                    :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+                  >
                     Phone Number
                   </label>
                   <input
                     v-model="reporterForm.phone"
                     type="tel"
-                    class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
+                    :class="isDarkMode 
+                      ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
+                      : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
                     placeholder="Enter phone number"
                   />
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-300 mb-2">
+                  <label 
+                    class="block text-sm font-medium mb-2"
+                    :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+                  >
                     Alternative Phone
                   </label>
                   <input
                     v-model="reporterForm.phone2"
                     type="tel"
-                    class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
+                    :class="isDarkMode 
+                      ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
+                      : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
                     placeholder="Alternative phone"
                   />
                 </div>
 
                 <div class="md:col-span-2">
-                  <label class="block text-sm font-medium text-gray-300 mb-2">
+                  <label 
+                    class="block text-sm font-medium mb-2"
+                    :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+                  >
                     Email
                   </label>
                   <input
                     v-model="reporterForm.email"
                     type="email"
-                    class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
+                    :class="isDarkMode 
+                      ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
+                      : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
                     placeholder="Enter email address"
                   />
                 </div>
 
                 <div class="md:col-span-2">
-                  <label class="block text-sm font-medium text-gray-300 mb-2">
+                  <label 
+                    class="block text-sm font-medium mb-2"
+                    :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+                  >
                     Nearest Landmark
                   </label>
                   <input
                     v-model="reporterForm.landmark"
                     type="text"
-                    class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
+                    :class="isDarkMode 
+                      ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
+                      : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
                     placeholder="Enter landmark"
                   />
                 </div>
@@ -295,7 +537,12 @@
 
             <!-- Additional Details -->
             <div>
-              <h4 class="text-md font-semibold text-gray-100 mb-4">Additional Details</h4>
+              <h4 
+                class="text-md font-semibold mb-4"
+                :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+              >
+                Additional Details
+              </h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <BaseSelect
@@ -338,19 +585,28 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-300 mb-2">
+                  <label 
+                    class="block text-sm font-medium mb-2"
+                    :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+                  >
                     ID Number
                   </label>
                   <input
                     v-model="reporterForm.idNumber"
                     type="text"
-                    class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-100 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
+                    :class="isDarkMode 
+                      ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
+                      : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
                     placeholder="Enter ID number"
                   />
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-300 mb-2">
+                  <label 
+                    class="block text-sm font-medium mb-2"
+                    :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+                  >
                     Is Refugee?
                   </label>
                   <div class="flex gap-4 mt-2">
@@ -359,18 +615,30 @@
                         v-model="reporterForm.isRefugee"
                         type="radio"
                         value="1"
-                        class="w-4 h-4 text-blue-600"
+                        class="w-4 h-4"
+                        :class="isDarkMode ? 'text-blue-600' : 'text-amber-700'"
                       />
-                      <span class="text-sm text-gray-300">Yes</span>
+                      <span 
+                        class="text-sm"
+                        :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+                      >
+                        Yes
+                      </span>
                     </label>
                     <label class="flex items-center gap-1.5 cursor-pointer">
                       <input
                         v-model="reporterForm.isRefugee"
                         type="radio"
                         value="0"
-                        class="w-4 h-4 text-blue-600"
+                        class="w-4 h-4"
+                        :class="isDarkMode ? 'text-blue-600' : 'text-amber-700'"
                       />
-                      <span class="text-sm text-gray-300">No</span>
+                      <span 
+                        class="text-sm"
+                        :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+                      >
+                        No
+                      </span>
                     </label>
                   </div>
                 </div>
@@ -378,11 +646,17 @@
             </div>
 
             <!-- Create Button -->
-            <div class="flex gap-3 justify-end pt-4 border-t border-gray-700">
+            <div 
+              class="flex gap-3 justify-end pt-4 border-t"
+              :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+            >
               <button
                 type="button"
                 @click="closeCreateForm"
-                class="px-4 py-2 bg-gray-700 text-gray-300 border border-gray-600 rounded-lg hover:bg-gray-600 transition-colors"
+                class="px-4 py-2 border rounded-lg transition-colors"
+                :class="isDarkMode 
+                  ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
+                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
               >
                 Cancel
               </button>
@@ -390,7 +664,10 @@
                 type="button"
                 @click="handleCreateReporter"
                 :disabled="isCreating"
-                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                class="px-4 py-2 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                :class="isDarkMode 
+                  ? 'bg-blue-600 hover:bg-blue-700' 
+                  : 'bg-amber-700 hover:bg-amber-800'"
               >
                 <span v-if="isCreating" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
                 {{ isCreating ? 'Creating...' : 'Create Reporter' }}
@@ -400,12 +677,27 @@
         </div>
       </div>
 
-      <div class="flex gap-3 justify-between mt-6 pt-5 border-t border-gray-700">
-        <button type="button" class="px-4 py-2 bg-transparent text-gray-300 border border-gray-600 rounded-lg hover:bg-gray-700 hover:border-red-500 hover:text-red-400 transition-colors" @click="$emit('cancel-form')">Cancel</button>
+      <div 
+        class="flex gap-3 justify-between mt-6 pt-5 border-t"
+        :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+      >
+        <button 
+          type="button" 
+          class="px-4 py-2 bg-transparent border rounded-lg transition-colors"
+          :class="isDarkMode 
+            ? 'text-gray-300 border-gray-600 hover:bg-gray-700 hover:border-red-500 hover:text-red-400' 
+            : 'text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-red-500 hover:text-red-600'"
+          @click="$emit('cancel-form')"
+        >
+          Cancel
+        </button>
         <div class="flex gap-3">
           <button 
             type="button" 
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
+            class="px-4 py-2 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
+            :class="isDarkMode 
+              ? 'bg-blue-600 hover:bg-blue-700' 
+              : 'bg-amber-700 hover:bg-amber-800'"
             :disabled="!extractedReporterId || !extractedContactId"
             @click="$emit('validate-and-proceed')"
           >
@@ -418,7 +710,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onBeforeUnmount, reactive } from "vue"
+import { ref, computed, watch, onMounted, onBeforeUnmount, reactive, inject } from "vue"
 import { useReporterStore } from "@/stores/reporters"
 import BaseSelect from "@/components/base/BaseSelect.vue"
 
@@ -437,6 +729,9 @@ const emit = defineEmits([
   "create-new-reporter",
   "reporter-created"
 ])
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 const reportersStore = useReporterStore()
 

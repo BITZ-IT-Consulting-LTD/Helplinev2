@@ -1,29 +1,72 @@
 <template>
-  <div v-if="perpetratorModalOpen" class="fixed top-0 left-0 w-full h-full bg-black/70 backdrop-blur-sm flex items-center justify-center z-[9999]">
-    <div class="bg-gray-800 border border-gray-700 rounded-lg shadow-2xl max-w-[90%] max-h-[90%] overflow-y-auto w-[95%] max-w-[95vw]">
+  <div 
+    v-if="perpetratorModalOpen" 
+    class="fixed top-0 left-0 w-full h-full bg-black/70 backdrop-blur-sm flex items-center justify-center z-[9999]"
+  >
+    <div 
+      class="border rounded-lg shadow-2xl max-w-[90%] max-h-[90%] overflow-y-auto w-[95%] max-w-[95vw]"
+      :class="isDarkMode 
+        ? 'bg-gray-800 border-gray-700' 
+        : 'bg-white border-gray-200'"
+    >
       <!-- Header -->
-      <div class="flex justify-between items-center p-5 border-b border-gray-700 bg-gray-900/60">
-        <h3 class="m-0 text-lg font-bold text-gray-100">New Perpetrator</h3>
+      <div 
+        class="flex justify-between items-center p-5 border-b"
+        :class="isDarkMode 
+          ? 'border-gray-700 bg-gray-900/60' 
+          : 'border-gray-200 bg-gray-50'"
+      >
+        <h3 
+          class="m-0 text-lg font-bold"
+          :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+        >
+          New Perpetrator
+        </h3>
         <button 
-          class="text-2xl cursor-pointer text-gray-400 p-1.5 rounded transition-all duration-200 hover:bg-gray-700 hover:text-gray-100"
+          class="text-2xl cursor-pointer p-1.5 rounded transition-all duration-200"
+          :class="isDarkMode 
+            ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-100' 
+            : 'text-gray-500 hover:bg-gray-200 hover:text-gray-900'"
           @click="closeModal"
         >
           <i-mdi-close class="w-6 h-6" />
         </button>
       </div>
 
-      <div class="p-5 bg-gray-900/40">
+      <div 
+        class="p-5"
+        :class="isDarkMode ? 'bg-gray-900/40' : 'bg-gray-50'"
+      >
         <!-- Show existing perpetrators -->
-        <div v-if="perpetrators.length > 0" class="mb-5 p-4 bg-gray-800 border border-gray-700 rounded-lg">
-          <h4 class="m-0 mb-3 text-base font-semibold text-gray-100">Added Perpetrators:</h4>
+        <div 
+          v-if="perpetrators.length > 0" 
+          class="mb-5 p-4 border rounded-lg"
+          :class="isDarkMode 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-300'"
+        >
+          <h4 
+            class="m-0 mb-3 text-base font-semibold"
+            :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+          >
+            Added Perpetrators:
+          </h4>
           <div
             v-for="(perpetrator, index) in perpetrators"
             :key="index"
-            class="flex justify-between items-center p-3 bg-gray-700/50 border border-gray-600 rounded-md mb-2 last:mb-0"
+            class="flex justify-between items-center p-3 border rounded-md mb-2 last:mb-0"
+            :class="isDarkMode 
+              ? 'bg-gray-700/50 border-gray-600' 
+              : 'bg-gray-50 border-gray-300'"
           >
-            <span class="text-sm text-gray-100 font-medium">
+            <span 
+              class="text-sm font-medium"
+              :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+            >
               {{ perpetrator.name || 'Unnamed' }} 
-              <span class="text-gray-400">({{ perpetrator.age || 'Unknown age' }}, {{ perpetrator.sex || 'Unknown gender' }})</span>
+              <span :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'">
+                ({{ perpetrator.age || 'Unknown age' }}, {{ perpetrator.sex || 'Unknown gender' }})
+              </span>
             </span>
             <button 
               @click="removePerpetrator(index)" 
@@ -36,10 +79,18 @@
 
         <!-- Multi-step Perpetrator Form -->
         <div class="add-perpetrator-form">
-          <h4 class="m-0 mb-4 text-base font-semibold text-gray-100">Add New Perpetrator:</h4>
+          <h4 
+            class="m-0 mb-4 text-base font-semibold"
+            :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+          >
+            Add New Perpetrator:
+          </h4>
 
           <!-- Progress Steps -->
-          <div class="mb-6 py-5 border-t border-b border-gray-700">
+          <div 
+            class="mb-6 py-5 border-t border-b"
+            :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+          >
             <div class="flex justify-between items-center mb-0">
               <div
                 v-for="(step, index) in perpetratorSteps"
@@ -53,29 +104,16 @@
                   },
                 ]"
               >
-                <span :class="[
-                  'w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm relative z-[2]',
-                  currentPerpetratorStep > index ? 'bg-green-600 text-white' : '',
-                  currentPerpetratorStep === index ? 'bg-blue-600 text-white ring-4 ring-blue-900/50' : '',
-                  currentPerpetratorStep < index ? 'bg-gray-700 text-gray-500 border-2 border-gray-600' : ''
-                ]">
+                <span :class="getStepCircleClass(index)">
                   <span v-if="currentPerpetratorStep > index">✓</span>
                   <span v-else>{{ index + 1 }}</span>
                 </span>
-                <span :class="[
-                  'text-xs font-medium text-center mt-1',
-                  currentPerpetratorStep > index ? 'text-green-400 font-semibold' : '',
-                  currentPerpetratorStep === index ? 'text-blue-400 font-semibold' : '',
-                  currentPerpetratorStep < index ? 'text-gray-500' : ''
-                ]">{{ step.title }}</span>
+                <span :class="getStepLabelClass(index)">{{ step.title }}</span>
                 
                 <!-- Connector line -->
                 <span 
                   v-if="index < perpetratorSteps.length - 1"
-                  :class="[
-                    'absolute top-4 left-1/2 right-[-50%] h-0.5 z-[1]',
-                    currentPerpetratorStep > index ? 'bg-green-600' : 'bg-gray-700'
-                  ]"
+                  :class="getConnectorClass(index)"
                 ></span>
               </div>
             </div>
@@ -88,33 +126,57 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
                 <!-- Name -->
                 <div class="flex flex-col gap-2">
-                  <label class="text-sm font-semibold text-gray-100 mb-1">Perpetrator's Name *</label>
+                  <label 
+                    class="text-sm font-semibold mb-1"
+                    :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+                  >
+                    Perpetrator's Name *
+                  </label>
                   <input
                     v-model="localPerpetratorForm.name"
                     type="text"
                     placeholder="Enter Perpetrator's Names"
-                    class="px-4 py-3 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
+                    :class="isDarkMode 
+                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm"
                   />
                 </div>
 
                 <div class="flex flex-col gap-2">
-                  <label class="text-sm font-semibold text-gray-100 mb-1">Age</label>
+                  <label 
+                    class="text-sm font-semibold mb-1"
+                    :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+                  >
+                    Age
+                  </label>
                   <input 
                     v-model="localPerpetratorForm.age" 
                     type="number" 
                     placeholder="Enter age"
-                    class="px-4 py-3 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
+                    :class="isDarkMode 
+                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm" 
                   />
                 </div>
 
                 <div class="flex flex-col gap-2">
-                  <label class="text-sm font-semibold text-gray-100 mb-1">DOB</label>
+                  <label 
+                    class="text-sm font-semibold mb-1"
+                    :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+                  >
+                    DOB
+                  </label>
                   <input 
                     v-model="localPerpetratorForm.dob" 
                     type="date"
-                    class="px-4 py-3 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
+                    :class="isDarkMode 
+                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @change="handleDobChange" 
                   />
                 </div>
@@ -158,12 +220,20 @@
             <div v-if="currentPerpetratorStep === 1" class="py-5 animate-fadeIn">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
                 <div class="flex flex-col gap-2">
-                  <label class="text-sm font-semibold text-gray-100 mb-1">Nearest Landmark</label>
+                  <label 
+                    class="text-sm font-semibold mb-1"
+                    :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+                  >
+                    Nearest Landmark
+                  </label>
                   <input
                     v-model="localPerpetratorForm.landmark"
                     type="text"
                     placeholder="Enter Nearest Landmark"
-                    class="px-4 py-3 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
+                    :class="isDarkMode 
+                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm"
                   />
                 </div>
@@ -191,12 +261,20 @@
                 </div>
 
                 <div class="flex flex-col gap-2">
-                  <label class="text-sm font-semibold text-gray-100 mb-1">ID Number</label>
+                  <label 
+                    class="text-sm font-semibold mb-1"
+                    :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+                  >
+                    ID Number
+                  </label>
                   <input
                     v-model="localPerpetratorForm.idNumber"
                     type="text"
                     placeholder="Enter ID Number"
-                    class="px-4 py-3 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
+                    :class="isDarkMode 
+                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm"
                   />
                 </div>
@@ -213,37 +291,60 @@
                 </div>
 
                 <div class="flex flex-col gap-2">
-                  <label class="text-sm font-semibold text-gray-100 mb-1">Is the Perpetrator a Refugee?</label>
+                  <label 
+                    class="text-sm font-semibold mb-1"
+                    :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+                  >
+                    Is the Perpetrator a Refugee?
+                  </label>
                   <div class="flex gap-4 flex-wrap">
                     <label class="flex items-center gap-1.5 cursor-pointer">
                       <input 
                         type="radio" 
                         v-model="localPerpetratorForm.isRefugee" 
                         value="yes"
-                        class="text-blue-600 focus:ring-blue-500"
+                        class="w-4 h-4"
+                        :class="isDarkMode ? 'text-blue-600' : 'text-amber-700'"
                         @change="updatePerpetratorForm" 
                       />
-                      <span class="text-sm text-gray-300">Yes</span>
+                      <span 
+                        class="text-sm"
+                        :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+                      >
+                        Yes
+                      </span>
                     </label>
                     <label class="flex items-center gap-1.5 cursor-pointer">
                       <input 
                         type="radio" 
                         v-model="localPerpetratorForm.isRefugee" 
                         value="no"
-                        class="text-blue-600 focus:ring-blue-500"
+                        class="w-4 h-4"
+                        :class="isDarkMode ? 'text-blue-600' : 'text-amber-700'"
                         @change="updatePerpetratorForm" 
                       />
-                      <span class="text-sm text-gray-300">No</span>
+                      <span 
+                        class="text-sm"
+                        :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+                      >
+                        No
+                      </span>
                     </label>
                     <label class="flex items-center gap-1.5 cursor-pointer">
                       <input
                         type="radio"
                         v-model="localPerpetratorForm.isRefugee"
                         value="unknown"
-                        class="text-blue-600 focus:ring-blue-500"
+                        class="w-4 h-4"
+                        :class="isDarkMode ? 'text-blue-600' : 'text-amber-700'"
                         @change="updatePerpetratorForm"
                       />
-                      <span class="text-sm text-gray-300">Unknown</span>
+                      <span 
+                        class="text-sm"
+                        :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+                      >
+                        Unknown
+                      </span>
                     </label>
                   </div>
                 </div>
@@ -265,34 +366,58 @@
                 </div>
 
                 <div class="flex flex-col gap-2">
-                  <label class="text-sm font-semibold text-gray-100 mb-1">Phone Number</label>
+                  <label 
+                    class="text-sm font-semibold mb-1"
+                    :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+                  >
+                    Phone Number
+                  </label>
                   <input
                     v-model="localPerpetratorForm.phone"
                     type="tel"
                     placeholder="Enter Phone Number"
-                    class="px-4 py-3 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
+                    :class="isDarkMode 
+                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm"
                   />
                 </div>
 
                 <div class="flex flex-col gap-2">
-                  <label class="text-sm font-semibold text-gray-100 mb-1">Alternative Phone</label>
+                  <label 
+                    class="text-sm font-semibold mb-1"
+                    :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+                  >
+                    Alternative Phone
+                  </label>
                   <input
                     v-model="localPerpetratorForm.alternativePhone"
                     type="tel"
                     placeholder="Enter Alternate Phone Number"
-                    class="px-4 py-3 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
+                    :class="isDarkMode 
+                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm"
                   />
                 </div>
 
                 <div class="flex flex-col gap-2">
-                  <label class="text-sm font-semibold text-gray-100 mb-1">Email</label>
+                  <label 
+                    class="text-sm font-semibold mb-1"
+                    :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+                  >
+                    Email
+                  </label>
                   <input
                     v-model="localPerpetratorForm.email"
                     type="email"
                     placeholder="Enter Email Address"
-                    class="px-4 py-3 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
+                    :class="isDarkMode 
+                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm"
                   />
                 </div>
@@ -357,15 +482,29 @@
                   />
 
                   <!-- Conditional Fields: Spouse Details -->
-                  <div v-if="showSpouseFields" class="mt-4 p-4 bg-gray-800 border border-gray-600 rounded-lg">
+                  <div 
+                    v-if="showSpouseFields" 
+                    class="mt-4 p-4 border rounded-lg"
+                    :class="isDarkMode 
+                      ? 'bg-gray-800 border-gray-600' 
+                      : 'bg-gray-50 border-gray-300'"
+                  >
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div class="flex flex-col gap-2">
-                        <label class="text-sm font-semibold text-gray-100 mb-1">Spouse Name</label>
+                        <label 
+                          class="text-sm font-semibold mb-1"
+                          :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+                        >
+                          Spouse Name
+                        </label>
                         <input
                           v-model="localPerpetratorForm.spouseName"
                           type="text"
                           placeholder="Enter spouse's name"
-                          class="px-4 py-3 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                          class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
+                          :class="isDarkMode 
+                            ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+                            : 'border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                           @input="updatePerpetratorForm"
                         />
                       </div>
@@ -385,23 +524,39 @@
                 </div>
 
                 <div class="flex flex-col gap-2">
-                  <label class="text-sm font-semibold text-gray-100 mb-1">Perpetrator's Guardian's Name</label>
+                  <label 
+                    class="text-sm font-semibold mb-1"
+                    :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+                  >
+                    Perpetrator's Guardian's Name
+                  </label>
                   <input
                     v-model="localPerpetratorForm.guardianName"
                     type="text"
                     placeholder="Enter Perpetrator's Guardian Name"
-                    class="px-4 py-3 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
+                    :class="isDarkMode 
+                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm"
                   />
                 </div>
 
                 <div class="flex flex-col gap-2 md:col-span-2">
-                  <label class="text-sm font-semibold text-gray-100 mb-1">Additional Details</label>
+                  <label 
+                    class="text-sm font-semibold mb-1"
+                    :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+                  >
+                    Additional Details
+                  </label>
                   <textarea
                     v-model="localPerpetratorForm.additionalDetails"
                     placeholder="Enter Additional Details"
                     rows="4"
-                    class="px-4 py-3 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                    class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
+                    :class="isDarkMode 
+                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm"
                   ></textarea>
                 </div>
@@ -410,12 +565,18 @@
           </div>
 
           <!-- Step Navigation -->
-          <div class="flex justify-between items-center mt-6 pt-5 border-t border-gray-700">
+          <div 
+            class="flex justify-between items-center mt-6 pt-5 border-t"
+            :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+          >
             <button
               v-if="currentPerpetratorStep > 0"
               @click="prevStep"
               type="button"
-              class="px-5 py-2.5 border-none rounded-lg font-medium cursor-pointer transition-all duration-200 bg-gray-700 text-gray-300 hover:bg-gray-600 flex items-center gap-2"
+              class="px-5 py-2.5 border-none rounded-lg font-medium cursor-pointer transition-all duration-200 flex items-center gap-2"
+              :class="isDarkMode 
+                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
+                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'"
             >
               <i-mdi-chevron-left class="w-5 h-5" />
               Previous
@@ -426,7 +587,10 @@
               v-if="currentPerpetratorStep < perpetratorSteps.length - 1"
               @click="nextStep"
               type="button"
-              class="px-5 py-2.5 border-none rounded-lg font-medium cursor-pointer transition-all duration-200 bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2"
+              class="px-5 py-2.5 border-none rounded-lg font-medium cursor-pointer transition-all duration-200 text-white flex items-center gap-2"
+              :class="isDarkMode 
+                ? 'bg-blue-600 hover:bg-blue-700' 
+                : 'bg-amber-700 hover:bg-amber-800'"
             >
               Next
               <i-mdi-chevron-right class="w-5 h-5" />
@@ -448,8 +612,11 @@
 </template>
 
 <script setup>
-import { computed, reactive, watch } from "vue";
+import { computed, reactive, watch, inject } from "vue";
 import BaseSelect from "@/components/base/BaseSelect.vue";
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 // Props from parent
 const props = defineProps({
@@ -593,6 +760,43 @@ const prevStep = () => {
   updatePerpetratorForm();
   emit("prev-perpetrator-step");
 };
+
+// Step circle class helper
+const getStepCircleClass = (index) => {
+  const baseClasses = 'w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm relative z-[2]'
+  
+  if (props.currentPerpetratorStep > index) {
+    return `${baseClasses} ${isDarkMode.value ? 'bg-green-600 text-white' : 'bg-green-600 text-white'}`
+  } else if (props.currentPerpetratorStep === index) {
+    return `${baseClasses} ${isDarkMode.value ? 'bg-blue-600 text-white ring-4 ring-blue-900/50' : 'bg-amber-700 text-white ring-4 ring-amber-100'}`
+  } else {
+    return `${baseClasses} ${isDarkMode.value ? 'bg-gray-700 text-gray-500 border-2 border-gray-600' : 'bg-white text-gray-400 border-2 border-gray-300'}`
+  }
+}
+
+// Step label class helper
+const getStepLabelClass = (index) => {
+  const baseClasses = 'text-xs font-medium text-center mt-1'
+  
+  if (props.currentPerpetratorStep > index) {
+    return `${baseClasses} ${isDarkMode.value ? 'text-green-400 font-semibold' : 'text-green-600 font-semibold'}`
+  } else if (props.currentPerpetratorStep === index) {
+    return `${baseClasses} ${isDarkMode.value ? 'text-blue-400 font-semibold' : 'text-amber-700 font-semibold'}`
+  } else {
+    return `${baseClasses} ${isDarkMode.value ? 'text-gray-500' : 'text-gray-500'}`
+  }
+}
+
+// Connector line class helper
+const getConnectorClass = (index) => {
+  const baseClasses = 'absolute top-4 left-1/2 right-[-50%] h-0.5 z-[1]'
+  
+  if (props.currentPerpetratorStep > index) {
+    return `${baseClasses} ${isDarkMode.value ? 'bg-green-600' : 'bg-green-600'}`
+  } else {
+    return `${baseClasses} ${isDarkMode.value ? 'bg-gray-700' : 'bg-gray-300'}`
+  }
+}
 </script>
 
 <style scoped>

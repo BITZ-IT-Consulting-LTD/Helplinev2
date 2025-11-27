@@ -59,7 +59,7 @@
                     class="text-sm font-semibold"
                     :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
                   >
-                    Activity #{{ activity.id }}
+                    Activity {{ activity.id }}
                   </h4>
                   <p 
                     class="text-xs mt-1"
@@ -118,7 +118,7 @@
                     class="text-sm font-medium"
                     :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
                   >
-                    #{{ activity.case_id }}
+                    {{ activity.case_id }}
                   </p>
                 </div>
                 <div>

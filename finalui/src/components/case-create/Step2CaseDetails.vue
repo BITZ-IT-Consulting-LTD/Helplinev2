@@ -2,14 +2,27 @@
   <div class="min-h-96">
     <form class="flex flex-col gap-3.5" @submit.prevent="handleFormSubmit">
       <div>
-        <div class="text-xl font-semibold text-gray-100 mb-2">Case Details</div>
-        <p class="text-sm text-gray-400 mb-5">
+        <div 
+          class="text-xl font-semibold mb-2"
+          :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+        >
+          Case Details
+        </div>
+        <p 
+          class="text-sm mb-5"
+          :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+        >
           Enter case details including narrative, priority, and classification. Fields marked with * are required.
         </p>
 
         <!-- GBV Related (Required) -->
         <div class="mb-5">
-          <label class="block font-semibold mb-2 text-gray-100">Is this Case GBV Related? *</label>
+          <label 
+            class="block font-semibold mb-2"
+            :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+          >
+            Is this Case GBV Related? *
+          </label>
           <BaseSelect
             v-model="localForm.isGBVRelated"
             placeholder="Select an option"
@@ -44,11 +57,20 @@
 
         <!-- Plan (Required) -->
         <div class="mb-5">
-          <label for="case-plan" class="block font-semibold mb-2 text-gray-100">Case Plan *</label>
+          <label 
+            for="case-plan" 
+            class="block font-semibold mb-2"
+            :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+          >
+            Case Plan *
+          </label>
           <textarea 
             v-model="localForm.plan" 
             id="case-plan" 
-            class="w-full px-3 py-2 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 resize-vertical" 
+            class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent resize-vertical"
+            :class="isDarkMode 
+              ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+              : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
             placeholder="Outline the planned interventions and support services..." 
             rows="4" 
             @input="updateForm"
@@ -59,10 +81,18 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
           <!-- Priority -->
           <div>
-            <label class="block font-semibold mb-2 text-gray-100">Priority *</label>
+            <label 
+              class="block font-semibold mb-2"
+              :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+            >
+              Priority *
+            </label>
             <select 
               v-model="localForm.priority" 
-              class="w-full px-3 py-2 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+              class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
+              :class="isDarkMode 
+                ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
+                : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
               @change="handlePriorityChange"
             >
               <option value="">Select priority</option>
@@ -74,10 +104,18 @@
 
           <!-- Status -->
           <div>
-            <label class="block font-semibold mb-2 text-gray-100">Status *</label>
+            <label 
+              class="block font-semibold mb-2"
+              :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+            >
+              Status *
+            </label>
             <select 
               v-model="localForm.status" 
-              class="w-full px-3 py-2 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+              class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
+              :class="isDarkMode 
+                ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
+                : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
               @change="handleStatusChange"
             >
               <option value="">Select status</option>
@@ -89,26 +127,70 @@
 
         <!-- Department (Required) -->
         <div class="mb-5">
-          <label class="block font-semibold mb-2 text-gray-100">Department *</label>
+          <label 
+            class="block font-semibold mb-2"
+            :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+          >
+            Department *
+          </label>
           <div class="flex gap-4 mt-2">
             <label class="flex items-center gap-1.5 cursor-pointer">
-              <input v-model="localForm.department" type="radio" value="116" @change="handleDepartmentChange" class="w-4 h-4 text-blue-600" />
-              <span class="text-sm text-gray-300">116</span>
+              <input 
+                v-model="localForm.department" 
+                type="radio" 
+                value="116" 
+                @change="handleDepartmentChange" 
+                class="w-4 h-4"
+                :class="isDarkMode ? 'text-blue-600' : 'text-amber-700'"
+              />
+              <span 
+                class="text-sm"
+                :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                116
+              </span>
             </label>
             <label class="flex items-center gap-1.5 cursor-pointer">
-              <input v-model="localForm.department" type="radio" value="labor" @change="handleDepartmentChange" class="w-4 h-4 text-blue-600" />
-              <span class="text-sm text-gray-300">Labor</span>
+              <input 
+                v-model="localForm.department" 
+                type="radio" 
+                value="labor" 
+                @change="handleDepartmentChange" 
+                class="w-4 h-4"
+                :class="isDarkMode ? 'text-blue-600' : 'text-amber-700'"
+              />
+              <span 
+                class="text-sm"
+                :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Labor
+              </span>
             </label>
           </div>
 
           <!-- Client Passport Number (conditional) -->
-          <div v-if="showPassportField" class="mt-4 p-4 bg-gray-800 border border-gray-600 rounded-lg animate-fadeIn">
-            <label for="client-passport" class="block font-semibold mb-2 text-gray-100">Client's Passport Number</label>
+          <div 
+            v-if="showPassportField" 
+            class="mt-4 p-4 border rounded-lg animate-fadeIn"
+            :class="isDarkMode 
+              ? 'bg-gray-800 border-gray-600' 
+              : 'bg-gray-50 border-gray-300'"
+          >
+            <label 
+              for="client-passport" 
+              class="block font-semibold mb-2"
+              :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+            >
+              Client's Passport Number
+            </label>
             <input 
               id="client-passport" 
               v-model="localForm.clientPassportNumber" 
               type="text" 
-              class="w-full px-3 py-2 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50" 
+              class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
+              :class="isDarkMode 
+                ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
               placeholder="Enter client's passport number" 
               @input="updateForm" 
             />
@@ -141,19 +223,43 @@
 
         <!-- Escalated To -->
         <div class="mb-5">
-          <label class="block font-semibold mb-2 text-gray-100">Escalated To</label>
+          <label 
+            class="block font-semibold mb-2"
+            :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+          >
+            Escalated To
+          </label>
           
           <!-- Loading State -->
-          <div v-if="userStore.loading" class="flex items-center gap-2 p-3 bg-gray-700 border border-gray-600 rounded-lg">
-            <div class="w-4 h-4 border-2 border-gray-400 border-t-blue-500 rounded-full animate-spin"></div>
-            <span class="text-sm text-gray-400">Loading users...</span>
+          <div 
+            v-if="userStore.loading" 
+            class="flex items-center gap-2 p-3 border rounded-lg"
+            :class="isDarkMode 
+              ? 'bg-gray-700 border-gray-600' 
+              : 'bg-gray-50 border-gray-300'"
+          >
+            <div 
+              class="w-4 h-4 border-2 rounded-full animate-spin"
+              :class="isDarkMode 
+                ? 'border-gray-400 border-t-blue-500' 
+                : 'border-gray-300 border-t-amber-700'"
+            ></div>
+            <span 
+              class="text-sm"
+              :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+            >
+              Loading users...
+            </span>
           </div>
 
           <!-- User Select -->
           <select 
             v-else
             v-model="localForm.escalatedTo" 
-            class="w-full px-3 py-2 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 transition-all focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+            class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
+            :class="isDarkMode 
+              ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
+              : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
             @change="handleEscalationChange"
           >
             <option value="0">None</option>
@@ -167,16 +273,40 @@
           </select>
 
           <!-- Error State -->
-          <p v-if="userStore.error" class="text-xs text-red-400 mt-1">
+          <p 
+            v-if="userStore.error" 
+            class="text-xs mt-1"
+            :class="isDarkMode ? 'text-red-400' : 'text-red-600'"
+          >
             Failed to load users: {{ userStore.error }}
           </p>
         </div>
       </div>
 
-      <div class="flex gap-3 justify-between mt-6 pt-5 border-t border-gray-700">
-        <button type="button" class="px-4 py-2 bg-gray-700 text-gray-300 border border-gray-600 rounded-lg hover:bg-gray-600 transition-colors" @click="goToStep(1)">Back</button>
+      <div 
+        class="flex gap-3 justify-between mt-6 pt-5 border-t"
+        :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+      >
+        <button 
+          type="button" 
+          class="px-4 py-2 border rounded-lg transition-colors"
+          :class="isDarkMode 
+            ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
+            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+          @click="goToStep(1)"
+        >
+          Back
+        </button>
         <div class="flex gap-3">
-          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Continue</button>
+          <button 
+            type="submit" 
+            class="px-4 py-2 text-white rounded-lg transition-colors"
+            :class="isDarkMode 
+              ? 'bg-blue-600 hover:bg-blue-700' 
+              : 'bg-amber-700 hover:bg-amber-800'"
+          >
+            Continue
+          </button>
         </div>
       </div>
     </form>
@@ -184,7 +314,7 @@
 </template>
 
 <script setup>
-import { reactive, watch, computed, onMounted } from "vue"
+import { reactive, watch, computed, onMounted, inject } from "vue"
 import { useAuthStore } from "@/stores/auth"
 import { useUserStore } from "@/stores/users"
 import { useCategoryStore } from "@/stores/categories"
@@ -201,6 +331,9 @@ const emit = defineEmits([
   "save-and-proceed", 
   "step-change"
 ])
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 const authStore = useAuthStore()
 const userStore = useUserStore()

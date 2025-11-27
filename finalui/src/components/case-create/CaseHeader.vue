@@ -1,11 +1,20 @@
 <template>
   <div class="flex items-center justify-between gap-3 mb-6">
     <div>
-      <h1 class="text-2xl font-black tracking-tight text-gray-100 mb-1.5">
+      <h1 
+        class="text-2xl font-black tracking-tight mb-1.5"
+        :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+      >
         Create New Case
-        <span class="block w-12 h-0.5 bg-blue-600 rounded-full mt-1.5"></span>
+        <span 
+          class="block w-12 h-0.5 rounded-full mt-1.5"
+          :class="isDarkMode ? 'bg-blue-600' : 'bg-amber-700'"
+        ></span>
       </h1>
-      <p class="text-sm text-gray-400 mt-1.5">
+      <p 
+        class="text-sm mt-1.5"
+        :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+      >
         {{ currentDescription }}
       </p>
     </div>
@@ -13,7 +22,10 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
+import { computed, inject } from "vue"
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 const props = defineProps({
   currentStep: {

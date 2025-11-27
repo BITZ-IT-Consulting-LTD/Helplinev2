@@ -62,7 +62,7 @@
                     class="text-sm font-semibold"
                     :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
                   >
-                    QA #{{ getFieldValue(qa, 'id') }}
+                    QA {{ getFieldValue(qa, 'id') }}
                   </h4>
                   <p 
                     class="text-xs mt-1"
