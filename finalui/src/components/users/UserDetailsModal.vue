@@ -434,9 +434,12 @@ const handleResetPassword = async () => {
           newPassword.value = passwordMatch[1]
           resetSuccess.value = true
           console.log('✅ Password extracted:', newPassword.value)
-          console.log('✅ NOT emitting refresh - modal should stay open')
-          toast.success(`Password reset successfully!`, {
-            duration: 3000
+          
+          // Show the password in a long-duration toast
+          toast.success(fullMessage, {
+            duration: 15000, // Show for 15 seconds
+            description: `Username: ${username}`,
+            closeButton: true,
           })
         } else {
           toast.warning('Password reset completed but password not found in response')
@@ -445,7 +448,10 @@ const handleResetPassword = async () => {
     } else if (result.status === 202 || result.status === 200) {
       resetSuccess.value = true
       resetMessage.value = 'Password has been reset successfully'
-      toast.success(`Password reset successfully!`)
+      toast.success(`Password reset successful for ${username}!`, {
+        duration: 10000,
+        closeButton: true,
+      })
     } else {
       toast.warning('Password reset completed with unexpected response')
     }
@@ -454,7 +460,7 @@ const handleResetPassword = async () => {
     toast.error(`Failed to reset password: ${error.message}`)
   } finally {
     resetting.value = false
-    console.log('✅ Password reset complete, resetting:', resetting.value)
+    console.log('✅ Password reset complete')
   }
 }
 
