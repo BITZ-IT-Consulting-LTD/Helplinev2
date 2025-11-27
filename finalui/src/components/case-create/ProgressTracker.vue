@@ -2,10 +2,14 @@
   <div class="py-2 pb-4">
     <div class="relative flex justify-between items-start gap-6 pt-7">
       <!-- Connecting Line -->
-      <div class="absolute top-10 left-0 right-0 h-0.5 bg-gray-700 -z-10" 
-           style="top: 2.75rem;">
+      <div 
+        class="absolute top-10 left-0 right-0 h-0.5 -z-10"
+        :class="isDarkMode ? 'bg-gray-700' : 'bg-gray-300'"
+        style="top: 2.75rem;"
+      >
         <div 
-          class="h-full bg-green-500 transition-all duration-300"
+          class="h-full transition-all duration-300"
+          :class="isDarkMode ? 'bg-green-500' : 'bg-green-600'"
           :style="{ width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%` }"
         ></div>
       </div>
@@ -24,13 +28,8 @@
       >
         <!-- Step Circle -->
         <div
-          class="relative flex items-center justify-center w-9 h-9 text-sm font-extrabold leading-none transition-all rounded-full bg-gray-900 border-2"
-          :class="{
-            'border-gray-600 text-gray-500': stepStatus[step] === 'pending' && currentStep !== step,
-            'border-blue-600 text-blue-400 ring-4 ring-blue-900/50': currentStep === step && stepStatus[step] !== 'completed',
-            'border-green-500 bg-green-500 text-white': stepStatus[step] === 'completed',
-            'border-red-600 text-red-400': stepStatus[step] === 'error'
-          }"
+          class="relative flex items-center justify-center w-9 h-9 text-sm font-extrabold leading-none transition-all rounded-full border-2"
+          :class="getStepCircleClass(step)"
         >
           <span v-if="stepStatus[step] === 'completed'">✓</span>
           <span v-else>{{ step }}</span>
@@ -39,12 +38,7 @@
         <!-- Step Label -->
         <div
           class="text-xs font-bold text-center transition-colors max-w-[100px]"
-          :class="{
-            'text-gray-500': stepStatus[step] === 'pending' && currentStep !== step,
-            'text-blue-400': currentStep === step && stepStatus[step] !== 'completed',
-            'text-green-400': stepStatus[step] === 'completed',
-            'text-red-400': stepStatus[step] === 'error'
-          }"
+          :class="getStepLabelClass(step)"
         >
           {{ stepLabels[step - 1] }}
         </div>
@@ -54,6 +48,11 @@
 </template>
 
 <script setup>
+import { inject, computed } from 'vue'
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
+
 const props = defineProps({
   currentStep: {
     type: Number,
@@ -82,5 +81,67 @@ const canNavigate = (step) => {
 
 const navigateToStep = (step) => {
   emit("step-change", step)
+}
+
+const getStepCircleClass = (step) => {
+  const status = props.stepStatus[step]
+  const isCurrent = props.currentStep === step
+  
+  if (isDarkMode.value) {
+    // Dark mode classes
+    if (status === 'pending' && !isCurrent) {
+      return 'bg-gray-900 border-gray-600 text-gray-500'
+    } else if (isCurrent && status !== 'completed') {
+      return 'bg-gray-900 border-blue-600 text-blue-400 ring-4 ring-blue-900/50'
+    } else if (status === 'completed') {
+      return 'border-green-500 bg-green-500 text-white'
+    } else if (status === 'error') {
+      return 'border-red-600 text-red-400 bg-gray-900'
+    }
+  } else {
+    // Light mode classes
+    if (status === 'pending' && !isCurrent) {
+      return 'bg-white border-gray-300 text-gray-400'
+    } else if (isCurrent && status !== 'completed') {
+      return 'bg-white border-amber-600 text-amber-700 ring-4 ring-amber-100'
+    } else if (status === 'completed') {
+      return 'border-green-600 bg-green-600 text-white'
+    } else if (status === 'error') {
+      return 'border-red-600 text-red-600 bg-white'
+    }
+  }
+  
+  return ''
+}
+
+const getStepLabelClass = (step) => {
+  const status = props.stepStatus[step]
+  const isCurrent = props.currentStep === step
+  
+  if (isDarkMode.value) {
+    // Dark mode classes
+    if (status === 'pending' && !isCurrent) {
+      return 'text-gray-500'
+    } else if (isCurrent && status !== 'completed') {
+      return 'text-blue-400'
+    } else if (status === 'completed') {
+      return 'text-green-400'
+    } else if (status === 'error') {
+      return 'text-red-400'
+    }
+  } else {
+    // Light mode classes
+    if (status === 'pending' && !isCurrent) {
+      return 'text-gray-500'
+    } else if (isCurrent && status !== 'completed') {
+      return 'text-amber-700'
+    } else if (status === 'completed') {
+      return 'text-green-600'
+    } else if (status === 'error') {
+      return 'text-red-600'
+    }
+  }
+  
+  return ''
 }
 </script>

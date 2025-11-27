@@ -1,19 +1,34 @@
 <template>
   <div class="flex flex-col gap-2">
-    <label v-if="label" class="block text-sm font-semibold text-gray-100" :for="id">{{ label }}</label>
+    <label 
+      v-if="label" 
+      class="block text-sm font-semibold" 
+      :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+      :for="id"
+    >
+      {{ label }}
+    </label>
     <input
       :id="id"
       :class="[
-        'px-4 py-3 border rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 transition-all',
+        'px-4 py-3 border rounded-lg text-sm placeholder-gray-500 transition-all',
         'focus:outline-none focus:ring-2',
         error 
           ? 'border-red-600 focus:border-red-600 focus:ring-red-600/50' 
-          : 'border-gray-600 focus:border-blue-500 focus:ring-blue-500/50 hover:border-blue-500',
+          : (isDarkMode
+            ? 'border-gray-600 focus:border-blue-500 focus:ring-blue-500/50 hover:border-blue-500'
+            : 'border-gray-300 focus:border-amber-600 focus:ring-amber-600/50 hover:border-amber-600'),
         disabled 
-          ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
-          : '',
+          ? (isDarkMode 
+            ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
+            : 'bg-gray-200 text-gray-500 cursor-not-allowed')
+          : (isDarkMode 
+            ? 'bg-gray-700 text-gray-100' 
+            : 'bg-gray-50 text-gray-900'),
         readonly 
-          ? 'bg-gray-800/50 cursor-default' 
+          ? (isDarkMode 
+            ? 'bg-gray-800/50 cursor-default' 
+            : 'bg-gray-100 cursor-default')
           : ''
       ]"
       :type="type"
@@ -23,13 +38,21 @@
       :readonly="readonly"
       :aria-invalid="!!error"
     />
-    <div v-if="hint && !error" class="text-xs text-gray-400">{{ hint }}</div>
+    <div 
+      v-if="hint && !error" 
+      class="text-xs"
+      :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+    >
+      {{ hint }}
+    </div>
     <div v-if="error" class="text-xs text-red-400">{{ error }}</div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
+
+const isDarkMode = inject('isDarkMode')
 
 const props = defineProps({
   modelValue: [String, Number],
@@ -42,7 +65,9 @@ const props = defineProps({
   disabled: Boolean,
   readonly: Boolean
 })
+
 const emit = defineEmits(['update:modelValue'])
+
 const model = computed({
   get: () => props.modelValue,
   set: (v) => emit('update:modelValue', v)

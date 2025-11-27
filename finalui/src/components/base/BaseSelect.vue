@@ -1,33 +1,84 @@
 <template>
   <div class="relative max-w-[420px]">
-    <label v-if="label" class="block font-semibold mb-1.5 text-gray-100" :for="id">{{ label }}</label>
+    <label 
+      v-if="label" 
+      class="block font-semibold mb-1.5" 
+      :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+      :for="id"
+    >
+      {{ label }}
+    </label>
 
     <!-- Input Display -->
     <div 
       @click="toggleDropdown" 
       :class="[
-        'border rounded-lg px-3 py-2.5 flex justify-between items-center cursor-pointer bg-gray-700 transition-all min-h-[20px]',
-        disabled ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'border-gray-600 hover:border-blue-500 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/50'
+        'border rounded-lg px-3 py-2.5 flex justify-between items-center cursor-pointer transition-all min-h-[20px]',
+        disabled 
+          ? isDarkMode
+            ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
+            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+          : isDarkMode
+            ? 'bg-gray-700 border-gray-600 hover:border-blue-500 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/50'
+            : 'bg-gray-50 border-gray-300 hover:border-amber-600 focus-within:border-amber-600 focus-within:ring-2 focus-within:ring-amber-600/50'
       ]"
     >
-      <div :class="['flex-1 overflow-hidden text-ellipsis whitespace-nowrap', disabled ? 'text-gray-500' : 'text-gray-100']">
+      <div 
+        :class="[
+          'flex-1 overflow-hidden text-ellipsis whitespace-nowrap',
+          disabled 
+            ? 'text-gray-500'
+            : isDarkMode 
+              ? 'text-gray-100' 
+              : 'text-gray-900'
+        ]"
+      >
         {{ displayValue || placeholder || 'Select an option' }}
       </div>
-      <span :class="['text-xs text-gray-400 ml-2 transition-transform', isOpen ? 'rotate-180' : '']">▼</span>
+      <span 
+        :class="[
+          'text-xs ml-2 transition-transform',
+          isDarkMode ? 'text-gray-400' : 'text-gray-500',
+          isOpen ? 'rotate-180' : ''
+        ]"
+      >
+        ▼
+      </span>
     </div>
 
     <!-- Dropdown -->
-    <div v-if="isOpen" class="border border-gray-700 rounded-lg mt-1 bg-gray-800 p-1.5 max-h-[300px] overflow-y-auto shadow-xl absolute w-full z-[1000]">
+    <div 
+      v-if="isOpen" 
+      class="border rounded-lg mt-1 p-1.5 max-h-[300px] overflow-y-auto shadow-xl absolute w-full z-[1000]"
+      :class="isDarkMode 
+        ? 'border-gray-700 bg-gray-800' 
+        : 'border-gray-200 bg-white'"
+    >
       <!-- Breadcrumb navigation -->
-      <div v-if="breadcrumb.length" class="px-3 py-2 text-sm text-gray-400 border-b border-gray-700 mb-1.5">
+      <div 
+        v-if="breadcrumb.length" 
+        class="px-3 py-2 text-sm border-b mb-1.5"
+        :class="isDarkMode 
+          ? 'text-gray-400 border-gray-700' 
+          : 'text-gray-600 border-gray-200'"
+      >
         <span v-for="(name, i) in breadcrumb" :key="i">
           {{ name }}<span v-if="i < breadcrumb.length - 1"> > </span>
         </span>
       </div>
 
       <!-- Loading state -->
-      <div v-if="loading" class="flex items-center gap-2 p-4 justify-center text-gray-400">
-        <div class="w-4 h-4 border-2 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
+      <div 
+        v-if="loading" 
+        class="flex items-center gap-2 p-4 justify-center"
+        :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+      >
+        <div 
+          class="w-4 h-4 border-2 rounded-full animate-spin"
+          :class="isDarkMode 
+            ? 'border-gray-600 border-t-blue-500' 
+            : 'border-gray-300 border-t-amber-700'"
+        ></div>
         <span>Loading options...</span>
       </div>
 
@@ -38,41 +89,90 @@
           :key="option.id"
           @click.stop="handleOptionClick(option)"
           :class="[
-            'px-3 py-2.5 cursor-pointer rounded transition-colors text-gray-100',
-            option.id === selectedOption?.id ? 'bg-blue-600/20 text-blue-400 font-medium' : 'hover:bg-gray-700'
+            'px-3 py-2.5 cursor-pointer rounded transition-colors',
+            option.id === selectedOption?.id 
+              ? isDarkMode 
+                ? 'bg-blue-600/20 text-blue-400 font-medium' 
+                : 'bg-amber-100 text-amber-800 font-medium'
+              : isDarkMode
+                ? 'text-gray-100 hover:bg-gray-700'
+                : 'text-gray-900 hover:bg-gray-100'
           ]"
         >
           <span class="option-text">{{ option.name }}</span>
-          <span v-if="option.hasChildren === true" class="float-right text-gray-400">→</span>
+          <span 
+            v-if="option.hasChildren === true" 
+            class="float-right"
+            :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'"
+          >
+            →
+          </span>
         </li>
       </ul>
 
       <!-- No options -->
-      <div v-else class="p-4 text-center text-gray-400 italic">
+      <div 
+        v-else 
+        class="p-4 text-center italic"
+        :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'"
+      >
         No options available
       </div>
 
       <!-- Controls -->
-      <div v-if="navigationPath.length > 0 || selectedOption" class="mt-2 flex justify-center border-t border-gray-700 pt-2">
-        <button v-if="navigationPath.length > 0" type="button" class="px-3 py-1.5 rounded border border-gray-600 bg-gray-800 cursor-pointer text-xs transition-all duration-200 text-gray-300 hover:bg-gray-700 flex items-center gap-1" @click.stop="goBack">
+      <div 
+        v-if="navigationPath.length > 0 || selectedOption" 
+        class="mt-2 flex justify-center border-t pt-2"
+        :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+      >
+        <button 
+          v-if="navigationPath.length > 0" 
+          type="button" 
+          class="px-3 py-1.5 rounded border cursor-pointer text-xs transition-all duration-200 flex items-center gap-1"
+          :class="isDarkMode 
+            ? 'border-gray-600 bg-gray-800 text-gray-300 hover:bg-gray-700' 
+            : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'"
+          @click.stop="goBack"
+        >
           <i-mdi-chevron-left class="w-4 h-4" />
           Back
         </button>
-        <button v-if="selectedOption" type="button" class="px-3 py-1.5 rounded border border-red-600 bg-gray-800 cursor-pointer text-xs transition-all duration-200 text-red-400 hover:bg-red-600 hover:text-white ml-2 flex items-center gap-1" @click.stop="clearSelection">
+        <button 
+          v-if="selectedOption" 
+          type="button" 
+          class="px-3 py-1.5 rounded border border-red-600 cursor-pointer text-xs transition-all duration-200 text-red-400 hover:bg-red-600 hover:text-white ml-2 flex items-center gap-1"
+          :class="isDarkMode ? 'bg-gray-800' : 'bg-white'"
+          @click.stop="clearSelection"
+        >
           <i-mdi-close class="w-4 h-4" />
           Clear
         </button>
       </div>
     </div>
 
-    <div v-if="hint && !error" class="text-xs text-gray-400 mt-1">{{ hint }}</div>
-    <div v-if="error" class="text-xs text-red-400 mt-1">{{ error }}</div>
+    <div 
+      v-if="hint && !error" 
+      class="text-xs mt-1"
+      :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'"
+    >
+      {{ hint }}
+    </div>
+    <div 
+      v-if="error" 
+      class="text-xs mt-1"
+      :class="isDarkMode ? 'text-red-400' : 'text-red-600'"
+    >
+      {{ error }}
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, inject } from 'vue'
 import { useCategoryStore } from '@/stores/categories'
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 const props = defineProps({
   modelValue: [String, Number],
