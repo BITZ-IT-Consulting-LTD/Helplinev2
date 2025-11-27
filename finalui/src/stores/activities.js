@@ -1,6 +1,7 @@
 // src/stores/activitiesStore.js
 import { defineStore } from 'pinia'
 import axiosInstance from '@/utils/axios'
+import { useAuthStore } from './auth'
 
 export const useActivitiesStore = defineStore('activitiesStore', {
   state: () => ({
@@ -78,6 +79,14 @@ export const useActivitiesStore = defineStore('activitiesStore', {
   },
 
   actions: {
+    // Helper to get auth headers
+    getAuthHeaders() {
+      const authStore = useAuthStore()
+      return {
+        'Session-Id': authStore.sessionId
+      }
+    },
+
     // 1. List Activities
     async listActivities(params = {}) {
       this.loading = true
@@ -86,9 +95,7 @@ export const useActivitiesStore = defineStore('activitiesStore', {
       try {
         const { data } = await axiosInstance.get('api/activities/', {
           params,
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          }
+          headers: this.getAuthHeaders()
         })
         
         console.log('API Response:', data)
@@ -108,9 +115,7 @@ export const useActivitiesStore = defineStore('activitiesStore', {
     async viewActivity(id) {
       try {
         const { data } = await axiosInstance.get(`api/activities/${id}`, {
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          }
+          headers: this.getAuthHeaders()
         })
         return data
       } catch (err) {
@@ -123,9 +128,7 @@ export const useActivitiesStore = defineStore('activitiesStore', {
       try {
         const response = await axiosInstance.get('api/activities/', {
           params: { ...params, csv: 1 },
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          },
+          headers: this.getAuthHeaders(),
           responseType: 'blob'
         })
         return response.data
@@ -139,9 +142,7 @@ export const useActivitiesStore = defineStore('activitiesStore', {
       try {
         const { data } = await axiosInstance.get('api/activities/rpt', {
           params,
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          }
+          headers: this.getAuthHeaders()
         })
         return data
       } catch (err) {

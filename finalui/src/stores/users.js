@@ -1,6 +1,7 @@
 // src/stores/users.js
-import { defineStore } from 'pinia';
-import axiosInstance from '@/utils/axios';
+import { defineStore } from 'pinia'
+import axiosInstance from '@/utils/axios'
+import { useAuthStore } from './auth'
 
 export const useUserStore = defineStore('userStore', {
   state: () => ({
@@ -13,28 +14,34 @@ export const useUserStore = defineStore('userStore', {
   }),
 
   actions: {
+    // Helper to get auth headers
+    getAuthHeaders() {
+      const authStore = useAuthStore()
+      return {
+        'Session-Id': authStore.sessionId
+      }
+    },
+
     // 1. List Users
     async listUsers(params = {}) {
-      this.loading = true;
-      this.error = null;
+      this.loading = true
+      this.error = null
 
       try {
         const { data } = await axiosInstance.get('api/users/', {
           params,
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          }
-        });
+          headers: this.getAuthHeaders()
+        })
 
-        console.log('Fetched users:', data);
-        this.raw = data;
-        this.users = data.users || [];
-        this.users_k = data.users_k || {};
-        this.users_ctx = data.users_ctx || [];
+        console.log('Fetched users:', data)
+        this.raw = data
+        this.users = data.users || []
+        this.users_k = data.users_k || {}
+        this.users_ctx = data.users_ctx || []
       } catch (err) {
-        this.error = err.message || 'Failed to fetch users';
+        this.error = err.message || 'Failed to fetch users'
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
 
@@ -42,13 +49,11 @@ export const useUserStore = defineStore('userStore', {
     async viewUser(userId) {
       try {
         const { data } = await axiosInstance.get(`api/users/${userId}`, {
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          }
-        });
-        return data;
+          headers: this.getAuthHeaders()
+        })
+        return data
       } catch (err) {
-        throw new Error(err.message || 'Failed to fetch user details');
+        throw new Error(err.message || 'Failed to fetch user details')
       }
     },
 
@@ -57,13 +62,13 @@ export const useUserStore = defineStore('userStore', {
       try {
         const { data } = await axiosInstance.post('api/users', payload, {
           headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe',
+            ...this.getAuthHeaders(),
             'Content-Type': 'application/json'
           }
-        });
-        return data;
+        })
+        return data
       } catch (err) {
-        throw new Error(err.message || 'Failed to create user');
+        throw new Error(err.message || 'Failed to create user')
       }
     },
 
@@ -72,13 +77,13 @@ export const useUserStore = defineStore('userStore', {
       try {
         const { data } = await axiosInstance.post(`api/users/${userId}`, payload, {
           headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe',
+            ...this.getAuthHeaders(),
             'Content-Type': 'application/json'
           }
-        });
-        return data;
+        })
+        return data
       } catch (err) {
-        throw new Error(err.message || 'Failed to edit user');
+        throw new Error(err.message || 'Failed to edit user')
       }
     },
 
@@ -87,14 +92,12 @@ export const useUserStore = defineStore('userStore', {
       try {
         const response = await axiosInstance.get('api/users/', {
           params: { ...params, csv: 1 },
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          },
+          headers: this.getAuthHeaders(),
           responseType: 'blob'
-        });
-        return response.data;
+        })
+        return response.data
       } catch (err) {
-        throw new Error(err.message || 'Failed to download CSV');
+        throw new Error(err.message || 'Failed to download CSV')
       }
     },
 
@@ -103,14 +106,12 @@ export const useUserStore = defineStore('userStore', {
       try {
         const { data } = await axiosInstance.get('api/users/rpt', {
           params,
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          }
-        });
-        return data;
+          headers: this.getAuthHeaders()
+        })
+        return data
       } catch (err) {
-        throw new Error(err.message || 'Failed to fetch pivot report');
+        throw new Error(err.message || 'Failed to fetch pivot report')
       }
     }
   }
-});
+})

@@ -1,6 +1,7 @@
 // src/stores/qa.js
 import { defineStore } from 'pinia'
-import axiosInstance from '@/utils/axios';
+import axiosInstance from '@/utils/axios'
+import { useAuthStore } from './auth'
 
 export const useQAStore = defineStore('qa', {
   state: () => ({
@@ -12,13 +13,21 @@ export const useQAStore = defineStore('qa', {
   }),
 
   actions: {
+    // Helper to get auth headers
+    getAuthHeaders() {
+      const authStore = useAuthStore()
+      return {
+        'Session-Id': authStore.sessionId
+      }
+    },
+
     async listQA(params = {}) {
       try {
         this.loading = true
 
         const { data } = await axiosInstance.get('api/qas/', {
           params,
-          headers: { 'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe' },
+          headers: this.getAuthHeaders()
         })
 
         // Store QA data and key mappings
@@ -40,7 +49,7 @@ export const useQAStore = defineStore('qa', {
         
         const { data } = await axiosInstance.post('api/qas', payload, {
           headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe',
+            ...this.getAuthHeaders(),
             'Content-Type': 'application/json'
           }
         })

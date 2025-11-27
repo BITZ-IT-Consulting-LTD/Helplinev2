@@ -1,6 +1,7 @@
 // stores/messages.js
 import { defineStore } from 'pinia'
-import axiosInstance from '@/utils/axios';
+import axiosInstance from '@/utils/axios'
+import { useAuthStore } from './auth'
 
 export const useMessagesStore = defineStore('messages', {
   state: () => ({
@@ -16,11 +17,22 @@ export const useMessagesStore = defineStore('messages', {
   },
 
   actions: {
+    // Helper to get auth headers
+    getAuthHeaders() {
+      const authStore = useAuthStore()
+      return {
+        'Session-Id': authStore.sessionId
+      }
+    },
+
     async fetchAllMessages(params = {}) {
       this.loading = true
       this.error = null
       try {
-        const { data } = await axiosInstance.get('api/pmessages/', { params })
+        const { data } = await axiosInstance.get('api/pmessages/', {
+          params,
+          headers: this.getAuthHeaders()
+        })
         console.log('[ALL] Messages:', data)
         this.pmessages = data.pmessages || []
         this.pmessages_k = data.pmessages_k || {}
@@ -39,7 +51,8 @@ export const useMessagesStore = defineStore('messages', {
       this.error = null
       try {
         const { data } = await axiosInstance.get('api/pmessages/', {
-          params: { src }
+          params: { src },
+          headers: this.getAuthHeaders()
         })
         console.log(`[${src.toUpperCase()}] Messages:`, data)
         this.pmessages = data.pmessages || []
