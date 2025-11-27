@@ -42,7 +42,7 @@
               class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
               :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
             >
-              Created By
+              Actions
             </th>
           </tr>
         </thead>
@@ -54,10 +54,11 @@
           <tr
             v-for="user in store.users"
             :key="getValue(user, 'id')"
-            class="transition-all duration-200"
+            class="transition-all duration-200 cursor-pointer"
             :class="isDarkMode 
               ? 'hover:bg-gray-700/30' 
               : 'hover:bg-gray-50'"
+            @click="selectUser(user)"
           >
             <td 
               class="px-6 py-4 text-sm"
@@ -87,27 +88,51 @@
             >
               {{ formatDate(getValue(user, 'created_on')) }}
             </td>
-            <td 
-              class="px-6 py-4 text-sm"
-              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
-            >
-              {{ getValue(user, 'created_by') || 'N/A' }}
+            <td class="px-6 py-4 text-sm">
+              <button
+                type="button"
+                @click.stop="selectUser(user)"
+                class="px-3 py-1.5 rounded-lg transition-all duration-200 font-medium text-xs flex items-center gap-1.5"
+                :class="isDarkMode 
+                  ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                  : 'bg-amber-700 hover:bg-amber-800 text-white'"
+              >
+                <i-mdi-eye class="w-4 h-4" />
+                View
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
+
+    <!-- User Details Modal -->
+    <Transition name="modal">
+      <div 
+        v-if="selectedUser"
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        @click.self="selectedUser = null"
+      >
+        <UserDetailsModal
+          :user="selectedUser"
+          @close="handleClose"
+          @edit="handleEdit"
+        />
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script setup>
-import { inject } from 'vue'
+import { ref, inject } from 'vue'
 import { useUserStore } from "@/stores/users"
+import UserDetailsModal from './UserDetailsModal.vue'
+
+const emit = defineEmits(['refresh', 'edit'])
 
 const store = useUserStore()
-
-// Inject theme
 const isDarkMode = inject('isDarkMode')
+const selectedUser = ref(null)
 
 const roleMap = {
   "1": "Counsellor",
@@ -133,4 +158,32 @@ const formatDate = (timestamp) => {
   const ms = timestamp < 10000000000 ? timestamp * 1000 : timestamp * 3600 * 1000
   return new Date(ms).toLocaleString()
 }
+
+const selectUser = (user) => {
+  selectedUser.value = user
+}
+
+const handleEdit = (user) => {
+  selectedUser.value = null
+  emit('edit', user)
+}
+
+const handleClose = (shouldRefresh = false) => {
+  selectedUser.value = null
+  if (shouldRefresh) {
+    emit('refresh')
+  }
+}
 </script>
+
+<style scoped>
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+</style>

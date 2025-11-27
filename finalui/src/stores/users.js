@@ -11,6 +11,7 @@ export const useUserStore = defineStore('userStore', {
     raw: {},
     loading: false,
     error: null,
+    userCount: 0,
   }),
 
   actions: {
@@ -38,6 +39,7 @@ export const useUserStore = defineStore('userStore', {
         this.users = data.users || []
         this.users_k = data.users_k || {}
         this.users_ctx = data.users_ctx || []
+        this.userCount = this.users.length
       } catch (err) {
         this.error = err.message || 'Failed to fetch users'
       } finally {
@@ -87,7 +89,37 @@ export const useUserStore = defineStore('userStore', {
       }
     },
 
-    // 5. CSV Download
+    // 5. Reset Password
+    async resetPassword(userId) {
+      try {
+        this.loading = true
+        this.error = null
+
+        console.log('🔄 Resetting password for user:', userId)
+
+        const { data, status } = await axiosInstance.post(
+          `api/resetAuth/${userId}`,
+          { '.id': userId },
+          {
+            headers: {
+              ...this.getAuthHeaders(),
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+
+        console.log('✅ Password reset response:', data, 'Status:', status)
+        return { data, status }
+      } catch (err) {
+        console.error('❌ Error resetting password:', err)
+        this.error = err.message || 'Failed to reset password'
+        throw new Error(err.message || 'Failed to reset password')
+      } finally {
+        this.loading = false
+      }
+    },
+
+    // 6. CSV Download
     async downloadCSV(params = {}) {
       try {
         const response = await axiosInstance.get('api/users/', {
@@ -101,7 +133,7 @@ export const useUserStore = defineStore('userStore', {
       }
     },
 
-    // 6. Pivot Reports
+    // 7. Pivot Reports
     async getPivotReport(params = {}) {
       try {
         const { data } = await axiosInstance.get('api/users/rpt', {
