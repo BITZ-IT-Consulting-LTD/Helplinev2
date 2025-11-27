@@ -1,15 +1,38 @@
 <template>
-  <div class="p-6 space-y-6 bg-gray-900 min-h-screen">
+  <div 
+    class="p-6 space-y-6 min-h-screen"
+    :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'"
+  >
     
-    <h1 class="text-2xl font-bold text-gray-100 mb-2">System Users</h1>
-    <p class="text-gray-400 mb-6">Manage user accounts and permissions across the system</p>
+    <h1 
+      class="text-2xl font-bold mb-2"
+      :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+    >
+      System Users
+    </h1>
+    <p 
+      class="mb-6"
+      :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+    >
+      Manage user accounts and permissions across the system
+    </p>
 
     <!-- Filters -->
     <UsersFilter @update:filters="applyFilters" />
 
     <!-- Loading State -->
-    <div v-if="store.loading" class="flex justify-center items-center py-12 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
-      <div class="text-gray-400">Loading users...</div>
+    <div 
+      v-if="store.loading" 
+      class="flex justify-center items-center py-12 rounded-lg shadow-xl border"
+      :class="isDarkMode 
+        ? 'bg-gray-800 border-gray-700' 
+        : 'bg-white border-gray-200'"
+    >
+      <div 
+        :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+      >
+        Loading users...
+      </div>
     </div>
 
     <!-- Content when loaded -->
@@ -17,22 +40,28 @@
       <!-- View Toggle Buttons and Stats Row -->
       <div class="flex justify-between items-center mb-6">
         <!-- Total Count -->
-        <div class="flex items-center gap-2 text-gray-300">
-          <i-mdi-account-multiple class="w-5 h-5 text-blue-400" />
+        <div 
+          class="flex items-center gap-2"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          <i-mdi-account-multiple 
+            class="w-5 h-5"
+            :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          />
           <span class="text-sm">Total Users:</span>
-          <span class="text-lg font-bold text-blue-400">{{ store.userCount }}</span>
+          <span 
+            class="text-lg font-bold"
+            :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          >
+            {{ store.userCount }}
+          </span>
         </div>
 
         <!-- View Toggle Buttons -->
         <div class="flex gap-3">
           <button
             @click="view = 'timeline'"
-            :class="[
-              'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm',
-              view === 'timeline' 
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
-                : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
-            ]"
+            :class="getViewButtonClass(view === 'timeline')"
           >
             <i-mdi-timeline-text-outline class="w-5 h-5" />
             Timeline
@@ -40,12 +69,7 @@
 
           <button
             @click="view = 'table'"
-            :class="[
-              'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm',
-              view === 'table' 
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
-                : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
-            ]"
+            :class="getViewButtonClass(view === 'table')"
           >
             <i-mdi-table class="w-5 h-5" />
             Table
@@ -62,7 +86,10 @@
           <button
             @click="refreshUsers"
             :disabled="store.loading"
-            class="px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm bg-gray-800 text-gray-300 border border-gray-700 hover:border-green-500 hover:text-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm border disabled:opacity-50 disabled:cursor-not-allowed"
+            :class="isDarkMode 
+              ? 'bg-gray-800 text-gray-300 border-gray-700 hover:border-green-500 hover:text-green-400' 
+              : 'bg-white text-gray-700 border-gray-300 hover:border-green-600 hover:text-green-700'"
           >
             <i-mdi-refresh class="w-5 h-5" />
             Refresh
@@ -97,7 +124,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, inject } from 'vue'
 import { toast } from 'vue-sonner'
 import { useUserStore } from '@/stores/users'
 import UsersTable from '@/components/users/Table.vue'
@@ -109,6 +136,24 @@ const store = useUserStore()
 const view = ref('timeline')
 const showCreateModal = ref(false)
 const currentFilters = ref({})
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
+
+// Dynamic button class for view toggle
+const getViewButtonClass = (isActive) => {
+  const baseClasses = 'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm'
+  
+  if (isActive) {
+    return isDarkMode.value
+      ? `${baseClasses} bg-blue-600 text-white shadow-lg shadow-blue-900/50`
+      : `${baseClasses} bg-amber-700 text-white shadow-lg shadow-amber-900/30`
+  } else {
+    return isDarkMode.value
+      ? `${baseClasses} bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400`
+      : `${baseClasses} bg-white text-gray-700 border border-gray-300 hover:border-amber-600 hover:text-amber-700`
+  }
+}
 
 onMounted(async () => {
   try {

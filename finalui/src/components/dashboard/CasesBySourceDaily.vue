@@ -1,6 +1,9 @@
 <script setup>
-import { watch, ref, computed } from "vue";
-import { useCaseStore } from "@/stores/cases";
+import { watch, ref, computed, inject } from "vue"
+import { useCaseStore } from "@/stores/cases"
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 const props = defineProps({
   filters: {
@@ -9,8 +12,8 @@ const props = defineProps({
   }
 })
 
-const store = useCaseStore();
-const localData = ref([]);
+const store = useCaseStore()
+const localData = ref([])
 
 const fetchData = async () => {
   await store.listCases({
@@ -18,100 +21,137 @@ const fetchData = async () => {
     yaxis: "dt",
     metrics: "case_count",
     ...props.filters
-  });
-  // Copy data to local storage
-  localData.value = [...store.cases];
+  })
+  localData.value = [...store.cases]
 }
 
 // Convert unix timestamp to readable date
 const formatDate = (unixTimestamp) => {
-  const date = new Date(parseInt(unixTimestamp) * 1000);
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-};
+  const date = new Date(parseInt(unixTimestamp) * 1000)
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+// Theme-aware color mappings for sources
+const sourceColors = computed(() => {
+  if (isDarkMode.value) {
+    return {
+      'call': '#3B82F6',     // Blue
+      'ceemis': '#10B981',   // Green
+      'chat': '#F59E0B',     // Amber
+      'safepal': '#EF4444',  // Red
+      'walkin': '#8B5CF6',   // Purple
+      'webform': '#EC4899',  // Pink
+      'sms': '#14B8A6',      // Teal
+      'email': '#F97316',    // Orange
+      'social': '#6366F1'    // Indigo
+    }
+  } else {
+    return {
+      'call': '#B45309',     // Amber-700
+      'ceemis': '#059669',   // Emerald-600
+      'chat': '#EA580C',     // Orange-600
+      'safepal': '#DC2626',  // Red-600
+      'walkin': '#7C3AED',   // Violet-600
+      'webform': '#DB2777',  // Pink-600
+      'sms': '#0D9488',      // Teal-600
+      'email': '#CA8A04',    // Yellow-600
+      'social': '#0891B2'    // Cyan-600
+    }
+  }
+})
 
 // Process data for chart
 const chartData = computed(() => {
-  if (!localData.value || localData.value.length === 0) return { sources: [], dates: [], series: [] };
+  if (!localData.value || localData.value.length === 0) return { sources: [], dates: [], series: [] }
   
   // Group data by source and date
-  const sourceMap = {};
-  const datesSet = new Set();
+  const sourceMap = {}
+  const datesSet = new Set()
   
   localData.value.forEach(row => {
-    const source = row[0];
-    const timestamp = row[1];
-    const cases = parseInt(row[2]);
+    const source = row[0]
+    const timestamp = row[1]
+    const cases = parseInt(row[2])
     
     if (!sourceMap[source]) {
-      sourceMap[source] = {};
+      sourceMap[source] = {}
     }
-    sourceMap[source][timestamp] = cases;
-    datesSet.add(timestamp);
-  });
+    sourceMap[source][timestamp] = cases
+    datesSet.add(timestamp)
+  })
   
   // Sort dates
-  const sortedDates = Array.from(datesSet).sort((a, b) => parseInt(a) - parseInt(b));
+  const sortedDates = Array.from(datesSet).sort((a, b) => parseInt(a) - parseInt(b))
   
   // Create series data for each source
-  const colors = {
-    'call': '#3B82F6',
-    'ceemis': '#10B981',
-    'chat': '#F59E0B',
-    'safepal': '#EF4444',
-    'walkin': '#8B5CF6',
-    'webform': '#EC4899',
-    'sms': '#14B8A6',
-    'email': '#F97316',
-    'social': '#6366F1'
-  };
-  
   const series = Object.keys(sourceMap).map(source => ({
     name: source,
-    color: colors[source] || '#6B7280',
+    color: sourceColors.value[source] || (isDarkMode.value ? '#6B7280' : '#78716C'),
     data: sortedDates.map(date => sourceMap[source][date] || 0)
-  }));
+  }))
   
   return {
     sources: Object.keys(sourceMap),
     dates: sortedDates,
     series
-  };
-});
+  }
+})
 
 // Calculate total cases
 const totalCases = computed(() => {
-  if (!localData.value || localData.value.length === 0) return 0;
-  return localData.value.reduce((sum, row) => sum + parseInt(row[2]), 0);
-});
+  if (!localData.value || localData.value.length === 0) return 0
+  return localData.value.reduce((sum, row) => sum + parseInt(row[2]), 0)
+})
 
 // Get max value for scaling
 const maxValue = computed(() => {
-  if (chartData.value.series.length === 0) return 0;
-  return Math.max(...chartData.value.series.flatMap(s => s.data));
-});
+  if (chartData.value.series.length === 0) return 0
+  return Math.max(...chartData.value.series.flatMap(s => s.data))
+})
 
 // Watch filters and refetch when they change
 watch(() => props.filters, () => {
-  fetchData();
-}, { deep: true, immediate: true });
+  fetchData()
+}, { deep: true, immediate: true })
 </script>
 
 <template>
   <div>
     <div class="flex justify-between items-center mb-6">
-      <h2 class="font-semibold text-base text-gray-200">Cases by Source Per Day</h2>
-      <div class="text-3xl font-bold text-blue-400">
-        {{ totalCases }} <span class="text-sm text-gray-500 font-normal">Total</span>
+      <h2 
+        class="font-semibold text-base"
+        :class="isDarkMode ? 'text-gray-200' : 'text-gray-800'"
+      >
+        Cases by Source Per Day
+      </h2>
+      <div 
+        class="text-3xl font-bold"
+        :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+      >
+        {{ totalCases }} 
+        <span 
+          class="text-sm font-normal"
+          :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+        >
+          Total
+        </span>
       </div>
     </div>
 
-    <div v-if="!localData || localData.length === 0" class="text-gray-500 text-center py-12">
+    <div 
+      v-if="!localData || localData.length === 0" 
+      class="text-center py-12"
+      :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+    >
       No data available
     </div>
 
     <div v-else class="space-y-6">
       <!-- Bar Chart -->
-      <div class="w-full overflow-x-auto bg-gray-900/40 rounded-lg p-4">
+      <div 
+        class="w-full overflow-x-auto rounded-lg p-4"
+        :class="isDarkMode ? 'bg-gray-900/40' : 'bg-gray-50'"
+      >
         <svg :viewBox="`0 0 ${Math.max(600, chartData.dates.length * 100)} 280`" class="w-full" :style="`min-width: ${Math.max(600, chartData.dates.length * 100)}px;`">
           <!-- Grid lines -->
           <g v-for="i in 5" :key="'grid-' + i">
@@ -120,7 +160,7 @@ watch(() => props.filters, () => {
               :y1="40 + (i - 1) * 40"
               :x2="Math.max(600, chartData.dates.length * 100) - 40"
               :y2="40 + (i - 1) * 40"
-              stroke="#374151"
+              :stroke="isDarkMode ? '#374151' : '#E5E7EB'"
               stroke-width="1"
               opacity="0.5"
             />
@@ -129,7 +169,8 @@ watch(() => props.filters, () => {
               :x="50"
               :y="44 + (i - 1) * 40"
               text-anchor="end"
-              class="text-xs fill-gray-500"
+              :class="isDarkMode ? 'fill-gray-500' : 'fill-gray-500'"
+              class="text-xs"
               font-size="11"
             >
               {{ Math.round(maxValue - (i - 1) * (maxValue / 4)) }}
@@ -158,7 +199,8 @@ watch(() => props.filters, () => {
               :x="60 + dateIndex * 100 + 40"
               y="265"
               text-anchor="middle"
-              class="text-xs fill-gray-500"
+              :class="isDarkMode ? 'fill-gray-500' : 'fill-gray-500'"
+              class="text-xs"
               font-size="11"
             >
               {{ formatDate(date) }}
@@ -172,14 +214,25 @@ watch(() => props.filters, () => {
         <div 
           v-for="serie in chartData.series" 
           :key="serie.name"
-          class="flex items-center gap-2 bg-gray-900/40 px-3 py-1.5 rounded"
+          class="flex items-center gap-2 px-3 py-1.5 rounded"
+          :class="isDarkMode ? 'bg-gray-900/40' : 'bg-gray-50'"
         >
           <div 
             class="w-3 h-3 rounded-sm flex-shrink-0"
             :style="{ backgroundColor: serie.color }"
           ></div>
-          <span class="capitalize text-gray-300">{{ serie.name }}</span>
-          <span class="text-gray-500 font-medium">({{ serie.data.reduce((a, b) => a + b, 0) }})</span>
+          <span 
+            class="capitalize"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            {{ serie.name }}
+          </span>
+          <span 
+            class="font-medium"
+            :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+          >
+            ({{ serie.data.reduce((a, b) => a + b, 0) }})
+          </span>
         </div>
       </div>
     </div>

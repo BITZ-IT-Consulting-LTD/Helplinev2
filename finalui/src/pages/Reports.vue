@@ -1,26 +1,51 @@
 <template>
-  <div class="min-h-screen bg-gray-900 p-6">
+  <div 
+    class="min-h-screen p-6"
+    :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'"
+  >
     <div class="max-w-7xl mx-auto">
       <!-- Page Header -->
       <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-100 flex items-center gap-3">
-          <i-mdi-chart-bar class="w-8 h-8 text-blue-400" />
+        <h1 
+          class="text-3xl font-bold flex items-center gap-3"
+          :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+        >
+          <i-mdi-chart-bar 
+            class="w-8 h-8"
+            :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          />
           Reports & Analytics
         </h1>
-        <p class="mt-2 text-gray-400">Visualize and analyze your data</p>
+        <p 
+          class="mt-2"
+          :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+        >
+          Visualize and analyze your data
+        </p>
       </div>
 
       <!-- Controls Section -->
-      <div class="bg-gray-800 rounded-lg shadow-xl p-6 mb-6 border border-gray-700">
+      <div 
+        class="rounded-lg shadow-xl p-6 mb-6 border"
+        :class="isDarkMode 
+          ? 'bg-gray-800 border-gray-700' 
+          : 'bg-white border-gray-200'"
+      >
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- Endpoint Selection -->
           <div>
-            <label class="block text-sm font-semibold text-gray-300 mb-3">
+            <label 
+              class="block text-sm font-semibold mb-3"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
               Data Source
             </label>
             <select 
               v-model="selectedEndpoint" 
-              class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-sm font-medium text-gray-100 cursor-pointer transition-all duration-300 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-4 py-3 rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:border-transparent"
+              :class="isDarkMode 
+                ? 'bg-gray-700 border border-gray-600 text-gray-100 hover:border-blue-500 focus:ring-blue-500' 
+                : 'bg-gray-50 border border-gray-300 text-gray-900 hover:border-amber-600 focus:ring-amber-600'"
             >
               <option value="qa">QA Results</option>
               <option value="cases">Cases</option>
@@ -31,7 +56,10 @@
 
           <!-- X-Axis (Time Duration) -->
           <div>
-            <label class="block text-sm font-semibold text-gray-300 mb-3">
+            <label 
+              class="block text-sm font-semibold mb-3"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
               Time Period (X-Axis)
             </label>
             <div class="flex gap-2">
@@ -39,12 +67,7 @@
                 v-for="period in timePeriods"
                 :key="period.value"
                 @click="selectTimePeriod(period.value)"
-                :class="[
-                  'flex-1 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200',
-                  xAxis === period.value
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50'
-                    : 'bg-gray-700 text-gray-300 border border-gray-600 hover:border-blue-500 hover:text-blue-400'
-                ]"
+                :class="getTimePeriodButtonClass(xAxis === period.value)"
               >
                 {{ period.label }}
               </button>
@@ -54,24 +77,27 @@
 
         <!-- Y-Axis Filter Selection -->
         <div class="mt-6">
-          <label class="block text-sm font-semibold text-gray-300 mb-3">
+          <label 
+            class="block text-sm font-semibold mb-3"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
             Filter By (Y-Axis)
           </label>
           
           <!-- Available Options -->
-          <div class="bg-gray-900/60 rounded-lg p-4 mb-4 border border-gray-700">
+          <div 
+            class="rounded-lg p-4 mb-4 border"
+            :class="isDarkMode 
+              ? 'bg-gray-900/60 border-gray-700' 
+              : 'bg-gray-100 border-gray-200'"
+          >
             <div class="flex flex-wrap gap-2">
               <button
                 v-for="field in availableYAxisFields"
                 :key="field"
                 @click="toggleYAxis(field)"
                 :disabled="selectedYAxis.includes(field)"
-                :class="[
-                  'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
-                  selectedYAxis.includes(field)
-                    ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                    : 'bg-gray-800 text-gray-300 border border-gray-600 hover:border-blue-500 hover:bg-blue-900/20 cursor-pointer'
-                ]"
+                :class="getYAxisButtonClass(selectedYAxis.includes(field))"
               >
                 {{ formatFieldName(field) }}
               </button>
@@ -79,12 +105,26 @@
           </div>
 
           <!-- Selected Filters -->
-          <div v-if="selectedYAxis.length > 0" class="bg-blue-900/20 rounded-lg p-4 border border-blue-600/30">
+          <div 
+            v-if="selectedYAxis.length > 0" 
+            class="rounded-lg p-4 border"
+            :class="isDarkMode 
+              ? 'bg-blue-900/20 border-blue-600/30' 
+              : 'bg-amber-50 border-amber-300'"
+          >
             <div class="flex items-center justify-between mb-2">
-              <span class="text-sm font-semibold text-blue-400">Selected Filters</span>
+              <span 
+                class="text-sm font-semibold"
+                :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+              >
+                Selected Filters
+              </span>
               <button
                 @click="clearAllFilters"
-                class="text-xs text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1"
+                class="text-xs font-medium flex items-center gap-1"
+                :class="isDarkMode 
+                  ? 'text-blue-400 hover:text-blue-300' 
+                  : 'text-amber-700 hover:text-amber-600'"
               >
                 <i-mdi-close class="w-3 h-3" />
                 Clear All
@@ -94,12 +134,16 @@
               <div
                 v-for="(field, index) in selectedYAxis"
                 :key="field"
-                class="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium shadow-sm"
+                class="flex items-center gap-2 px-3 py-2 text-white rounded-lg text-sm font-medium shadow-sm"
+                :class="isDarkMode ? 'bg-blue-600' : 'bg-amber-700'"
               >
                 <span>{{ formatFieldName(field) }}</span>
                 <button
                   @click="removeYAxis(index)"
-                  class="hover:bg-blue-700 rounded p-0.5 transition-colors"
+                  class="rounded p-0.5 transition-colors"
+                  :class="isDarkMode 
+                    ? 'hover:bg-blue-700' 
+                    : 'hover:bg-amber-800'"
                 >
                   <i-mdi-close class="w-4 h-4" />
                 </button>
@@ -107,39 +151,96 @@
             </div>
           </div>
 
-          <p v-else class="text-sm text-gray-500 italic">No filters selected. Click on options above to add filters.</p>
+          <p 
+            v-else 
+            class="text-sm italic"
+            :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+          >
+            No filters selected. Click on options above to add filters.
+          </p>
         </div>
       </div>
 
       <!-- Graph Section -->
-      <div class="bg-gray-800 rounded-lg shadow-xl p-6 mb-6 border border-gray-700">
+      <div 
+        class="rounded-lg shadow-xl p-6 mb-6 border"
+        :class="isDarkMode 
+          ? 'bg-gray-800 border-gray-700' 
+          : 'bg-white border-gray-200'"
+      >
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-gray-100 flex items-center gap-2">
-            <i-mdi-chart-line class="w-6 h-6 text-blue-400" />
+          <h2 
+            class="text-2xl font-bold flex items-center gap-2"
+            :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+          >
+            <i-mdi-chart-line 
+              class="w-6 h-6"
+              :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+            />
             {{ formatFieldName(selectedEndpoint) }} Analytics
           </h2>
-          <div class="px-4 py-2 bg-blue-600/20 text-blue-400 rounded-lg text-sm font-medium border border-blue-600/30">
+          <div 
+            class="px-4 py-2 rounded-lg text-sm font-medium border"
+            :class="isDarkMode 
+              ? 'bg-blue-600/20 text-blue-400 border-blue-600/30' 
+              : 'bg-amber-100 text-amber-700 border-amber-300'"
+          >
             {{ formatFieldName(currentMetric) }}
           </div>
         </div>
 
-        <div v-if="loading" class="flex items-center justify-center h-96">
+        <div 
+          v-if="loading" 
+          class="flex items-center justify-center h-96"
+        >
           <div class="flex flex-col items-center gap-4">
-            <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-900/30 border-t-blue-500"></div>
-            <div class="text-gray-400 font-medium">Loading data...</div>
+            <div 
+              class="animate-spin rounded-full h-12 w-12 border-4"
+              :class="isDarkMode 
+                ? 'border-blue-900/30 border-t-blue-500' 
+                : 'border-amber-900/30 border-t-amber-600'"
+            ></div>
+            <div 
+              class="font-medium"
+              :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+            >
+              Loading data...
+            </div>
           </div>
         </div>
 
-        <div v-else-if="chartData.length === 0" class="flex items-center justify-center h-96">
+        <div 
+          v-else-if="chartData.length === 0" 
+          class="flex items-center justify-center h-96"
+        >
           <div class="text-center">
-            <i-mdi-chart-bar class="mx-auto h-16 w-16 text-gray-600" />
-            <p class="mt-4 text-gray-400 font-medium">No data available</p>
-            <p class="mt-2 text-sm text-gray-500">Select time period and filters to view analytics</p>
+            <i-mdi-chart-bar 
+              class="mx-auto h-16 w-16"
+              :class="isDarkMode ? 'text-gray-600' : 'text-gray-400'"
+            />
+            <p 
+              class="mt-4 font-medium"
+              :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+            >
+              No data available
+            </p>
+            <p 
+              class="mt-2 text-sm"
+              :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+            >
+              Select time period and filters to view analytics
+            </p>
           </div>
         </div>
 
         <!-- Bar Chart -->
-        <div v-else class="overflow-x-auto rounded-lg bg-gray-900/40 p-4 border border-gray-700">
+        <div 
+          v-else 
+          class="overflow-x-auto rounded-lg p-4 border"
+          :class="isDarkMode 
+            ? 'bg-gray-900/40 border-gray-700' 
+            : 'bg-gray-50 border-gray-200'"
+        >
           <div class="inline-block min-w-full">
             <svg :width="svgWidth" :height="svgHeight">
               <!-- Horizontal gridlines -->
@@ -149,7 +250,7 @@
                   :x2="svgWidth - margin.right"
                   :y1="yScale(tick)"
                   :y2="yScale(tick)"
-                  stroke="#374151"
+                  :stroke="isDarkMode ? '#374151' : '#d1d5db'"
                   stroke-width="1"
                   stroke-dasharray="4"
                 />
@@ -162,7 +263,7 @@
                   :y="yScale(bar.value)"
                   :width="barWidth"
                   :height="svgHeight - margin.bottom - yScale(bar.value)"
-                  fill="url(#barGradient)"
+                  :fill="isDarkMode ? 'url(#barGradientDark)' : 'url(#barGradientLight)'"
                   class="cursor-pointer hover:opacity-80 transition-opacity"
                   rx="4"
                 />
@@ -172,7 +273,8 @@
                   :y="yScale(bar.value) - 8"
                   text-anchor="middle"
                   font-size="11"
-                  class="fill-blue-400 font-semibold"
+                  font-weight="600"
+                  :class="isDarkMode ? 'fill-blue-400' : 'fill-amber-700'"
                 >
                   {{ bar.value }}
                 </text>
@@ -182,7 +284,8 @@
                   :y="svgHeight - margin.bottom + 20"
                   text-anchor="middle"
                   font-size="11"
-                  class="fill-gray-400 font-medium"
+                  font-weight="500"
+                  :class="isDarkMode ? 'fill-gray-400' : 'fill-gray-600'"
                 >
                   {{ bar.label }}
                 </text>
@@ -195,7 +298,8 @@
                   :y="yScale(tick) + 4"
                   text-anchor="end"
                   font-size="11"
-                  class="fill-gray-400 font-medium"
+                  font-weight="500"
+                  :class="isDarkMode ? 'fill-gray-400' : 'fill-gray-600'"
                 >
                   {{ tick }}
                 </text>
@@ -207,7 +311,7 @@
                 :x2="svgWidth - margin.right"
                 :y1="svgHeight - margin.bottom"
                 :y2="svgHeight - margin.bottom"
-                stroke="#6b7280"
+                :stroke="isDarkMode ? '#6b7280' : '#9ca3af'"
                 stroke-width="2"
               />
 
@@ -217,15 +321,21 @@
                 :x2="margin.left"
                 :y1="margin.top"
                 :y2="svgHeight - margin.bottom"
-                stroke="#6b7280"
+                :stroke="isDarkMode ? '#6b7280' : '#9ca3af'"
                 stroke-width="2"
               />
 
-              <!-- Gradient for bars -->
+              <!-- Gradients for bars -->
               <defs>
-                <linearGradient id="barGradient" x1="0" y1="1" x2="0" y2="0">
+                <!-- Dark mode gradient -->
+                <linearGradient id="barGradientDark" x1="0" y1="1" x2="0" y2="0">
                   <stop offset="0%" stop-color="#2563eb" />
                   <stop offset="100%" stop-color="#60a5fa" />
+                </linearGradient>
+                <!-- Light mode gradient -->
+                <linearGradient id="barGradientLight" x1="0" y1="1" x2="0" y2="0">
+                  <stop offset="0%" stop-color="#b45309" />
+                  <stop offset="100%" stop-color="#f59e0b" />
                 </linearGradient>
               </defs>
             </svg>
@@ -234,36 +344,86 @@
       </div>
 
       <!-- Table Section -->
-      <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
-        <h2 class="text-2xl font-bold text-gray-100 mb-6 flex items-center gap-2">
-          <i-mdi-table class="w-6 h-6 text-blue-400" />
+      <div 
+        class="rounded-lg shadow-xl p-6 border"
+        :class="isDarkMode 
+          ? 'bg-gray-800 border-gray-700' 
+          : 'bg-white border-gray-200'"
+      >
+        <h2 
+          class="text-2xl font-bold mb-6 flex items-center gap-2"
+          :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+        >
+          <i-mdi-table 
+            class="w-6 h-6"
+            :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          />
           Data Table
         </h2>
         
-        <div v-if="loading" class="flex items-center justify-center h-64">
+        <div 
+          v-if="loading" 
+          class="flex items-center justify-center h-64"
+        >
           <div class="flex flex-col items-center gap-4">
-            <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-900/30 border-t-blue-500"></div>
-            <div class="text-gray-400 font-medium">Loading data...</div>
+            <div 
+              class="animate-spin rounded-full h-12 w-12 border-4"
+              :class="isDarkMode 
+                ? 'border-blue-900/30 border-t-blue-500' 
+                : 'border-amber-900/30 border-t-amber-600'"
+            ></div>
+            <div 
+              class="font-medium"
+              :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+            >
+              Loading data...
+            </div>
           </div>
         </div>
 
-        <div v-else-if="tableData.length === 0" class="flex items-center justify-center h-64">
+        <div 
+          v-else-if="tableData.length === 0" 
+          class="flex items-center justify-center h-64"
+        >
           <div class="text-center">
-            <i-mdi-table class="mx-auto h-16 w-16 text-gray-600" />
-            <p class="mt-4 text-gray-400 font-medium">No data available</p>
-            <p class="mt-2 text-sm text-gray-500">Select time period and filters to view data</p>
+            <i-mdi-table 
+              class="mx-auto h-16 w-16"
+              :class="isDarkMode ? 'text-gray-600' : 'text-gray-400'"
+            />
+            <p 
+              class="mt-4 font-medium"
+              :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+            >
+              No data available
+            </p>
+            <p 
+              class="mt-2 text-sm"
+              :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+            >
+              Select time period and filters to view data
+            </p>
           </div>
         </div>
 
-        <div v-else class="overflow-x-auto rounded-lg border border-gray-700">
-          <table class="min-w-full divide-y divide-gray-700">
-            <thead class="bg-gray-900/60">
+        <div 
+          v-else 
+          class="overflow-x-auto rounded-lg border"
+          :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+        >
+          <table 
+            class="min-w-full divide-y"
+            :class="isDarkMode ? 'divide-gray-700' : 'divide-gray-200'"
+          >
+            <thead 
+              :class="isDarkMode ? 'bg-gray-900/60' : 'bg-gray-50'"
+            >
               <tr>
                 <!-- Dynamic filter columns -->
                 <th 
                   v-for="(filter, idx) in selectedYAxis" 
                   :key="'filter-' + idx"
-                  class="px-6 py-4 text-left text-xs font-bold text-gray-300 uppercase tracking-wider"
+                  class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider"
+                  :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
                 >
                   {{ formatFieldName(filter) }}
                 </th>
@@ -271,24 +431,49 @@
                 <th 
                   v-for="period in tableTimePeriods" 
                   :key="'period-' + period"
-                  class="px-6 py-4 text-center text-xs font-bold text-gray-300 uppercase tracking-wider bg-blue-900/20"
+                  class="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider"
+                  :class="isDarkMode 
+                    ? 'text-gray-300 bg-blue-900/20' 
+                    : 'text-gray-700 bg-amber-50'"
                 >
                   {{ period }}
                 </th>
-                <th class="px-6 py-4 text-center text-xs font-bold text-blue-400 uppercase tracking-wider bg-blue-900/30">
+                <th 
+                  class="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider"
+                  :class="isDarkMode 
+                    ? 'text-blue-400 bg-blue-900/30' 
+                    : 'text-amber-700 bg-amber-100'"
+                >
                   Total
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-gray-800 divide-y divide-gray-700">
-              <tr v-for="(row, rowIdx) in tableData" :key="'row-' + rowIdx" class="hover:bg-gray-700/30 transition-colors">
+            <tbody 
+              class="divide-y"
+              :class="isDarkMode 
+                ? 'bg-gray-800 divide-gray-700' 
+                : 'bg-white divide-gray-200'"
+            >
+              <tr 
+                v-for="(row, rowIdx) in tableData" 
+                :key="'row-' + rowIdx" 
+                class="transition-colors"
+                :class="isDarkMode 
+                  ? 'hover:bg-gray-700/30' 
+                  : 'hover:bg-gray-50'"
+              >
                 <!-- Filter value cells -->
                 <td 
                   v-for="(filter, filterIdx) in selectedYAxis" 
                   :key="'cell-filter-' + filterIdx"
-                  class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100"
+                  class="px-6 py-4 whitespace-nowrap text-sm font-medium"
                 >
-                  <span class="inline-flex items-center px-3 py-1 rounded-lg bg-gray-700 text-gray-300">
+                  <span 
+                    class="inline-flex items-center px-3 py-1 rounded-lg"
+                    :class="isDarkMode 
+                      ? 'bg-gray-700 text-gray-300' 
+                      : 'bg-gray-100 text-gray-700'"
+                  >
                     {{ row.filters[filterIdx] || '-' }}
                   </span>
                 </td>
@@ -296,31 +481,47 @@
                 <td 
                   v-for="(count, periodIdx) in row.counts" 
                   :key="'cell-count-' + periodIdx"
-                  class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-300 font-medium"
+                  class="px-6 py-4 whitespace-nowrap text-sm text-center font-medium"
+                  :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
                 >
                   {{ count }}
                 </td>
                 <!-- Total cell -->
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-bold text-blue-400 bg-blue-900/20">
+                <td 
+                  class="px-6 py-4 whitespace-nowrap text-sm text-center font-bold"
+                  :class="isDarkMode 
+                    ? 'text-blue-400 bg-blue-900/20' 
+                    : 'text-amber-700 bg-amber-50'"
+                >
                   {{ row.total }}
                 </td>
               </tr>
               <!-- Total row -->
-              <tr class="bg-gray-900/60 font-bold">
+              <tr 
+                class="font-bold"
+                :class="isDarkMode ? 'bg-gray-900/60' : 'bg-gray-100'"
+              >
                 <td 
                   :colspan="selectedYAxis.length"
-                  class="px-6 py-4 whitespace-nowrap text-sm text-gray-100 uppercase"
+                  class="px-6 py-4 whitespace-nowrap text-sm uppercase"
+                  :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
                 >
                   Total
                 </td>
                 <td 
                   v-for="(total, idx) in columnTotals" 
                   :key="'total-' + idx"
-                  class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-100"
+                  class="px-6 py-4 whitespace-nowrap text-sm text-center"
+                  :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
                 >
                   {{ total }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-blue-400 bg-blue-900/30">
+                <td 
+                  class="px-6 py-4 whitespace-nowrap text-sm text-center"
+                  :class="isDarkMode 
+                    ? 'text-blue-400 bg-blue-900/30' 
+                    : 'text-amber-700 bg-amber-100'"
+                >
                   {{ grandTotal }}
                 </td>
               </tr>
@@ -333,11 +534,44 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, inject } from 'vue'
 import { useCaseStore } from '@/stores/cases'
 import { useCallStore } from '@/stores/calls'
 import { useQAStore } from '@/stores/qas'
 import { useUserStore } from '@/stores/users'
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
+
+// Dynamic button class for time period selection
+const getTimePeriodButtonClass = (isActive) => {
+  const baseClasses = 'flex-1 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200'
+  
+  if (isActive) {
+    return isDarkMode.value
+      ? `${baseClasses} bg-blue-600 text-white shadow-lg shadow-blue-900/50`
+      : `${baseClasses} bg-amber-700 text-white shadow-lg shadow-amber-900/30`
+  } else {
+    return isDarkMode.value
+      ? `${baseClasses} bg-gray-700 text-gray-300 border border-gray-600 hover:border-blue-500 hover:text-blue-400`
+      : `${baseClasses} bg-gray-100 text-gray-700 border border-gray-300 hover:border-amber-600 hover:text-amber-700`
+  }
+}
+
+// Dynamic button class for Y-axis selection
+const getYAxisButtonClass = (isDisabled) => {
+  const baseClasses = 'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200'
+  
+  if (isDisabled) {
+    return isDarkMode.value
+      ? `${baseClasses} bg-gray-700 text-gray-500 cursor-not-allowed`
+      : `${baseClasses} bg-gray-200 text-gray-400 cursor-not-allowed`
+  } else {
+    return isDarkMode.value
+      ? `${baseClasses} bg-gray-800 text-gray-300 border border-gray-600 hover:border-blue-500 hover:bg-blue-900/20 cursor-pointer`
+      : `${baseClasses} bg-white text-gray-700 border border-gray-300 hover:border-amber-600 hover:bg-amber-50 cursor-pointer`
+  }
+}
 
 // Store instances
 const caseStore = useCaseStore()

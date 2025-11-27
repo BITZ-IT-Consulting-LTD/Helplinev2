@@ -1,31 +1,63 @@
 <template>
-  <div class="w-full bg-gray-800 rounded-lg p-4 shadow-xl border border-gray-700 mb-4">
+  <div 
+    class="w-full rounded-lg p-4 shadow-xl border mb-4"
+    :class="isDarkMode 
+      ? 'bg-gray-800 border-gray-700' 
+      : 'bg-white border-gray-200'"
+  >
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
       <!-- Date Range From -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1 text-gray-300">From Date</label>
+        <label 
+          class="text-sm font-medium mb-1"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          From Date
+        </label>
         <input 
           type="date" 
           v-model="filters.dateFrom" 
-          class="bg-gray-700 border border-gray-600 text-gray-100 rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:border-transparent"
+          :class="isDarkMode 
+            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
+            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
         />
       </div>
 
       <!-- Date Range To -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1 text-gray-300">To Date</label>
+        <label 
+          class="text-sm font-medium mb-1"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          To Date
+        </label>
         <input 
           type="date" 
           v-model="filters.dateTo" 
-          class="bg-gray-700 border border-gray-600 text-gray-100 rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:border-transparent"
+          :class="isDarkMode 
+            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
+            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
         />
       </div>
 
       <!-- Direction -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1 text-gray-300">Direction</label>
-        <select v-model="filters.direction" class="bg-gray-700 border border-gray-600 text-gray-100 rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        <label 
+          class="text-sm font-medium mb-1"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          Direction
+        </label>
+        <select 
+          v-model="filters.direction" 
+          class="rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:border-transparent"
+          :class="isDarkMode 
+            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
+            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
+        >
           <option value="">All</option>
           <option value="1">Inbound</option>
           <option value="2">Outbound</option>
@@ -34,30 +66,57 @@
 
       <!-- Phone Number -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1 text-gray-300">Phone</label>
+        <label 
+          class="text-sm font-medium mb-1"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          Phone
+        </label>
         <input 
           type="text" 
           v-model="filters.phone" 
           placeholder="Enter phone number"
-          class="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:border-transparent"
+          :class="isDarkMode 
+            ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+            : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
         />
       </div>
 
       <!-- Extension -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1 text-gray-300">Extension</label>
+        <label 
+          class="text-sm font-medium mb-1"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          Extension
+        </label>
         <input 
           type="text" 
           v-model="filters.extension" 
           placeholder="Enter extension"
-          class="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:border-transparent"
+          :class="isDarkMode 
+            ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+            : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
         />
       </div>
 
       <!-- Hangup Status -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1 text-gray-300">Hangup Status</label>
-        <select v-model="filters.hangupStatus" class="bg-gray-700 border border-gray-600 text-gray-100 rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        <label 
+          class="text-sm font-medium mb-1"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          Hangup Status
+        </label>
+        <select 
+          v-model="filters.hangupStatus" 
+          class="rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:border-transparent"
+          :class="isDarkMode 
+            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
+            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
+        >
           <option value="">All</option>
           <option value="answered">Answered</option>
           <option value="abandoned">Abandoned</option>
@@ -79,8 +138,19 @@
 
       <!-- Hangup By -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1 text-gray-300">Hangup By</label>
-        <select v-model="filters.hangupBy" class="bg-gray-700 border border-gray-600 text-gray-100 rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        <label 
+          class="text-sm font-medium mb-1"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          Hangup By
+        </label>
+        <select 
+          v-model="filters.hangupBy" 
+          class="rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:border-transparent"
+          :class="isDarkMode 
+            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
+            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
+        >
           <option value="">All</option>
           <option value="phone">Customer</option>
           <option value="usr">Extension</option>
@@ -91,14 +161,22 @@
 
       <!-- QA Score -->
       <div class="flex flex-col">
-        <label class="text-sm font-medium mb-1 text-gray-300">Min QA Score</label>
+        <label 
+          class="text-sm font-medium mb-1"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          Min QA Score
+        </label>
         <input 
           type="number" 
           v-model="filters.qaScore" 
           placeholder="0-100"
           min="0"
           max="100"
-          class="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:border-transparent"
+          :class="isDarkMode 
+            ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+            : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
         />
       </div>
 
@@ -108,7 +186,10 @@
     <div class="flex gap-2 mt-4">
       <button
         @click="applyFilters"
-        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all duration-200 font-medium shadow-lg flex items-center gap-2 active:scale-95"
+        class="text-white px-6 py-2 rounded-lg transition-all duration-200 font-medium shadow-lg flex items-center gap-2 active:scale-95"
+        :class="isDarkMode 
+          ? 'bg-blue-600 hover:bg-blue-700' 
+          : 'bg-amber-700 hover:bg-amber-800'"
       >
         <i-mdi-filter class="w-4 h-4" />
         Apply Filters
@@ -116,7 +197,10 @@
       
       <button
         @click="resetFilters"
-        class="bg-gray-700 text-gray-300 px-6 py-2 rounded-lg hover:bg-gray-600 transition-all duration-200 font-medium border border-gray-600 flex items-center gap-2"
+        class="px-6 py-2 rounded-lg transition-all duration-200 font-medium border flex items-center gap-2"
+        :class="isDarkMode 
+          ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
+          : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200'"
       >
         <i-mdi-refresh class="w-4 h-4" />
         Reset
@@ -126,7 +210,10 @@
 </template>
 
 <script setup>
-import { reactive, defineEmits } from 'vue'
+import { reactive, defineEmits, inject } from 'vue'
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 const emit = defineEmits(['update:filters'])
 

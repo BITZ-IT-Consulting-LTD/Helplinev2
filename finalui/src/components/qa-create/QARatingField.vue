@@ -1,12 +1,23 @@
 <template>
   <div :class="containerClass">
-    <label class="block text-sm font-semibold text-gray-100 mb-3">
+    <label 
+      class="block text-sm font-semibold mb-3"
+      :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+    >
       {{ label }}
       <span v-if="required" class="text-red-400 font-bold">*</span>
     </label>
     <div class="flex gap-3">
-      <label class="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border transition-all hover:shadow-md"
-        :class="model === '0' ? 'bg-red-600/20 border-red-600/50 shadow-md' : 'bg-gray-700 border-gray-600'">
+      <label 
+        class="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border transition-all hover:shadow-md"
+        :class="model === '0' 
+          ? (isDarkMode 
+            ? 'bg-red-600/20 border-red-600/50 shadow-md' 
+            : 'bg-red-100 border-red-300 shadow-md')
+          : (isDarkMode 
+            ? 'bg-gray-700 border-gray-600' 
+            : 'bg-white border-gray-300')"
+      >
         <input 
           type="radio" 
           :name="name"
@@ -14,12 +25,26 @@
           v-model="model"
           class="w-4 h-4 text-red-600 cursor-pointer" 
         />
-        <span class="text-sm font-semibold" :class="model === '0' ? 'text-red-400' : 'text-gray-300'">
+        <span 
+          class="text-sm font-semibold"
+          :class="model === '0' 
+            ? (isDarkMode ? 'text-red-400' : 'text-red-700')
+            : (isDarkMode ? 'text-gray-300' : 'text-gray-700')"
+        >
           No (0)
         </span>
       </label>
-      <label class="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border transition-all hover:shadow-md"
-        :class="model === '1' ? 'bg-amber-600/20 border-amber-600/50 shadow-md' : 'bg-gray-700 border-gray-600'">
+      
+      <label 
+        class="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border transition-all hover:shadow-md"
+        :class="model === '1' 
+          ? (isDarkMode 
+            ? 'bg-amber-600/20 border-amber-600/50 shadow-md' 
+            : 'bg-amber-100 border-amber-300 shadow-md')
+          : (isDarkMode 
+            ? 'bg-gray-700 border-gray-600' 
+            : 'bg-white border-gray-300')"
+      >
         <input 
           type="radio" 
           :name="name"
@@ -27,12 +52,26 @@
           v-model="model"
           class="w-4 h-4 text-amber-600 cursor-pointer" 
         />
-        <span class="text-sm font-semibold" :class="model === '1' ? 'text-amber-400' : 'text-gray-300'">
+        <span 
+          class="text-sm font-semibold"
+          :class="model === '1' 
+            ? (isDarkMode ? 'text-amber-400' : 'text-amber-700')
+            : (isDarkMode ? 'text-gray-300' : 'text-gray-700')"
+        >
           Partially (0.5)
         </span>
       </label>
-      <label class="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border transition-all hover:shadow-md"
-        :class="model === '2' ? 'bg-green-600/20 border-green-600/50 shadow-md' : 'bg-gray-700 border-gray-600'">
+      
+      <label 
+        class="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg border transition-all hover:shadow-md"
+        :class="model === '2' 
+          ? (isDarkMode 
+            ? 'bg-green-600/20 border-green-600/50 shadow-md' 
+            : 'bg-green-100 border-green-300 shadow-md')
+          : (isDarkMode 
+            ? 'bg-gray-700 border-gray-600' 
+            : 'bg-white border-gray-300')"
+      >
         <input 
           type="radio" 
           :name="name"
@@ -40,17 +79,30 @@
           v-model="model"
           class="w-4 h-4 text-green-600 cursor-pointer" 
         />
-        <span class="text-sm font-semibold" :class="model === '2' ? 'text-green-400' : 'text-gray-300'">
+        <span 
+          class="text-sm font-semibold"
+          :class="model === '2' 
+            ? (isDarkMode ? 'text-green-400' : 'text-green-700')
+            : (isDarkMode ? 'text-gray-300' : 'text-gray-700')"
+        >
           Yes (1)
         </span>
       </label>
     </div>
-    <p v-if="hint" class="text-xs text-gray-400 mt-2">{{ hint }}</p>
+    <p 
+      v-if="hint" 
+      class="text-xs mt-2"
+      :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+    >
+      {{ hint }}
+    </p>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
+
+const isDarkMode = inject('isDarkMode')
 
 const props = defineProps({
   modelValue: {
@@ -82,12 +134,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const model = computed({
-/*************  ✨ Windsurf Command ⭐  *************/
-  /**
-   * Convert the modelValue to a string for radio button binding.
-   * @returns {string} The modelValue as a string.
-   */
-/*******  7da69971-5053-47f4-848b-075fe7bee2ba  *******/  get: () => String(props.modelValue),
+  get: () => String(props.modelValue),
   set: (value) => emit('update:modelValue', String(value))
 })
 </script>

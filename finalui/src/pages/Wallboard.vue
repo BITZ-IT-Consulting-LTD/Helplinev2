@@ -1,12 +1,15 @@
 <template>
-  <div class="min-h-screen bg-gray-900 p-4">
+  <div 
+    class="min-h-screen p-4"
+    :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'"
+  >
     <!-- Header -->
     <WallboardHeader 
       :connection-status="connectionClass"
       :connection-label="connectionLabel"
       :last-update="lastUpdate"
       :is-dark-mode="isDarkMode"
-      @toggle-theme="toggleDarkMode"
+      @toggle-theme="toggleTheme"
     />
 
     <!-- Main Dashboard Grid -->
@@ -35,7 +38,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
+import { computed, onMounted, onBeforeUnmount, watch, provide } from 'vue'
 import axiosInstance from "@/utils/axios.js"
 
 // Import components
@@ -49,6 +52,7 @@ import { useWebSocketConnection } from '@/composables/useWebSocketConnection.js'
 import { useCounsellorData } from '@/composables/useCounsellorData'
 import { useApiData } from '@/composables/useApiData'
 import { formatDuration, getStatusText } from '@/utils/formatters'
+import { useTheme } from '@/composables/useTheme' // ✅ Import shared theme composable
 
 const WSHOST = 'wss://demo-openchs.bitz-itc.com:8384/ami/sync?c=-2'
 
@@ -61,7 +65,12 @@ export default {
     CallersTable
   },
   setup() {
-    const isDarkMode = ref(true)
+    // ✅ Use the SHARED theme composable instead of local state
+    const { isDarkMode, toggleTheme } = useTheme()
+    
+    // Provide theme to all child components
+    provide('isDarkMode', isDarkMode)
+    provide('toggleTheme', toggleTheme)
     
     // Use WebSocket composable
     const {
@@ -224,19 +233,8 @@ export default {
       return 'Disconnected'
     })
 
-    // Theme management
-    const toggleDarkMode = () => {
-      isDarkMode.value = !isDarkMode.value
-      localStorage.setItem('darkMode', isDarkMode.value.toString())
-    }
-
     // Lifecycle
     onMounted(() => {
-      const savedDarkMode = localStorage.getItem('darkMode')
-      if (savedDarkMode !== null) {
-        isDarkMode.value = savedDarkMode === 'true'
-      }
-      
       // Connect to WebSocket
       connect(channels, fetchCounsellorName, fetchCounsellorStats)
       
@@ -280,7 +278,7 @@ export default {
       lastUpdate,
       
       // Methods
-      toggleDarkMode
+      toggleTheme // ✅ Now uses shared toggleTheme
     }
   }
 }

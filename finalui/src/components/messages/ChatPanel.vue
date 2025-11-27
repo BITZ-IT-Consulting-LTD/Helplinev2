@@ -6,9 +6,19 @@
   ></div>
 
   <!-- Chat Panel Slide-out -->
-  <div class="fixed right-0 top-0 h-full w-full md:w-[500px] bg-gray-900 shadow-2xl z-50 flex flex-col border-l border-gray-700 animate-slide-in">
+  <div 
+    class="fixed right-0 top-0 h-full w-full md:w-[500px] shadow-2xl z-50 flex flex-col border-l animate-slide-in"
+    :class="isDarkMode 
+      ? 'bg-gray-900 border-gray-700' 
+      : 'bg-white border-gray-200'"
+  >
     <!-- Header -->
-    <div class="flex items-center justify-between p-4 border-b border-gray-700 bg-gray-800">
+    <div 
+      class="flex items-center justify-between p-4 border-b"
+      :class="isDarkMode 
+        ? 'bg-gray-800 border-gray-700' 
+        : 'bg-gray-50 border-gray-200'"
+    >
       <div class="flex items-center gap-3">
         <div
           class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm"
@@ -17,20 +27,39 @@
           {{ getContactName().charAt(0).toUpperCase() }}
         </div>
         <div>
-          <h3 class="font-semibold text-gray-100">{{ getContactName() }}</h3>
-          <p class="text-xs text-gray-400">{{ getPlatform() }}</p>
+          <h3 
+            class="font-semibold"
+            :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+          >
+            {{ getContactName() }}
+          </h3>
+          <p 
+            class="text-xs"
+            :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+          >
+            {{ getPlatform() }}
+          </p>
         </div>
       </div>
       <button 
         @click="$emit('close')"
-        class="p-2 hover:bg-gray-700 rounded-lg transition-all"
+        class="p-2 rounded-lg transition-all"
+        :class="isDarkMode 
+          ? 'hover:bg-gray-700' 
+          : 'hover:bg-gray-200'"
       >
-        <i-mdi-close class="w-6 h-6 text-gray-400" />
+        <i-mdi-close 
+          class="w-6 h-6"
+          :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+        />
       </button>
     </div>
 
     <!-- Message History -->
-    <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-900">
+    <div 
+      class="flex-1 overflow-y-auto p-4 space-y-4"
+      :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'"
+    >
       <!-- Received Message -->
       <div class="flex gap-3">
         <div
@@ -40,10 +69,25 @@
           {{ getContactName().charAt(0).toUpperCase() }}
         </div>
         <div class="flex-1">
-          <div class="bg-gray-800 rounded-lg rounded-tl-none p-3 border border-gray-700">
-            <p class="text-sm text-gray-200">{{ getMessageContent() }}</p>
+          <div 
+            class="rounded-lg rounded-tl-none p-3 border"
+            :class="isDarkMode 
+              ? 'bg-gray-800 border-gray-700' 
+              : 'bg-white border-gray-200'"
+          >
+            <p 
+              class="text-sm"
+              :class="isDarkMode ? 'text-gray-200' : 'text-gray-900'"
+            >
+              {{ getMessageContent() }}
+            </p>
           </div>
-          <p class="text-xs text-gray-500 mt-1">{{ getMessageTime() }}</p>
+          <p 
+            class="text-xs mt-1"
+            :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
+          >
+            {{ getMessageTime() }}
+          </p>
         </div>
       </div>
 
@@ -59,7 +103,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import { useMessagesStore } from '@/stores/messages'
 import MessageInput from './MessageInput.vue'
 
@@ -78,6 +122,9 @@ const emit = defineEmits(['close', 'sendMessage'])
 
 const messagesStore = useMessagesStore()
 const newMessage = ref(props.newMessage)
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 const getValue = (key) => {
   if (!props.selectedMessage || !messagesStore.pmessages_k?.[key]) return null
@@ -110,7 +157,9 @@ const getMessageTime = () => {
 }
 
 const getAvatarColor = (name) => {
-  const colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
+  const colors = isDarkMode.value 
+    ? ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
+    : ['#B45309', '#059669', '#DC2626', '#7C3AED', '#DB2777']
   const index = name?.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) || 0
   return colors[index % colors.length]
 }

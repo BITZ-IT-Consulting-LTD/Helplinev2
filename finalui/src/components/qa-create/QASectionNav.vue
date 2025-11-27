@@ -1,5 +1,10 @@
 <template>
-  <div class="bg-gray-800 rounded-lg shadow-xl p-4 border border-gray-700">
+  <div 
+    class="rounded-lg shadow-xl p-4 border"
+    :class="isDarkMode 
+      ? 'bg-gray-800 border-gray-700' 
+      : 'bg-white border-gray-200'"
+  >
     <div class="flex flex-wrap gap-2">
       <button
         v-for="(section, index) in sections"
@@ -8,8 +13,12 @@
         :class="[
           'px-4 py-3 rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2',
           activeSection === index 
-            ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50 transform scale-105' 
-            : 'bg-gray-700 text-gray-300 border border-gray-600 hover:border-blue-500 hover:text-blue-400'
+            ? (isDarkMode 
+              ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50 transform scale-105' 
+              : 'bg-amber-700 text-white shadow-lg shadow-amber-900/30 transform scale-105')
+            : (isDarkMode 
+              ? 'bg-gray-700 text-gray-300 border border-gray-600 hover:border-blue-500 hover:text-blue-400' 
+              : 'bg-white text-gray-700 border border-gray-300 hover:border-amber-600 hover:text-amber-700')
         ]"
       >
         <span>{{ section.name }}</span>
@@ -45,7 +54,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
+
+const isDarkMode = inject('isDarkMode')
 
 const props = defineProps({
   sections: {
@@ -68,7 +79,7 @@ const totalScore = computed(() => {
 
 const getScoreColor = (score) => {
   if (score >= 90) return 'bg-green-500 text-white'
-  if (score >= 75) return 'bg-blue-500 text-white'
+  if (score >= 75) return isDarkMode.value ? 'bg-blue-500 text-white' : 'bg-amber-500 text-white'
   if (score >= 50) return 'bg-amber-500 text-white'
   return 'bg-red-500 text-white'
 }

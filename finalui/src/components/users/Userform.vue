@@ -1,8 +1,23 @@
 <template>
-  <div class="max-w-3xl w-full bg-gray-800 rounded-lg shadow-2xl border border-gray-700 max-h-[90vh] flex flex-col">
+  <div 
+    class="max-w-3xl w-full rounded-lg shadow-2xl border max-h-[90vh] flex flex-col"
+    :class="isDarkMode 
+      ? 'bg-gray-800 border-gray-700' 
+      : 'bg-white border-gray-200'"
+  >
     <!-- Header -->
-    <div class="px-8 py-5 border-b border-gray-700">
-      <h2 class="text-xl font-bold text-gray-100">Create User</h2>
+    <div 
+      class="px-8 py-5 border-b"
+      :class="isDarkMode 
+        ? 'border-gray-700' 
+        : 'border-gray-200'"
+    >
+      <h2 
+        class="text-xl font-bold"
+        :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+      >
+        Create User
+      </h2>
     </div>
 
     <!-- Scrollable Form Content -->
@@ -11,44 +26,76 @@
 
         <!-- Username -->
         <div>
-          <label class="block text-gray-300 mb-2 text-sm font-medium">Username *</label>
+          <label 
+            class="block mb-2 text-sm font-medium"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            Username *
+          </label>
           <input 
             v-model="form.usn" 
             type="text" 
             required 
-            class="w-full bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
+            :class="isDarkMode 
+              ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+              : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
           />
         </div>
 
         <!-- First Name -->
         <div>
-          <label class="block text-gray-300 mb-2 text-sm font-medium">First Name *</label>
+          <label 
+            class="block mb-2 text-sm font-medium"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            First Name *
+          </label>
           <input 
             v-model="form.fname" 
             type="text" 
             required 
-            class="w-full bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
+            :class="isDarkMode 
+              ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+              : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
           />
         </div>
 
         <!-- Last Name -->
         <div>
-          <label class="block text-gray-300 mb-2 text-sm font-medium">Last Name *</label>
+          <label 
+            class="block mb-2 text-sm font-medium"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            Last Name *
+          </label>
           <input 
             v-model="form.lname" 
             type="text" 
             required 
-            class="w-full bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
+            :class="isDarkMode 
+              ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+              : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
           />
         </div>
 
         <!-- Role (Dropdown) -->
         <div>
-          <label class="block text-gray-300 mb-2 text-sm font-medium">Role *</label>
+          <label 
+            class="block mb-2 text-sm font-medium"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            Role *
+          </label>
           <select 
             v-model="form.role" 
             required 
-            class="w-full bg-gray-700 border border-gray-600 text-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full rounded-lg px-4 py-3 focus:outline-none focus:ring-2"
+            :class="isDarkMode 
+              ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
+              : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
           >
             <option disabled value="">Select Role</option>
             <option v-for="r in roles" :key="r.id" :value="r.id">
@@ -59,37 +106,73 @@
 
         <!-- Phone -->
         <div>
-          <label class="block text-gray-300 mb-2 text-sm font-medium">Phone</label>
+          <label 
+            class="block mb-2 text-sm font-medium"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            Phone
+          </label>
           <input 
             v-model="form.phone" 
             type="text" 
-            class="w-full bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
+            :class="isDarkMode 
+              ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+              : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
           />
         </div>
 
         <!-- Email -->
         <div>
-          <label class="block text-gray-300 mb-2 text-sm font-medium">Email</label>
+          <label 
+            class="block mb-2 text-sm font-medium"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            Email
+          </label>
           <input 
             v-model="form.email" 
             type="email" 
-            class="w-full bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
+            :class="isDarkMode 
+              ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+              : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
           />
         </div>
 
         <!-- Is Active -->
         <div class="flex items-center gap-2 pt-2">
-          <input type="checkbox" v-model="isActive" class="h-4 w-4 rounded border-gray-600 bg-gray-700 text-blue-600 focus:ring-blue-500" />
-          <label class="text-gray-300 text-sm">Active User</label>
+          <input 
+            type="checkbox" 
+            v-model="isActive" 
+            class="h-4 w-4 rounded text-blue-600 focus:ring-blue-500"
+            :class="isDarkMode 
+              ? 'border-gray-600 bg-gray-700' 
+              : 'border-gray-300 bg-white'"
+          />
+          <label 
+            class="text-sm"
+            :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+          >
+            Active User
+          </label>
         </div>
       </form>
     </div>
 
     <!-- Footer Buttons -->
-    <div class="px-8 py-5 border-t border-gray-700 flex gap-3">
+    <div 
+      class="px-8 py-5 border-t flex gap-3"
+      :class="isDarkMode 
+        ? 'border-gray-700' 
+        : 'border-gray-200'"
+    >
       <button
         @click="submitForm"
-        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-all duration-200 font-medium flex items-center justify-center gap-2"
+        class="flex-1 text-white py-3 rounded-lg transition-all duration-200 font-medium flex items-center justify-center gap-2"
+        :class="isDarkMode 
+          ? 'bg-blue-600 hover:bg-blue-700' 
+          : 'bg-amber-700 hover:bg-amber-800'"
       >
         <i-mdi-content-save class="w-5 h-5" />
         Save User
@@ -98,7 +181,10 @@
       <button
         type="button"
         @click="emit('cancel')"
-        class="px-8 bg-gray-700 hover:bg-gray-600 text-gray-300 py-3 rounded-lg transition-all duration-200 font-medium border border-gray-600"
+        class="px-8 py-3 rounded-lg transition-all duration-200 font-medium border"
+        :class="isDarkMode 
+          ? 'bg-gray-700 hover:bg-gray-600 text-gray-300 border-gray-600' 
+          : 'bg-gray-200 hover:bg-gray-300 text-gray-700 border-gray-300'"
       >
         Cancel
       </button>
@@ -108,11 +194,14 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
-import { useUserStore } from '@/stores/users';
+import { reactive, ref, inject } from 'vue'
+import { useUserStore } from '@/stores/users'
 
-const emit = defineEmits(["saved", "cancel"]);
-const store = useUserStore();
+const emit = defineEmits(["saved", "cancel"])
+const store = useUserStore()
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 const roles = [
   { id: "1", name: "Counsellor" },
@@ -122,7 +211,7 @@ const roles = [
   { id: "5", name: "Partner" },
   { id: "6", name: "Media Account" },
   { id: "99", name: "Administrator" },
-];
+]
 
 const form = reactive({
   usn: "",
@@ -131,17 +220,17 @@ const form = reactive({
   role: "",
   phone: "",
   email: ""
-});
+})
 
-const isActive = ref(true);
+const isActive = ref(true)
 
 const submitForm = async () => {
   const payload = {
     ...form,
     is_active: isActive.value ? 1 : 0,
-  };
+  }
 
-  await store.createUser(payload);
-  emit("saved");
-};
+  await store.createUser(payload)
+  emit("saved")
+}
 </script>

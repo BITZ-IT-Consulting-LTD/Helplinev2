@@ -1,16 +1,27 @@
 <template>
-  <div class="p-4 border-t border-gray-700 bg-gray-800">
+  <div 
+    class="p-4 border-t"
+    :class="isDarkMode 
+      ? 'border-gray-700 bg-gray-800' 
+      : 'border-gray-200 bg-white'"
+  >
     <div class="flex gap-3">
       <textarea
         v-model="newMessageLocal"
         rows="2"
         placeholder="Type your message..."
-        class="flex-1 bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-400 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm"
+        class="flex-1 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent resize-none text-sm"
+        :class="isDarkMode 
+          ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-400 focus:ring-blue-500' 
+          : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
         @keydown.enter.exact.prevent="sendMessage"
       />
       <button 
         @click="sendMessage"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-lg transition-all duration-200 shadow-lg font-medium flex items-center gap-2 active:scale-95"
+        class="text-white px-6 rounded-lg transition-all duration-200 shadow-lg font-medium flex items-center gap-2 active:scale-95"
+        :class="isDarkMode 
+          ? 'bg-blue-600 hover:bg-blue-700' 
+          : 'bg-amber-700 hover:bg-amber-800'"
       >
         <i-mdi-send class="w-5 h-5" />
         Send
@@ -20,7 +31,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue"
+import { ref, watch, inject } from "vue"
 import { toast } from 'vue-sonner'
 
 const props = defineProps({
@@ -28,6 +39,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue', 'send-message'])
+
+// Inject theme
+const isDarkMode = inject('isDarkMode')
 
 const newMessageLocal = ref(props.modelValue || "")
 

@@ -1,6 +1,9 @@
 <template>
   <div :class="containerClass">
-    <label class="block text-sm font-semibold text-gray-100 mb-2">
+    <label 
+      class="block text-sm font-semibold mb-2"
+      :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+    >
       {{ label }}
       <span v-if="required" class="text-red-400 font-bold">*</span>
     </label>
@@ -11,12 +14,26 @@
       :disabled="disabled"
       :maxlength="maxlength"
       :required="required"
-      class="px-4 py-3 border border-gray-600 rounded-lg text-sm bg-gray-700 text-gray-100 placeholder-gray-500 w-full focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all resize-y disabled:bg-gray-800 disabled:cursor-not-allowed"
+      class="px-4 py-3 border rounded-lg text-sm w-full focus:outline-none focus:ring-2 transition-all resize-y disabled:cursor-not-allowed"
+      :class="isDarkMode 
+        ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-500 focus:border-blue-500 focus:ring-blue-500/50 disabled:bg-gray-800' 
+        : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:border-amber-600 focus:ring-amber-600/50 disabled:bg-gray-200'"
     ></textarea>
     <div v-if="hint || (maxlength && showCharCount)" class="flex justify-between items-center mt-2">
-      <p v-if="hint" class="text-xs text-gray-400">{{ hint }}</p>
-      <p v-if="maxlength && showCharCount" class="text-xs font-semibold"
-        :class="model?.length > maxlength * 0.9 ? 'text-red-400' : 'text-gray-400'">
+      <p 
+        v-if="hint" 
+        class="text-xs"
+        :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+      >
+        {{ hint }}
+      </p>
+      <p 
+        v-if="maxlength && showCharCount" 
+        class="text-xs font-semibold"
+        :class="model?.length > maxlength * 0.9 
+          ? 'text-red-400' 
+          : (isDarkMode ? 'text-gray-400' : 'text-gray-600')"
+      >
         {{ model?.length || 0 }} / {{ maxlength }}
       </p>
     </div>
@@ -24,7 +41,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
+
+const isDarkMode = inject('isDarkMode')
 
 const props = defineProps({
   modelValue: {

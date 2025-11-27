@@ -1,15 +1,38 @@
 <template>
-  <div class="p-6 space-y-6 bg-gray-900 min-h-screen">
+  <div 
+    class="p-6 space-y-6 min-h-screen"
+    :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'"
+  >
     
-    <h1 class="text-2xl font-bold text-gray-100 mb-2">Call History</h1>
-    <p class="text-gray-400 mb-6">Track and analyze all incoming and outgoing call records</p>
+    <h1 
+      class="text-2xl font-bold mb-2"
+      :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+    >
+      Call History
+    </h1>
+    <p 
+      class="mb-6"
+      :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+    >
+      Track and analyze all incoming and outgoing call records
+    </p>
 
     <!-- Filters -->
     <CallsFilter @update:filters="applyFilters" />
 
     <!-- Loading State -->
-    <div v-if="callsStore.loading" class="flex justify-center items-center py-12 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
-      <div class="text-gray-400">Loading calls...</div>
+    <div 
+      v-if="callsStore.loading" 
+      class="flex justify-center items-center py-12 rounded-lg shadow-xl border"
+      :class="isDarkMode 
+        ? 'bg-gray-800 border-gray-700' 
+        : 'bg-white border-gray-200'"
+    >
+      <div 
+        :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+      >
+        Loading calls...
+      </div>
     </div>
 
     <!-- Content when loaded -->
@@ -17,22 +40,28 @@
       <!-- View Toggle Buttons and Stats Row -->
       <div class="flex justify-between items-center mb-6">
         <!-- Total Count -->
-        <div class="flex items-center gap-2 text-gray-300">
-          <i-mdi-phone-outline class="w-5 h-5 text-blue-400" />
+        <div 
+          class="flex items-center gap-2"
+          :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+        >
+          <i-mdi-phone-outline 
+            class="w-5 h-5"
+            :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          />
           <span class="text-sm">Total Calls:</span>
-          <span class="text-lg font-bold text-blue-400">{{ callsStore.callCount }}</span>
+          <span 
+            class="text-lg font-bold"
+            :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          >
+            {{ callsStore.callCount }}
+          </span>
         </div>
 
         <!-- View Toggle Buttons -->
         <div class="flex gap-3">
           <button
             @click="activeView = 'timeline'"
-            :class="[
-              'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm',
-              activeView === 'timeline' 
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
-                : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
-            ]"
+            :class="getViewButtonClass(activeView === 'timeline')"
           >
             <i-mdi-timeline-text-outline class="w-5 h-5" />
             Timeline
@@ -40,12 +69,7 @@
 
           <button
             @click="activeView = 'table'"
-            :class="[
-              'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm',
-              activeView === 'table' 
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
-                : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
-            ]"
+            :class="getViewButtonClass(activeView === 'table')"
           >
             <i-mdi-table class="w-5 h-5" />
             Table
@@ -53,12 +77,7 @@
 
           <button
             @click="activeView = 'sip'"
-            :class="[
-              'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm',
-              activeView === 'sip' 
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' 
-                : 'bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400'
-            ]"
+            :class="getViewButtonClass(activeView === 'sip')"
           >
             <i-mdi-phone-settings class="w-5 h-5" />
             SIP Agent
@@ -67,7 +86,12 @@
           <button
             @click="refreshCalls"
             :disabled="callsStore.loading"
-            class="px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm bg-gray-800 text-gray-300 border border-gray-700 hover:border-green-500 hover:text-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
+            :class="[
+              'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm border disabled:opacity-50 disabled:cursor-not-allowed',
+              isDarkMode
+                ? 'bg-gray-800 text-gray-300 border-gray-700 hover:border-green-500 hover:text-green-400'
+                : 'bg-white text-gray-700 border-gray-300 hover:border-green-600 hover:text-green-600'
+            ]"
           >
             <i-mdi-refresh class="w-5 h-5" />
             Refresh
@@ -106,7 +130,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue"
+import { ref, computed, onMounted, inject } from "vue"
 import { useRouter } from "vue-router"
 import { toast } from 'vue-sonner'
 import Timeline from "@/components/calls/Timeline.vue"
@@ -115,11 +139,29 @@ import CallsFilter from "@/components/calls/CallsFilter.vue"
 import SipAgentView from "@/components/calls/SipAgentView.vue"
 import { useCallStore } from "@/stores/calls"
 
+// Inject theme
+const isDarkMode = inject('isDarkMode')
+
 const router = useRouter()
 const callsStore = useCallStore()
 const activeView = ref("timeline")
 const selectedCallId = ref(null)
 const currentFilters = ref({})
+
+// Dynamic button class based on active state
+const getViewButtonClass = (isActive) => {
+  const baseClasses = 'px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm'
+  
+  if (isActive) {
+    return isDarkMode.value
+      ? `${baseClasses} bg-blue-600 text-white shadow-lg shadow-blue-900/50`
+      : `${baseClasses} bg-amber-700 text-white shadow-lg shadow-amber-900/30`
+  } else {
+    return isDarkMode.value
+      ? `${baseClasses} bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400`
+      : `${baseClasses} bg-white text-gray-700 border border-gray-300 hover:border-amber-600 hover:text-amber-700`
+  }
+}
 
 // Fetch calls on mount
 onMounted(async () => {
