@@ -24,7 +24,7 @@
         class="text-lg font-semibold"
         :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
       >
-        Case #{{ getValue(caseItem, 'id') }}
+        Case {{ getValue(caseItem, 'id') }}
       </h3>
       <p 
         class="text-sm mt-1"
