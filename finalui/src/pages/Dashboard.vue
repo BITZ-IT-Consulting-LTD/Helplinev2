@@ -3,26 +3,31 @@
     class="p-6 space-y-6 min-h-screen"
     :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'"
   >
-
-    <h1 
-      class="text-2xl font-bold mb-2"
-      :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
-    >
-      Dashboard
-    </h1>
-    <p 
-      class="mb-6"
-      :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
-    >
-      Overview of case analytics and key performance metrics
-    </p>
+    <!-- Page Header -->
+    <div class="mb-6">
+      <h1 
+        class="text-3xl font-bold flex items-center gap-3"
+        :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+      >
+        <i-mdi-view-dashboard-outline 
+          class="w-8 h-8"
+          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+        />
+        Dashboard
+      </h1>
+      <p 
+        class="mt-2"
+        :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+      >
+        Overview of case analytics and key performance metrics
+      </p>
+    </div>
 
     <!-- 🔥 Shared Filters Bar -->
     <CasesFilters @update:filters="applyFilters" />
 
     <!-- Grid for the analytics blocks -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
       <!-- Case Categories -->
       <div 
         class="shadow-xl rounded-lg p-4 border"
@@ -62,7 +67,6 @@
       >
         <CaseStatusPriority :filters="filters" />
       </div>
-
     </div>
   </div>
 </template>

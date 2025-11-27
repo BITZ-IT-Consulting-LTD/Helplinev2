@@ -1,6 +1,7 @@
 // src/stores/reporters.js
-import { defineStore } from 'pinia';
-import axiosInstance from '@/utils/axios';
+import { defineStore } from 'pinia'
+import axiosInstance from '@/utils/axios'
+import { useAuthStore } from './auth'
 
 export const useReporterStore = defineStore('reporterStore', {
   state: () => ({
@@ -13,28 +14,34 @@ export const useReporterStore = defineStore('reporterStore', {
   }),
 
   actions: {
+    // Helper to get auth headers
+    getAuthHeaders() {
+      const authStore = useAuthStore()
+      return {
+        'Session-Id': authStore.sessionId
+      }
+    },
+
     // 1. List Reporters
     async listReporters(params = {}) {
-      this.loading = true;
-      this.error = null;
+      this.loading = true
+      this.error = null
 
       try {
         const { data } = await axiosInstance.get('api/reporters/', {
           params,
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          }
-        });
+          headers: this.getAuthHeaders()
+        })
 
-        console.log('Fetched reporters:', data);
-        this.raw = data;
-        this.reporters = data.reporters || [];
-        this.reporters_k = data.reporters_k || {};
-        this.reporters_ctx = data.reporters_ctx || [];
+        console.log('Fetched reporters:', data)
+        this.raw = data
+        this.reporters = data.reporters || []
+        this.reporters_k = data.reporters_k || {}
+        this.reporters_ctx = data.reporters_ctx || []
       } catch (err) {
-        this.error = err.message || 'Failed to fetch reporters';
+        this.error = err.message || 'Failed to fetch reporters'
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
 
@@ -42,13 +49,11 @@ export const useReporterStore = defineStore('reporterStore', {
     async viewReporter(reporterId) {
       try {
         const { data } = await axiosInstance.get(`api/reporters/${reporterId}`, {
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          }
-        });
-        return data;
+          headers: this.getAuthHeaders()
+        })
+        return data
       } catch (err) {
-        throw new Error(err.message || 'Failed to fetch reporter details');
+        throw new Error(err.message || 'Failed to fetch reporter details')
       }
     },
 
@@ -57,13 +62,13 @@ export const useReporterStore = defineStore('reporterStore', {
       try {
         const { data } = await axiosInstance.post('api/reporters', payload, {
           headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe',
+            ...this.getAuthHeaders(),
             'Content-Type': 'application/json'
           }
-        });
-        return data;
+        })
+        return data
       } catch (err) {
-        throw new Error(err.message || 'Failed to create reporter');
+        throw new Error(err.message || 'Failed to create reporter')
       }
     },
 
@@ -72,13 +77,13 @@ export const useReporterStore = defineStore('reporterStore', {
       try {
         const { data } = await axiosInstance.post(`api/reporters/${reporterId}`, payload, {
           headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe',
+            ...this.getAuthHeaders(),
             'Content-Type': 'application/json'
           }
-        });
-        return data;
+        })
+        return data
       } catch (err) {
-        throw new Error(err.message || 'Failed to edit reporter');
+        throw new Error(err.message || 'Failed to edit reporter')
       }
     },
 
@@ -87,14 +92,12 @@ export const useReporterStore = defineStore('reporterStore', {
       try {
         const response = await axiosInstance.get('api/reporters/', {
           params: { ...params, csv: 1 },
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          },
+          headers: this.getAuthHeaders(),
           responseType: 'blob'
-        });
-        return response.data;
+        })
+        return response.data
       } catch (err) {
-        throw new Error(err.message || 'Failed to download CSV');
+        throw new Error(err.message || 'Failed to download CSV')
       }
     },
 
@@ -103,14 +106,12 @@ export const useReporterStore = defineStore('reporterStore', {
       try {
         const { data } = await axiosInstance.get('api/reporters/rpt', {
           params,
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          }
-        });
-        return data;
+          headers: this.getAuthHeaders()
+        })
+        return data
       } catch (err) {
-        throw new Error(err.message || 'Failed to fetch pivot report');
+        throw new Error(err.message || 'Failed to fetch pivot report')
       }
     }
   }
-});
+})

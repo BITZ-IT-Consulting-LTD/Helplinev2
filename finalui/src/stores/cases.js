@@ -1,5 +1,7 @@
+// src/stores/caseStore.js
 import { defineStore } from 'pinia';
 import axiosInstance from '@/utils/axios';
+import { useAuthStore } from './auth';
 
 export const useCaseStore = defineStore('cases', {
   state: () => ({
@@ -11,13 +13,21 @@ export const useCaseStore = defineStore('cases', {
   }),
 
   actions: {
+    // Helper to get auth headers
+    getAuthHeaders() {
+      const authStore = useAuthStore();
+      return {
+        'Session-Id': authStore.sessionId
+      };
+    },
+
     // 1. Create Case
     async createCase(payload) {
       try {
         this.loading = true;
         const { data } = await axiosInstance.post('api/cases', payload, {
           headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe',
+            ...this.getAuthHeaders(),
             'Content-Type': 'application/json'
           }
         });
@@ -35,9 +45,7 @@ export const useCaseStore = defineStore('cases', {
       try {
         this.loading = true;
         const { data } = await axiosInstance.post(`api/cases/${id}`, payload, {
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          }
+          headers: this.getAuthHeaders()
         });
         return data;
       } catch (err) {
@@ -53,9 +61,7 @@ export const useCaseStore = defineStore('cases', {
       try {
         this.loading = true;
         const { data } = await axiosInstance.get(`api/cases/${id}`, {
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          }
+          headers: this.getAuthHeaders()
         });
         return data;
       } catch (err) {
@@ -72,9 +78,7 @@ export const useCaseStore = defineStore('cases', {
         this.loading = true;
         const { data } = await axiosInstance.get('api/cases/', {
           params,
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          }
+          headers: this.getAuthHeaders()
         });
         console.log('Cases data:', data);
         this.cases = data.cases || [];
@@ -93,9 +97,7 @@ export const useCaseStore = defineStore('cases', {
       try {
         const response = await axiosInstance.get('api/cases/', {
           params: { ...params, csv: 1 },
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          },
+          headers: this.getAuthHeaders(),
           responseType: 'blob'
         });
         return response.data;
@@ -109,9 +111,7 @@ export const useCaseStore = defineStore('cases', {
       try {
         const { data } = await axiosInstance.get('api/cases/rpt', {
           params,
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          }
+          headers: this.getAuthHeaders()
         });
         return data;
       } catch (err) {

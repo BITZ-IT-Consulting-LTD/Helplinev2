@@ -99,16 +99,16 @@
 
       <!-- Timeline view -->
       <div v-if="view === 'timeline'">
-        <UsersTimeline />
+        <UsersTimeline @refresh="refreshUsers" @edit="handleEditUser" />
       </div>
 
       <!-- Table view -->
       <div v-if="view === 'table'">
-        <UsersTable />
+        <UsersTable @refresh="refreshUsers" @edit="handleEditUser" />
       </div>
     </div>
 
-    <!-- Create User Modal - Blocking -->
+    <!-- Create User Modal -->
     <Transition name="modal">
       <div 
         v-if="showCreateModal"
@@ -116,6 +116,22 @@
       >
         <div class="my-8">
           <UserForm @saved="handleSaved" @cancel="showCreateModal = false" />
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Edit User Modal -->
+    <Transition name="modal">
+      <div 
+        v-if="showEditModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto"
+      >
+        <div class="my-8">
+          <UserEditForm 
+            :user="userToEdit"
+            @saved="handleEditSaved" 
+            @cancel="showEditModal = false" 
+          />
         </div>
       </div>
     </Transition>
@@ -130,11 +146,14 @@ import { useUserStore } from '@/stores/users'
 import UsersTable from '@/components/users/Table.vue'
 import UsersTimeline from '@/components/users/Timeline.vue'
 import UserForm from '@/components/users/UserForm.vue'
+import UserEditForm from '@/components/users/UserEditForm.vue'
 import UsersFilter from '@/components/users/UsersFilter.vue'
 
 const store = useUserStore()
 const view = ref('timeline')
 const showCreateModal = ref(false)
+const showEditModal = ref(false)
+const userToEdit = ref(null)
 const currentFilters = ref({})
 
 // Inject theme
@@ -192,6 +211,18 @@ const handleSaved = () => {
   showCreateModal.value = false
   store.listUsers()
   toast.success('User saved successfully!')
+}
+
+const handleEditUser = (user) => {
+  userToEdit.value = user
+  showEditModal.value = true
+}
+
+const handleEditSaved = () => {
+  showEditModal.value = false
+  userToEdit.value = null
+  store.listUsers()
+  toast.success('User updated successfully!')
 }
 </script>
 

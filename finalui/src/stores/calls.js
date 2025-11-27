@@ -1,6 +1,7 @@
 // src/stores/callStore.js
 import { defineStore } from 'pinia';
 import axiosInstance from '@/utils/axios';
+import { useAuthStore } from './auth';
 
 export const useCallStore = defineStore('callStore', {
   state: () => ({
@@ -12,36 +13,44 @@ export const useCallStore = defineStore('callStore', {
     error: null
   }),
 
- getters: {
-  callCount: (state) => state.calls?.length ?? 0,
+  getters: {
+    callCount: (state) => state.calls?.length ?? 0,
 
-  // Get call by uniqueid
-  getCallById: (state) => (uniqueid) => {
-    const index = parseInt(state.calls_k?.uniqueid?.[0] ?? 0);
-    return state.calls.find(call => call[index] === uniqueid) || null;
+    // Get call by uniqueid
+    getCallById: (state) => (uniqueid) => {
+      const index = parseInt(state.calls_k?.uniqueid?.[0] ?? 0);
+      return state.calls.find(call => call[index] === uniqueid) || null;
+    },
+
+    // Getter to return calls with human-readable Date Hour
+    formattedCalls: (state) => {
+      const dthIndex = parseInt(state.calls_k?.dth?.[0] ?? -1); // index for Date Hour
+      if (dthIndex === -1) return [];
+
+      return state.calls.map(call => {
+        const timestamp = call[dthIndex];
+        let readableDate = '';
+        if (timestamp) {
+          const dateObj = new Date(Number(timestamp) * 1000); // convert seconds to ms
+          readableDate = dateObj.toLocaleString(); // e.g., "7/21/2025, 14:20:00"
+        }
+        return {
+          ...call,
+          readableDate
+        };
+      });
+    }
   },
 
-  // Getter to return calls with human-readable Date Hour
-  formattedCalls: (state) => {
-    const dthIndex = parseInt(state.calls_k?.dth?.[0] ?? -1); // index for Date Hour
-    if (dthIndex === -1) return [];
-
-    return state.calls.map(call => {
-      const timestamp = call[dthIndex];
-      let readableDate = '';
-      if (timestamp) {
-        const dateObj = new Date(Number(timestamp) * 1000); // convert seconds to ms
-        readableDate = dateObj.toLocaleString(); // e.g., "7/21/2025, 14:20:00"
-      }
-      return {
-        ...call,
-        readableDate
-      };
-    });
-  }
-},
-
   actions: {
+    // Helper to get auth headers
+    getAuthHeaders() {
+      const authStore = useAuthStore();
+      return {
+        'Session-Id': authStore.sessionId
+      };
+    },
+
     // 1. List Calls
     async listCalls(params = {}) {
       this.loading = true;
@@ -50,9 +59,7 @@ export const useCallStore = defineStore('callStore', {
       try {
         const { data } = await axiosInstance.get('api/calls/', {
           params,
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          }
+          headers: this.getAuthHeaders()
         });
         console.log('API Response:', data);
         this.raw = data;
@@ -70,9 +77,7 @@ export const useCallStore = defineStore('callStore', {
     async viewCall(uniqueid) {
       try {
         const { data } = await axiosInstance.get(`/api-proxy/api/calls/${uniqueid}`, {
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          }
+          headers: this.getAuthHeaders()
         });
         return data;
       } catch (err) {
@@ -81,34 +86,29 @@ export const useCallStore = defineStore('callStore', {
     },
 
     // 3. Download Call Recording
-   async downloadCallRecording(uniqueid, format = 'wav') {
-  try {
-    const url = `api/calls/${uniqueid}`;
-    console.log('Downloading recording from:', url);
+    async downloadCallRecording(uniqueid, format = 'wav') {
+      try {
+        const url = `api/calls/${uniqueid}`;
+        console.log('Downloading recording from:', url);
 
-    const response = await axiosInstance.get(url, {
-      params: { file: format },
-      headers: {
-        'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-      },
-      responseType: 'blob'
-    });
+        const response = await axiosInstance.get(url, {
+          params: { file: format },
+          headers: this.getAuthHeaders(),
+          responseType: 'blob'
+        });
 
-    return response.data;
-  } catch (err) {
-    throw new Error(err.message || 'Failed to download recording');
-  }
-},
-
+        return response.data;
+      } catch (err) {
+        throw new Error(err.message || 'Failed to download recording');
+      }
+    },
 
     // 4. CSV Download
     async downloadCSV(params = {}) {
       try {
         const response = await axiosInstance.get('api/calls/', {
           params: { ...params, csv: 1 },
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          },
+          headers: this.getAuthHeaders(),
           responseType: 'blob'
         });
         return response.data;
@@ -122,9 +122,7 @@ export const useCallStore = defineStore('callStore', {
       try {
         const { data } = await axiosInstance.get('api/calls/rpt', {
           params,
-          headers: {
-            'X-API-Key': '21mku1hhf5gg4om161jk5fdfbe'
-          }
+          headers: this.getAuthHeaders()
         });
         return data;
       } catch (err) {

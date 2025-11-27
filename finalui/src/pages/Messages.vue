@@ -3,18 +3,25 @@
     class="p-6 min-h-screen"
     :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'"
   >
-    <h1 
-      class="text-2xl font-bold mb-2"
-      :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
-    >
-      Chats
-    </h1>
-    <p 
-      class="mb-6"
-      :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
-    >
-      Manage conversations and communications across all channels
-    </p>
+    <!-- Page Header -->
+    <div class="mb-6">
+      <h1 
+        class="text-3xl font-bold flex items-center gap-3"
+        :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+      >
+        <i-mdi-message-text-outline 
+          class="w-8 h-8"
+          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+        />
+        Chats
+      </h1>
+      <p 
+        class="mt-2"
+        :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+      >
+        Manage conversations and communications across all channels
+      </p>
+    </div>
 
     <!-- Channel Filter Pills -->
     <Filter 
@@ -22,6 +29,7 @@
       :activePlatform="activePlatform" 
       @update:activePlatform="handlePlatformChange"
     />
+
 
     <!-- Loading State -->
     <div 

@@ -7,10 +7,11 @@
     <div
       v-for="user in store.users"
       :key="getValue(user, 'id')"
-      class="relative shadow-xl rounded-lg p-6 border"
+      class="relative shadow-xl rounded-lg p-6 border cursor-pointer transition-all duration-200"
       :class="isDarkMode 
-        ? 'bg-gray-800 border-gray-700' 
-        : 'bg-white border-gray-200'"
+        ? 'bg-gray-800 border-gray-700 hover:border-blue-600' 
+        : 'bg-white border-gray-200 hover:border-amber-600'"
+      @click="selectUser(user)"
     >
       <!-- Timeline Dot -->
       <div 
@@ -25,7 +26,7 @@
         class="text-lg font-semibold"
         :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
       >
-        {{ getValue(user, 'first_name') }} {{ getValue(user, 'last_name') }}
+        {{ getValue(user, 'contact_fname') }} {{ getValue(user, 'contact_lname') }}
       </h3>
 
       <p 
@@ -65,17 +66,33 @@
       </span>
     </div>
 
+    <!-- User Details Modal -->
+    <Transition name="modal">
+      <div 
+        v-if="selectedUser"
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        @click.self="selectedUser = null"
+      >
+        <UserDetailsModal
+          :user="selectedUser"
+          @close="handleClose"
+          @edit="handleEdit"
+        />
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script setup>
-import { inject } from 'vue'
+import { ref, inject } from 'vue'
 import { useUserStore } from "@/stores/users"
+import UserDetailsModal from './UserDetailsModal.vue'
+
+const emit = defineEmits(['refresh', 'edit'])
 
 const store = useUserStore()
-
-// Inject theme
 const isDarkMode = inject('isDarkMode')
+const selectedUser = ref(null)
 
 const roleMap = {
   "1": "Counsellor",
@@ -105,4 +122,32 @@ const formatDate = (timestamp) => {
 
   return new Date(ms).toLocaleString()
 }
+
+const selectUser = (user) => {
+  selectedUser.value = user
+}
+
+const handleEdit = (user) => {
+  selectedUser.value = null
+  emit('edit', user)
+}
+
+const handleClose = (shouldRefresh = false) => {
+  selectedUser.value = null
+  if (shouldRefresh) {
+    emit('refresh')
+  }
+}
 </script>
+
+<style scoped>
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+</style>
