@@ -7,12 +7,18 @@
   >
 
     <!-- Header with Logo - Fixed -->
-    <div class="flex-shrink-0 flex items-center justify-center p-6 pb-4">
+    <div class="flex-shrink-0 flex flex-col items-center justify-center p-2 pb-4">
       <img 
         src="@/assets/images/Openchs logo.png" 
         alt="OpenCHS Logo" 
-        class="h-32 w-auto object-contain"
+        class="h-48 w-auto object-contain"
       />
+      <h2 
+        class=" text-2xl font-bold tracking-wide"
+        :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+      >
+        OPENCHS
+      </h2>
     </div>
 
     <!-- Navigation - Scrollable -->
