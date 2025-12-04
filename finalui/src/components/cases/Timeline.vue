@@ -6,10 +6,11 @@
     <div
       v-for="caseItem in cases"
       :key="cases_k.id ? caseItem[cases_k.id[0]] : caseItem.id"
-      class="relative shadow-xl rounded-lg p-6 border"
+      @click="selectCase(caseItem)"
+      class="relative shadow-xl rounded-lg p-6 border cursor-pointer transition-all duration-200"
       :class="isDarkMode 
-        ? 'bg-gray-800 border-gray-700' 
-        : 'bg-white border-gray-200'"
+        ? 'bg-gray-800 border-gray-700 hover:bg-gray-700/50' 
+        : 'bg-white border-gray-200 hover:bg-gray-50'"
     >
       <!-- Timeline Dot -->
       <div 
@@ -73,8 +74,17 @@ const props = defineProps({
   cases_k: Object,
 })
 
+const emit = defineEmits(['select-case'])
+
 // Inject theme
 const isDarkMode = inject('isDarkMode')
+
+// ✅ FIXED: Emit case ID only
+const selectCase = (caseItem) => {
+  const caseId = getValue(caseItem, 'id')
+  console.log('📤 Timeline emitting case ID:', caseId)
+  emit('select-case', caseId)
+}
 
 // Map the array-style structure
 const getValue = (caseItem, key) => {

@@ -59,6 +59,7 @@
         <tr
           v-for="caseItem in cases"
           :key="cases_k.id ? caseItem[cases_k.id[0]] : caseItem.id"
+          @click="selectCase(caseItem)"
           class="cursor-pointer transition-all duration-200"
           :class="isDarkMode 
             ? 'hover:bg-gray-700/30' 
@@ -126,8 +127,17 @@ const props = defineProps({
   cases_k: Object,
 })
 
+const emit = defineEmits(['select-case'])
+
 // Inject theme
 const isDarkMode = inject('isDarkMode')
+
+// ✅ FIXED: Emit case ID only
+const selectCase = (caseItem) => {
+  const caseId = getValue(caseItem, 'id')
+  console.log('📤 Table emitting case ID:', caseId)
+  emit('select-case', caseId)
+}
 
 // Access values using the cases_k structure
 const getValue = (caseItem, key) => {
