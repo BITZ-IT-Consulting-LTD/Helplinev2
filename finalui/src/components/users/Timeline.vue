@@ -71,13 +71,44 @@
       <div 
         v-if="selectedUser"
         class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-        @click.self="selectedUser = null"
+        @click.self="closeModal"
       >
         <UserDetailsModal
           :user="selectedUser"
+          :loading="loadingUser"
           @close="handleClose"
           @edit="handleEdit"
         />
+      </div>
+    </Transition>
+
+    <!-- Loading overlay for modal -->
+    <Transition name="modal">
+      <div 
+        v-if="loadingUser"
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+      >
+        <div 
+          class="rounded-lg shadow-2xl p-8 border"
+          :class="isDarkMode 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'"
+        >
+          <div class="flex flex-col items-center gap-4">
+            <div 
+              class="w-12 h-12 border-4 rounded-full animate-spin"
+              :class="isDarkMode 
+                ? 'border-gray-600 border-t-blue-500' 
+                : 'border-gray-300 border-t-amber-700'"
+            ></div>
+            <p 
+              class="text-sm font-medium"
+              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+            >
+              Loading user details...
+            </p>
+          </div>
+        </div>
       </div>
     </Transition>
   </div>
@@ -85,6 +116,7 @@
 
 <script setup>
 import { ref, inject } from 'vue'
+import { toast } from 'vue-sonner'
 import { useUserStore } from "@/stores/users"
 import UserDetailsModal from './UserDetailsModal.vue'
 
@@ -93,6 +125,7 @@ const emit = defineEmits(['refresh', 'edit'])
 const store = useUserStore()
 const isDarkMode = inject('isDarkMode')
 const selectedUser = ref(null)
+const loadingUser = ref(false)
 
 const roleMap = {
   "1": "Counsellor",
@@ -115,16 +148,49 @@ const getRoleName = (roleId) => {
 
 const formatDate = (timestamp) => {
   if (!timestamp) return 'N/A'
-
-  const ms = timestamp < 10000000000 
-    ? timestamp * 1000 
-    : timestamp * 3600 * 1000
-
-  return new Date(ms).toLocaleString()
+  const date = new Date(parseInt(timestamp) * 1000)
+  return date.toLocaleString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  })
 }
 
-const selectUser = (user) => {
-  selectedUser.value = user
+const selectUser = async (user) => {
+  const userId = getValue(user, 'id')
+  
+  if (!userId) {
+    toast.error('User ID not found')
+    return
+  }
+
+  loadingUser.value = true
+  selectedUser.value = null
+
+  try {
+    const userData = await store.viewUser(userId)
+    console.log('Fetched user data:', userData)
+    
+    // The API returns the user in the same array format
+    if (userData.users && userData.users.length > 0) {
+      selectedUser.value = userData.users[0]
+    } else {
+      toast.error('User data not found')
+    }
+  } catch (error) {
+    console.error('Error fetching user:', error)
+    toast.error('Failed to load user details')
+  } finally {
+    loadingUser.value = false
+  }
+}
+
+const closeModal = () => {
+  selectedUser.value = null
+  loadingUser.value = false
 }
 
 const handleEdit = (user) => {

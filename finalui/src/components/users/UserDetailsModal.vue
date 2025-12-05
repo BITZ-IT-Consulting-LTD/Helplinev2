@@ -242,30 +242,30 @@
       </div>
 
       <!-- Status -->
-      <div class="pt-2">
-        <label 
-          class="text-xs font-semibold uppercase tracking-wider mb-1 block"
-          :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
-        >
-          Status
-        </label>
-        <div class="flex items-center gap-2">
-          <div 
-            class="w-2 h-2 rounded-full"
-            :class="getValue('is_active') === 1 
-              ? 'bg-green-500' 
-              : 'bg-red-500'"
-          ></div>
-          <span 
-            class="text-sm font-medium"
-            :class="getValue('is_active') === 1 
-              ? (isDarkMode ? 'text-green-400' : 'text-green-600')
-              : (isDarkMode ? 'text-red-400' : 'text-red-600')"
-          >
-            {{ getValue('is_active') === 1 ? 'Active' : 'Inactive' }}
-          </span>
-        </div>
-      </div>
+<div class="pt-2">
+  <label 
+    class="text-xs font-semibold uppercase tracking-wider mb-1 block"
+    :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
+  >
+    Status
+  </label>
+  <div class="flex items-center gap-2">
+    <div 
+      class="w-2 h-2 rounded-full"
+      :class="getValue('is_active') === '1' 
+        ? 'bg-green-500' 
+        : 'bg-red-500'"
+    ></div>
+    <span 
+      class="text-sm font-medium"
+      :class="getValue('is_active') === '1' 
+        ? (isDarkMode ? 'text-green-400' : 'text-green-600')
+        : (isDarkMode ? 'text-red-400' : 'text-red-600')"
+    >
+      {{ getValue('is_active') === '1' ? 'Active' : 'Inactive' }}
+    </span>
+  </div>
+</div>
     </div>
 
     <!-- Action Buttons -->

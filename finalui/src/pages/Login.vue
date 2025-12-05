@@ -70,7 +70,11 @@
 
         <!-- Additional Links -->
         <div class="mt-6 text-center">
-          <a href="#" class="text-yellow-500 hover:text-yellow-400 text-sm font-medium">
+          <a 
+            @click.prevent="handleForgotPassword" 
+            href="#" 
+            class="text-yellow-500 hover:text-yellow-400 text-sm font-medium cursor-pointer"
+          >
             Forgot password?
           </a>
         </div>
@@ -82,6 +86,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { toast } from 'vue-sonner'
 import { useAuthStore } from '@/stores/auth'
 
 const username = ref('')
@@ -99,5 +104,9 @@ const handleLogin = async () => {
   if (success) {
     router.push('/')
   }
+}
+
+const handleForgotPassword = () => {
+  toast.info('Forgot Password feature is not yet available')
 }
 </script>
