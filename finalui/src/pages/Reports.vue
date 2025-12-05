@@ -32,27 +32,27 @@
           : 'bg-white border-gray-200'"
       >
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Endpoint Selection -->
-          <div>
-            <label 
-              class="block text-sm font-semibold mb-3"
-              :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
-            >
-              Data Source
-            </label>
-            <select 
-              v-model="selectedEndpoint" 
-              class="w-full px-4 py-3 rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:border-transparent"
-              :class="isDarkMode 
-                ? 'bg-gray-700 border border-gray-600 text-gray-100 hover:border-blue-500 focus:ring-blue-500' 
-                : 'bg-gray-50 border border-gray-300 text-gray-900 hover:border-amber-600 focus:ring-amber-600'"
-            >
-              <option value="qa">QA Results</option>
-              <option value="cases">Cases</option>
-              <option value="calls">Call History</option>
-              <option value="users">Users</option>
-            </select>
-          </div>
+         <!-- Endpoint Selection -->
+<div>
+  <label 
+    class="block text-sm font-semibold mb-3"
+    :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+  >
+    Data Source
+  </label>
+  <select 
+    v-model="selectedEndpoint" 
+    class="w-full px-4 py-3 rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:border-transparent"
+    :class="isDarkMode 
+      ? 'bg-gray-700 border border-gray-600 text-gray-100 hover:border-blue-500 focus:ring-blue-500' 
+      : 'bg-gray-50 border border-gray-300 text-gray-900 hover:border-amber-600 focus:ring-amber-600'"
+  >
+    <option value="qa">QA Results</option>
+    <option value="cases">Cases</option>
+    <option value="calls">Call History</option>
+    <!-- <option value="users">Users</option> -->  <!-- ✅ Just commented out -->
+  </select>
+</div>
 
           <!-- X-Axis (Time Duration) -->
           <div>
@@ -630,7 +630,7 @@ const endpointConfig = {
     method: 'listQA',
     yAxisFields: ['Extension'],
     metric: 'qa_count',
-    storeKey: 'qaResults'
+    storeKey: 'qas'  // ✅ Changed from 'qaResults' to 'qas'
   },
   cases: {
     store: caseStore,

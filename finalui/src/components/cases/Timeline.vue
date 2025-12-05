@@ -31,7 +31,7 @@
         class="text-sm mt-1"
         :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
       >
-        Created on: {{ formatDate(getValue(caseItem, 'dt')) }}
+        Created on: {{ formatDateTime(getValue(caseItem, 'dt')) }}
       </p>
       <p 
         class="text-sm mt-1"
@@ -92,12 +92,15 @@ const getValue = (caseItem, key) => {
   return caseItem[props.cases_k[key][0]]
 }
 
-// Format timestamps nicely
-const formatDate = (timestamp) => {
-  if (!timestamp) return 'N/A'
-  const value =
-    timestamp < 10000000000 ? timestamp * 1000 : timestamp * 3600 * 1000
-  return new Date(value).toLocaleString()
+// Format timestamp to date only (no time for cases)
+const formatDateTime = (timestamp) => {
+  if (!timestamp || timestamp === '0') return 'N/A'
+  const date = new Date(parseInt(timestamp) * 1000)
+  return date.toLocaleString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  })
 }
 
 // --- Priority ---

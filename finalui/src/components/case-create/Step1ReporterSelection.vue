@@ -1086,13 +1086,17 @@ const handleCreateReporter = async () => {
       extractedReporterId.value = reporterId
       extractedContactId.value = contactId
       
+      // ✅ NEW: Store the reporter array in selectedReporter so it can be displayed in Step4
+      selectedReporter.value = reporterArray
+      
       console.log('✅ Extracted IDs:', {
         reporterId: reporterId,
         contactId: contactId
       })
       console.log('='.repeat(80))
       
-      // Emit to parent
+      // Emit both the IDs and the reporter data to parent
+      emit('select-reporter', reporterArray)
       emit('reporter-created', {
         reporterId: reporterId,
         contactId: contactId

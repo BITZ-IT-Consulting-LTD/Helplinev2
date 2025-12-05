@@ -50,11 +50,7 @@
               class="text-xs mt-1"
               :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
             >
-              {{
-                call[callsStore.calls_k?.dth?.[0]]
-                  ? new Date(call[callsStore.calls_k.dth[0]] * 1000).toLocaleString()
-                  : 'N/A'
-              }}
+              {{ formatDateTime(call[callsStore.calls_k?.dth?.[0]]) }}
             </div>
 
             <div 
@@ -117,6 +113,20 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['select-call', 'create-qa'])
+
+// Format timestamp to readable date and time (same as CallsTable)
+function formatDateTime(timestamp) {
+  if (!timestamp || timestamp === '0') return 'N/A'
+  const date = new Date(parseInt(timestamp) * 1000)
+  return date.toLocaleString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  })
+}
 
 // When user clicks a call, emit the call's unique id
 function handleSelect(call) {
