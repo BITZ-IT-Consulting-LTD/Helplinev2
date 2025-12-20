@@ -1,15 +1,13 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: process.env.NODE_ENV === 'development'
-        ? '/api-proxy'
-        : 'https://demo-openchs.bitz-itc.com/helpline',
+    // Always use relative path - nginx will proxy it
+    baseURL: '/api-proxy',
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     }
-    // ❌ REMOVED: auth block - this was causing the conflict
 });
 
 // Add session-id to all requests if available
@@ -19,7 +17,6 @@ axiosInstance.interceptors.request.use((config) => {
     if (sessionId) {
         config.headers['Session-Id'] = sessionId;
     }
-
     // Add X-API-Key for /cases/ endpoint
     if (config.url.includes('/cases/')) {
         config.headers['X-API-Key'] = '08m9cujgjlk0epqqms1q99bbvc';
