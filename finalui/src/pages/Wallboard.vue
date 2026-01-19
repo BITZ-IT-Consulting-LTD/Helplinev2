@@ -15,13 +15,13 @@
     <!-- Main Dashboard Grid -->
     <div class="mt-4 grid grid-cols-1 xl:grid-cols-12 gap-4">
       
-      <!-- Left Section: Stats Tiles (Full width on mobile, 4 cols on XL) -->
-      <div class="xl:col-span-4">
+      <!-- Top Section: Stats Tiles (Full width) -->
+      <div class="xl:col-span-12">
         <CasesTiles :tiles="casesTiles" />
       </div>
 
-      <!-- Right Section: Tables (Full width on mobile, 8 cols on XL) -->
-      <div class="xl:col-span-8 space-y-4">
+      <!-- Bottom Section: Tables (Full width) -->
+      <div class="xl:col-span-12 grid grid-cols-1 lg:grid-cols-2 gap-4">
         <CounsellorsTable 
           :counsellors="counsellorsWithQueueData"
           :online-count="onlineCounsellorsCount"

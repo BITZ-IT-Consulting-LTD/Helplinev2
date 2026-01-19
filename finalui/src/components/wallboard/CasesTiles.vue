@@ -11,7 +11,7 @@
     >
       <i-mdi-chart-box 
         class="w-5 h-5"
-        :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
+        :class="isDarkMode ? 'text-amber-500' : 'text-amber-600'"
       />
       Cases Overview
     </h3>
@@ -28,7 +28,7 @@
       </div>
     </div>
     
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
       <div
         v-for="tile in tiles"
         :key="tile.id"
@@ -121,12 +121,12 @@ export default {
       }
       
       const lightTextMap = {
-        'blue': 'text-amber-700',
-        'amber': 'text-amber-700',
-        'red': 'text-red-700',
-        'green': 'text-emerald-700',
-        'purple': 'text-purple-700',
-        'indigo': 'text-indigo-700'
+        'blue': 'text-amber-600',
+        'amber': 'text-amber-600',
+        'red': 'text-red-600',
+        'green': 'text-emerald-600',
+        'purple': 'text-purple-600',
+        'indigo': 'text-indigo-600'
       }
       
       return this.isDarkMode 
@@ -155,12 +155,12 @@ export default {
       }
       
       const lightIconBgMap = {
-        'blue': 'bg-blue-100 text-amber-700',
-        'amber': 'bg-amber-100 text-amber-700',
-        'red': 'bg-red-100 text-red-700',
-        'green': 'bg-emerald-100 text-emerald-700',
-        'purple': 'bg-purple-100 text-purple-700',
-        'indigo': 'bg-indigo-100 text-indigo-700'
+        'blue': 'bg-amber-600/10 text-amber-600',
+        'amber': 'bg-amber-600/10 text-amber-600',
+        'red': 'bg-red-600/10 text-red-600',
+        'green': 'bg-emerald-600/10 text-emerald-600',
+        'purple': 'bg-purple-600/10 text-purple-600',
+        'indigo': 'bg-indigo-600/10 text-indigo-600'
       }
       
       return this.isDarkMode 

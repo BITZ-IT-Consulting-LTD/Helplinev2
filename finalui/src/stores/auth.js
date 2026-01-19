@@ -33,13 +33,13 @@ const ROLE_DISPLAY_NAMES = {
 }
 
 const ROLE_PERMISSIONS = {
-  [ROLES.COUNSELLOR]: ['dashboard', 'cases', 'calls', 'messages', 'wallboard'],
-  [ROLES.SUPERVISOR]: ['dashboard', 'cases', 'calls', 'messages', 'wallboard', 'qa', 'reports'],
-  [ROLES.CASE_MANAGER]: ['dashboard', 'cases', 'calls', 'messages', 'wallboard', 'qa', 'reports'],
-  [ROLES.CASE_WORKER]: ['dashboard', 'cases'],
+  [ROLES.COUNSELLOR]: ['dashboard', 'cases', 'calls', 'messages', 'wallboard', 'faqs'],
+  [ROLES.SUPERVISOR]: ['dashboard', 'cases', 'calls', 'messages', 'wallboard', 'qa', 'reports', 'faqs'],
+  [ROLES.CASE_MANAGER]: ['dashboard', 'cases', 'calls', 'messages', 'wallboard', 'qa', 'reports', 'faqs'],
+  [ROLES.CASE_WORKER]: ['dashboard', 'cases', 'faqs'],
   [ROLES.PARTNER]: ['dashboard'],
   [ROLES.MEDIA_ACCOUNT]: ['dashboard'],
-  [ROLES.ADMINISTRATOR]: ['dashboard', 'cases', 'calls', 'messages', 'wallboard', 'activities', 'qa', 'users', 'reports', 'categories']
+  [ROLES.ADMINISTRATOR]: ['dashboard', 'cases', 'calls', 'messages', 'wallboard', 'activities', 'qa', 'users', 'reports', 'categories', 'faqs']
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -58,7 +58,7 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated: (state) => {
       return !!(state.sessionId && state.userId && state.username && state.userRole)
     },
-    
+
     roleName: (state) => {
       if (!state.userRole) return null
       return ROLE_ID_MAP[state.userRole] || null
@@ -68,7 +68,7 @@ export const useAuthStore = defineStore('auth', {
       if (!state.userRole) return 'User'
       return ROLE_DISPLAY_NAMES[state.userRole] || 'User'
     },
-    
+
     isCounsellor: (state) => state.userRole === 1 || state.userRole === '1',
     isSupervisor: (state) => state.userRole === 2 || state.userRole === '2',
     isCaseManager: (state) => state.userRole === 3 || state.userRole === '3',
@@ -76,19 +76,19 @@ export const useAuthStore = defineStore('auth', {
     isPartner: (state) => state.userRole === 5 || state.userRole === '5',
     isMediaAccount: (state) => state.userRole === 6 || state.userRole === '6',
     isAdministrator: (state) => state.userRole === 99 || state.userRole === '99',
-    
+
     isMainRole: (state) => {
       const mainRoles = [1, 2, 3, 4, 99, '1', '2', '3', '4', '99']
       return mainRoles.includes(state.userRole)
     },
-    
+
     userDisplayName: (state) => state.username || state.profile?.username || 'User',
-    
+
     userInitials: (state) => {
       const name = state.username || state.profile?.username || 'U'
       return name.charAt(0).toUpperCase()
     },
-    
+
     permissions: (state) => {
       const role = ROLE_ID_MAP[state.userRole]
       return role ? ROLE_PERMISSIONS[role] || [] : []
@@ -151,7 +151,7 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('user-id', this.userId)
         localStorage.setItem('username', this.username)
         localStorage.setItem('user-role', this.userRole)
-        
+
         axiosInstance.defaults.headers.common['Session-Id'] = this.sessionId
 
         console.log('✅ Login successful!')
@@ -160,16 +160,16 @@ export const useAuthStore = defineStore('auth', {
       } catch (err) {
         console.error('❌ Login failed:', err)
         console.error('❌ Error response:', err.response)
-        
+
         // Clear any partial data
         this.clearAuthData()
-        
+
         if (err.response) {
-          const errorMsg = err.response.data?.errors?.[0]?.[1] || 
-                          err.response.data?.message ||
-                          err.response.data?.error ||
-                          'Invalid username or password'
-          
+          const errorMsg = err.response.data?.errors?.[0]?.[1] ||
+            err.response.data?.message ||
+            err.response.data?.error ||
+            'Invalid username or password'
+
           this.error = errorMsg
           console.error('❌ Server error:', errorMsg)
         } else if (err.request) {
@@ -179,7 +179,7 @@ export const useAuthStore = defineStore('auth', {
           this.error = err.message || 'Login failed. Please try again.'
           console.error('❌ Error:', err.message)
         }
-        
+
         return false
       } finally {
         this.loading = false
@@ -198,12 +198,12 @@ export const useAuthStore = defineStore('auth', {
       this.username = null
       this.userRole = null
       this.profile = null
-      
+
       localStorage.removeItem('session-id')
       localStorage.removeItem('user-id')
       localStorage.removeItem('username')
       localStorage.removeItem('user-role')
-      
+
       delete axiosInstance.defaults.headers.common['Session-Id']
     },
 
@@ -213,28 +213,28 @@ export const useAuthStore = defineStore('auth', {
       const userId = localStorage.getItem('user-id')
       const username = localStorage.getItem('username')
       const userRole = localStorage.getItem('user-role')
-      
+
       console.log('🔄 Initializing auth from localStorage...')
       console.log('Session ID:', sessionId)
       console.log('User ID:', userId)
       console.log('Username:', username)
       console.log('User Role:', userRole)
-      
+
       // CRITICAL: ALL fields must exist, or authentication is invalid
       if (!sessionId || !userId || !username || !userRole) {
         console.warn('⚠️ Incomplete auth data in localStorage - clearing all data')
         this.clearAuthData()
         return
       }
-      
+
       // Restore state
       this.sessionId = sessionId
       this.userId = userId
       this.username = username
       this.userRole = parseInt(userRole) // Convert back to number
-      
+
       axiosInstance.defaults.headers.common['Session-Id'] = sessionId
-      
+
       console.log('✅ Auth initialized successfully')
       console.log('👤 User ID:', this.userId)
       console.log('📛 Username:', this.username)

@@ -11,7 +11,7 @@
       >
         <i-mdi-view-dashboard-outline 
           class="w-8 h-8"
-          :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
+          :class="isDarkMode ? 'text-amber-500' : 'text-amber-600'"
         />
         Dashboard
       </h1>

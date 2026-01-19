@@ -207,7 +207,7 @@ export default {
       if (s.includes('queue')) {
         return this.isDarkMode 
           ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-600/30'
-          : 'bg-blue-100 text-amber-700 border border-blue-300'
+          : 'bg-amber-600/10 text-amber-600 border border-amber-600/20'
       }
       if (s.includes('available')) {
         return this.isDarkMode 

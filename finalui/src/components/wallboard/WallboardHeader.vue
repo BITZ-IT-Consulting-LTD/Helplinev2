@@ -14,7 +14,7 @@
         >
           <i-mdi-monitor-dashboard 
             class="w-7 h-7"
-            :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
+            :class="isDarkMode ? 'text-amber-500' : 'text-amber-600'"
           />
           Helpline Wallboard
         </h1>

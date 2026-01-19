@@ -11,7 +11,7 @@
       >
         <i-mdi-folder-account-outline 
           class="w-8 h-8"
-          :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
+          :class="isDarkMode ? 'text-amber-500' : 'text-amber-600'"
         />
         Cases
       </h1>
@@ -52,12 +52,12 @@
         >
           <i-mdi-folder-outline 
             class="w-5 h-5"
-            :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
+            :class="isDarkMode ? 'text-amber-500' : 'text-amber-600'"
           />
           <span class="text-sm">Total Cases:</span>
           <span 
             class="text-lg font-bold"
-            :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
+            :class="isDarkMode ? 'text-amber-500' : 'text-amber-600'"
           >
             {{ casesStore.caseCount }}
           </span>
