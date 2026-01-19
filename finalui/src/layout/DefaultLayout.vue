@@ -15,6 +15,9 @@
         <RouterView />
       </div>
     </main>
+
+    <!-- Global Softphone Widget -->
+    <Softphone v-if="showSidebar" />
   </div>
 </template>
 
@@ -23,6 +26,7 @@ import { computed, provide } from 'vue'
 import { useRoute } from 'vue-router'
 import { useTheme } from '@/composables/useTheme'
 import Sidebar from '@/components/layout/Sidebar.vue'
+import Softphone from '@/components/calls/Softphone.vue'
 
 const route = useRoute()
 const { isDarkMode, toggleTheme } = useTheme()
