@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="min-h-screen font-sans" :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'">
+  <div id="app" class="min-h-screen font-sans" :class="isDarkMode ? 'bg-black' : 'bg-gray-50'">
     <Toaster 
       position="top-center" 
       :theme="isDarkMode ? 'dark' : 'light'"
@@ -72,7 +72,7 @@ const layout = computed(() => {
 
 /* SUCCESS - Blue (Dark Mode) */
 [data-sonner-toaster][data-theme='dark'] [data-sonner-toast][data-type="success"] {
-  background: #2563eb !important;
+  background: #16a34a !important;
   border-color: #3b82f6 !important;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4) !important;
 }

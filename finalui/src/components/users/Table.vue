@@ -2,8 +2,8 @@
   <div 
     class="rounded-lg shadow-xl border overflow-hidden"
     :class="isDarkMode 
-      ? 'bg-gray-800 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-gray-800 border-transparent' 
+      : 'bg-white border-transparent'"
   >
     <div class="overflow-x-auto">
       <table class="w-full">
@@ -11,8 +11,8 @@
           <tr 
             class="border-b"
             :class="isDarkMode 
-              ? 'bg-gray-900/60 border-gray-700' 
-              : 'bg-gray-50 border-gray-200'"
+              ? 'bg-gray-900/60 border-transparent' 
+              : 'bg-gray-50 border-transparent'"
           >
             <th 
               class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
@@ -76,7 +76,7 @@
               <span 
                 class="px-3 py-1 rounded-full text-xs font-medium uppercase border"
                 :class="isDarkMode 
-                  ? 'bg-blue-600/20 text-blue-400 border-blue-600/30' 
+                  ? 'bg-amber-600/20 text-amber-500 border-amber-600/30' 
                   : 'bg-amber-100 text-amber-700 border-amber-300'"
               >
                 {{ getRoleName(getValue(user, 'role')) }}
@@ -94,7 +94,7 @@
                 @click.stop="selectUser(user)"
                 class="px-3 py-1.5 rounded-lg transition-all duration-200 font-medium text-xs flex items-center gap-1.5"
                 :class="isDarkMode 
-                  ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                  ? 'bg-amber-600 hover:bg-amber-700 text-white' 
                   : 'bg-amber-700 hover:bg-amber-800 text-white'"
               >
                 <i-mdi-eye class="w-4 h-4" />
@@ -131,15 +131,15 @@
         <div 
           class="rounded-lg shadow-2xl p-8 border"
           :class="isDarkMode 
-            ? 'bg-gray-800 border-gray-700' 
-            : 'bg-white border-gray-200'"
+            ? 'bg-gray-800 border-transparent' 
+            : 'bg-white border-transparent'"
         >
           <div class="flex flex-col items-center gap-4">
             <div 
               class="w-12 h-12 border-4 rounded-full animate-spin"
               :class="isDarkMode 
-                ? 'border-gray-600 border-t-blue-500' 
-                : 'border-gray-300 border-t-amber-700'"
+                ? 'border-transparent border-t-blue-500' 
+                : 'border-transparent border-t-amber-700'"
             ></div>
             <p 
               class="text-sm font-medium"

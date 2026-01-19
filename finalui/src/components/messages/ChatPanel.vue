@@ -9,15 +9,15 @@
   <div 
     class="fixed right-0 top-0 h-full w-full md:w-[500px] shadow-2xl z-50 flex flex-col border-l animate-slide-in"
     :class="isDarkMode 
-      ? 'bg-gray-900 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-black border-transparent' 
+      : 'bg-white border-transparent'"
   >
     <!-- Header -->
     <div 
       class="flex items-center justify-between p-4 border-b"
       :class="isDarkMode 
-        ? 'bg-gray-800 border-gray-700' 
-        : 'bg-gray-50 border-gray-200'"
+        ? 'bg-neutral-900 border-transparent' 
+        : 'bg-gray-50 border-transparent'"
     >
       <div class="flex items-center gap-3">
         <div
@@ -45,7 +45,7 @@
         @click="$emit('close')"
         class="p-2 rounded-lg transition-all"
         :class="isDarkMode 
-          ? 'hover:bg-gray-700' 
+          ? 'hover:bg-neutral-800 text-gray-400' 
           : 'hover:bg-gray-200'"
       >
         <i-mdi-close 
@@ -58,7 +58,7 @@
     <!-- Message History -->
     <div 
       class="flex-1 overflow-y-auto p-4 space-y-4"
-      :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'"
+      :class="isDarkMode ? 'bg-black' : 'bg-gray-50'"
     >
       <!-- Received Message -->
       <div class="flex gap-3">
@@ -72,8 +72,8 @@
           <div 
             class="rounded-lg rounded-tl-none p-3 border"
             :class="isDarkMode 
-              ? 'bg-gray-800 border-gray-700' 
-              : 'bg-white border-gray-200'"
+              ? 'bg-neutral-900 border-transparent' 
+              : 'bg-white border-transparent'"
           >
             <p 
               class="text-sm"
@@ -158,7 +158,7 @@ const getMessageTime = () => {
 
 const getAvatarColor = (name) => {
   const colors = isDarkMode.value 
-    ? ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
+    ? ['#F59E0B', '#10B981', '#EF4444', '#8B5CF6', '#EC4899']
     : ['#B45309', '#059669', '#DC2626', '#7C3AED', '#DB2777']
   const index = name?.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) || 0
   return colors[index % colors.length]

@@ -3,36 +3,36 @@
     <div
       v-for="(group, label) in groupedCalls"
       :key="label"
-      class="shadow-xl rounded-lg p-4 border"
+      class="shadow-lg rounded-xl border overflow-hidden p-0"
       :class="isDarkMode 
-        ? 'bg-gray-800 border-gray-700' 
-        : 'bg-white border-gray-200'"
+        ? 'bg-neutral-900 border-transparent' 
+        : 'bg-white border-transparent'"
     >
       <h2 
-        class="text-base font-semibold mb-3 border-b pb-2 uppercase tracking-wide"
+        class="text-base font-semibold p-4 border-b uppercase tracking-wide"
         :class="isDarkMode 
-          ? 'text-blue-400 border-gray-700' 
-          : 'text-amber-700 border-gray-200'"
+          ? 'text-amber-500 border-transparent bg-neutral-900' 
+          : 'text-amber-700 border-transparent bg-gray-50/50'"
       >
         {{ label }}
       </h2>
 
-      <div class="space-y-3">
+      <div>
         <div
           v-for="(call, index) in group"
           :key="index"
           @click="handleSelect(call)"
-          class="flex items-center gap-4 p-3 rounded-lg shadow-sm cursor-pointer transition-all duration-200 border"
+          class="flex items-center gap-4 p-4 cursor-pointer transition-all duration-200 border-b last:border-b-0"
           :class="isDarkMode 
-            ? 'bg-gray-700/50 hover:bg-gray-700 border-gray-600 hover:border-blue-500' 
-            : 'bg-gray-50 hover:bg-gray-100 border-gray-200 hover:border-amber-600'"
+            ? 'hover:bg-gray-700/50 border-transparent' 
+            : 'hover:bg-gray-50 border-transparent'"
         >
           <!-- Icon -->
           <div 
-            class="w-10 h-10 flex items-center justify-center rounded-lg flex-shrink-0"
+            class="w-10 h-10 flex items-center justify-center rounded-xl flex-shrink-0"
             :class="isDarkMode 
-              ? 'text-blue-400 bg-gray-800' 
-              : 'text-amber-700 bg-white border border-gray-200'"
+              ? 'text-amber-500 bg-gray-900' 
+              : 'text-amber-700 bg-white border border-transparent'"
           >
             <i-mdi-phone class="w-6 h-6" />
           </div>
@@ -60,7 +60,7 @@
               Agent:
               <span 
                 class="font-medium"
-                :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+                :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
               >
                 {{ call[callsStore.calls_k?.user_name?.[0]] || 'Unknown' }}
               </span>
@@ -72,10 +72,10 @@
             @click.stop="emitCreateQA(call)" 
             :disabled="!isAnswered(call)"
             :class="[
-              'p-2 rounded transition-all duration-200 flex-shrink-0',
+              'p-2 rounded-xl transition-all duration-200 flex-shrink-0',
               isAnswered(call) 
                 ? (isDarkMode 
-                    ? 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95' 
+                    ? 'bg-amber-600 text-white hover:bg-amber-700 active:scale-95' 
                     : 'bg-amber-700 text-white hover:bg-amber-800 active:scale-95')
                 : (isDarkMode
                     ? 'bg-gray-700 text-gray-500 cursor-not-allowed opacity-50'
@@ -93,8 +93,8 @@
       v-if="Object.keys(groupedCalls).length === 0" 
       class="text-center py-12 rounded-lg border"
       :class="isDarkMode 
-        ? 'text-gray-500 bg-gray-800 border-gray-700' 
-        : 'text-gray-500 bg-white border-gray-200'"
+        ? 'text-gray-500 bg-neutral-900 border-transparent' 
+        : 'text-gray-500 bg-white border-transparent'"
     >
       No calls to show.
     </div>

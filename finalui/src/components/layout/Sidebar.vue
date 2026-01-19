@@ -1,9 +1,9 @@
 <template>
   <aside 
-    class="fixed left-0 top-0 h-screen w-64 border-r flex flex-col shadow-xl"
+    class="fixed left-0 top-0 h-screen w-64 border-r border-transparent flex flex-col shadow-xl"
     :class="isDarkMode 
-      ? 'bg-gray-800 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-black' 
+      : 'bg-white'"
   >
 
     <!-- Header with Logo - Fixed -->
@@ -32,7 +32,7 @@
         <RouterLink
           v-if="hasPermission('dashboard')"
           to="/"
-          class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200"
           :class="getNavLinkClass($route.path === '/')"
         >
           <i-mdi-view-dashboard-outline class="w-5 h-5" />
@@ -43,7 +43,7 @@
         <RouterLink
           v-if="hasPermission('calls')"
           to="/calls"
-          class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200"
           :class="getNavLinkClass($route.path === '/calls')"
         >
           <i-mdi-phone-outline class="w-5 h-5" />
@@ -54,7 +54,7 @@
         <RouterLink
           v-if="hasPermission('cases')"
           to="/cases"
-          class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200"
           :class="getNavLinkClass($route.path === '/cases')"
         >
           <i-mdi-folder-account-outline class="w-5 h-5" />
@@ -65,7 +65,7 @@
         <RouterLink
           v-if="hasPermission('messages')"
           to="/messages"
-          class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200"
           :class="getNavLinkClass($route.path === '/messages')"
         >
           <i-mdi-message-text-outline class="w-5 h-5" />
@@ -76,7 +76,7 @@
         <RouterLink
           v-if="hasPermission('activities')"
           to="/activities"
-          class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200"
           :class="getNavLinkClass($route.path === '/activities')"
         >
           <i-mdi-clipboard-list-outline class="w-5 h-5" />
@@ -87,7 +87,7 @@
         <RouterLink
           v-if="hasPermission('qa')"
           to="/qa"
-          class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200"
           :class="getNavLinkClass($route.path === '/qa')"
         >
           <i-mdi-check-decagram class="w-5 h-5" />
@@ -98,7 +98,7 @@
         <RouterLink
           v-if="hasPermission('users')"
           to="/users"
-          class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200"
           :class="getNavLinkClass($route.path === '/users')"
         >
           <i-mdi-account-multiple-outline class="w-5 h-5" />
@@ -109,7 +109,7 @@
         <RouterLink
           v-if="hasPermission('reports')"
           to="/reports"
-          class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200"
           :class="getNavLinkClass($route.path === '/reports')"
         >
           <i-mdi-chart-bar class="w-5 h-5" />
@@ -120,7 +120,7 @@
         <RouterLink
           v-if="hasPermission('wallboard')"
           to="/wallboard"
-          class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200"
           :class="getNavLinkClass($route.path === '/wallboard')"
         >
           <i-mdi-monitor-dashboard class="w-5 h-5" />
@@ -151,16 +151,15 @@
 
     <!-- User Profile Section with Theme Toggle - Fixed at Bottom -->
     <div 
-      class="flex-shrink-0 p-6 pt-4 border-t"
-      :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+      class="flex-shrink-0 p-6 pt-4 border-t border-transparent"
     >
       <div 
-        class="flex items-center gap-3 px-4 py-3 rounded-lg mb-3"
-        :class="isDarkMode ? 'bg-gray-900/40' : 'bg-gray-50'"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl mb-3"
+        :class="isDarkMode ? 'bg-neutral-900' : 'bg-gray-50'"
       >
         <div 
           class="w-9 h-9 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
-          :class="isDarkMode ? 'bg-blue-600' : 'bg-amber-700'"
+          :class="isDarkMode ? 'bg-amber-600' : 'bg-amber-700'"
         >
           {{ authStore.userInitials }}
         </div>
@@ -181,20 +180,21 @@
         
         <!-- Theme Toggle Button -->
         <button 
-          class="p-2 rounded-lg border transition-all duration-200 flex items-center justify-center flex-shrink-0"
+          class="p-2 rounded-lg transition-all duration-300 flex items-center justify-center flex-shrink-0"
           :class="isDarkMode 
-            ? 'bg-gray-700 border-gray-600 hover:bg-gray-600' 
-            : 'bg-gray-100 border-gray-300 hover:bg-gray-200'"
+            ? 'hover:bg-amber-500/10 text-amber-500' 
+            : 'hover:bg-amber-600/10 text-amber-700'"
           @click="$emit('toggle-theme')" 
           :title="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
         >
-          <span class="text-base">{{ isDarkMode ? '☀️' : '🌙' }}</span>
+          <i-mdi-weather-sunny v-if="isDarkMode" class="w-5 h-5" />
+          <i-mdi-weather-night v-else class="w-5 h-5" />
         </button>
       </div>
       
       <button 
         @click="handleLogout"
-        class="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg bg-red-600/10 hover:bg-red-600 text-red-400 hover:text-white transition-all duration-200 group"
+        class="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-red-600/10 hover:bg-red-600 text-red-400 hover:text-white transition-all duration-200 group"
       >
         <i-mdi-logout class="w-5 h-5 group-hover:scale-110 transition-transform" />
         <span class="text-sm font-semibold">Log Out</span>
@@ -228,7 +228,7 @@ const getNavLinkClass = (isActive) => {
   if (isActive) {
     // Active state with brown for light mode, blue for dark mode
     return props.isDarkMode 
-      ? 'bg-blue-600 text-white font-medium shadow-lg shadow-blue-900/50'
+      ? 'bg-amber-600 text-white font-medium shadow-lg shadow-amber-900/50'
       : 'bg-amber-700 text-white font-medium shadow-lg shadow-amber-900/30'
   } else {
     // Inactive state

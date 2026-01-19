@@ -2,8 +2,8 @@
   <div 
     class="rounded-lg shadow-xl border overflow-hidden"
     :class="isDarkMode 
-      ? 'bg-gray-800 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-neutral-900 border-transparent' 
+      : 'bg-white border-transparent'"
   >
     <div class="overflow-x-auto">
       <table class="w-full">
@@ -11,8 +11,8 @@
           <tr 
             class="border-b"
             :class="isDarkMode 
-              ? 'bg-gray-900/60 border-gray-700' 
-              : 'bg-gray-50 border-gray-200'"
+              ? 'bg-black/60 border-transparent' 
+              : 'bg-gray-50 border-transparent'"
           >
             <th 
               class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap"
@@ -63,10 +63,10 @@
               'cursor-pointer transition-all duration-200',
               selectedMessageId === getValue(message, 'id')
                 ? isDarkMode 
-                  ? 'bg-blue-600/10 border-l-4 border-l-blue-500' 
+                  ? 'bg-amber-600/10 border-l-4 border-l-amber-600' 
                   : 'bg-amber-100 border-l-4 border-l-amber-600'
                 : isDarkMode
-                  ? 'hover:bg-gray-700/30'
+                  ? 'hover:bg-neutral-800'
                   : 'hover:bg-gray-50'
             ]"
             @click="openChatPanel(message)"
@@ -94,7 +94,7 @@
               <span 
                 class="px-3 py-1 rounded-full text-xs font-medium uppercase border"
                 :class="isDarkMode 
-                  ? 'bg-blue-600/20 text-blue-400 border-blue-600/30' 
+                  ? 'bg-amber-600/20 text-amber-500 border-amber-600/30' 
                   : 'bg-amber-100 text-amber-700 border-amber-300'"
               >
                 {{ getValue(message, 'src') || 'All' }}
@@ -136,7 +136,7 @@
               <button
                 class="p-2 rounded-lg text-white transition-all duration-200"
                 :class="isDarkMode 
-                  ? 'bg-blue-600 hover:bg-blue-700' 
+                  ? 'bg-amber-600 hover:bg-amber-700' 
                   : 'bg-amber-700 hover:bg-amber-800'"
                 @click.stop="openChatPanel(message)"
                 title="Open Chat"

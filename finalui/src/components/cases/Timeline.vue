@@ -1,7 +1,7 @@
 <template>
   <div 
-    class="relative border-l-2 pl-6 space-y-6"
-    :class="isDarkMode ? 'border-gray-700' : 'border-gray-300'"
+    class="relative border-l-[1px] pl-8 space-y-6"
+    :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
   >
     <div
       v-for="caseItem in cases"
@@ -9,15 +9,15 @@
       @click="selectCase(caseItem)"
       class="relative shadow-xl rounded-lg p-6 border cursor-pointer transition-all duration-200"
       :class="isDarkMode 
-        ? 'bg-gray-800 border-gray-700 hover:bg-gray-700/50' 
-        : 'bg-white border-gray-200 hover:bg-gray-50'"
+        ? 'bg-neutral-900 border-transparent hover:bg-neutral-800' 
+        : 'bg-white border-transparent hover:bg-gray-50'"
     >
-      <!-- Timeline Dot -->
+      <!-- Timeline Dot - Hollow Circle Split by Line -->
       <div 
-        class="absolute -left-[1.875rem] top-6 w-6 h-6 rounded-full border-4"
+        class="absolute -left-[42px] top-1/2 -translate-y-1/2 w-5 h-5 rounded-full border-[3px]"
         :class="isDarkMode 
-          ? 'bg-blue-500 border-gray-900' 
-          : 'bg-amber-600 border-gray-50'"
+          ? 'border-transparent bg-black' 
+          : 'border-transparent bg-white'"
       ></div>
 
       <!-- Case Info -->

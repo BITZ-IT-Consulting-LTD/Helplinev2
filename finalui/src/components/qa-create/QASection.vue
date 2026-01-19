@@ -4,14 +4,14 @@
       'mb-6 p-6 rounded-lg border',
       containerClass,
       isDarkMode 
-        ? 'bg-gray-900/40 border-gray-700' 
-        : 'bg-gray-50 border-gray-200'
+        ? 'bg-gray-900/40 border-transparent' 
+        : 'bg-gray-50 border-transparent'
     ]"
   >
     <div class="flex items-center justify-between mb-4">
       <h2 
         class="text-xl font-bold"
-        :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+        :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
       >
         {{ title }}
       </h2>
@@ -19,7 +19,7 @@
         v-if="badge" 
         class="px-3 py-1 text-xs font-bold rounded-full border"
         :class="isDarkMode 
-          ? 'bg-blue-600/20 text-blue-400 border-blue-600/30' 
+          ? 'bg-amber-600/20 text-amber-500 border-amber-600/30' 
           : 'bg-amber-100 text-amber-700 border-amber-300'"
       >
         {{ badge }}

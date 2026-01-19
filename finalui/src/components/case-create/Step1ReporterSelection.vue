@@ -21,8 +21,8 @@
             <div 
               class="relative flex items-center gap-2 border rounded-lg px-3 py-2.5 flex-1 max-w-xs focus-within:ring-2 transition-all"
               :class="isDarkMode 
-                ? 'border-gray-600 bg-gray-700 focus-within:border-blue-500 focus-within:ring-blue-500/50' 
-                : 'border-gray-300 bg-gray-50 focus-within:border-amber-600 focus-within:ring-amber-600/50'"
+                ? 'border-transparent bg-neutral-800 focus-within:border-amber-600 focus-within:ring-amber-500/50' 
+                : 'border-transparent bg-gray-50 focus-within:border-amber-600 focus-within:ring-amber-600/50'"
             >
               <i-mdi-magnify 
                 class="w-5 h-5"
@@ -41,7 +41,7 @@
               type="button"
               class="h-10 px-4 text-white rounded-lg text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap"
               :class="isDarkMode 
-                ? 'bg-blue-600 hover:bg-blue-700' 
+                ? 'bg-amber-600 hover:bg-amber-700' 
                 : 'bg-amber-700 hover:bg-amber-800'"
               @click="openCreateReporterForm"
             >
@@ -60,8 +60,8 @@
           <div 
             class="w-5 h-5 border-2 rounded-full animate-spin"
             :class="isDarkMode 
-              ? 'border-gray-600 border-t-blue-500' 
-              : 'border-gray-300 border-t-amber-700'"
+              ? 'border-transparent border-t-amber-500' 
+              : 'border-transparent border-t-amber-700'"
           ></div>
           <span>Searching reporters...</span>
         </div>
@@ -71,8 +71,8 @@
           <div 
             class="py-2 text-sm border-b mb-3"
             :class="isDarkMode 
-              ? 'text-gray-400 border-gray-700' 
-              : 'text-gray-600 border-gray-200'"
+              ? 'text-gray-400 border-transparent' 
+              : 'text-gray-600 border-transparent'"
           >
             <span>{{ filteredContacts.length }} reporter(s) found</span>
           </div>
@@ -82,16 +82,16 @@
             class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer transition-all"
             :class="isSelected(contact)
               ? isDarkMode 
-                ? 'border-blue-500 bg-blue-900/20' 
+                ? 'border-amber-600 bg-amber-900/20' 
                 : 'border-amber-600 bg-amber-100'
               : isDarkMode
-                ? 'border-gray-700 bg-gray-800 hover:bg-gray-700 hover:border-blue-500'
-                : 'border-gray-200 bg-white hover:bg-gray-50 hover:border-amber-600'"
+                ? 'border-transparent bg-neutral-900 hover:bg-neutral-800 hover:border-amber-600'
+                : 'border-transparent bg-white hover:bg-gray-50 hover:border-amber-600'"
             @click="selectExistingReporter(contact)"
           >
             <div 
               class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
-              :class="isDarkMode ? 'bg-blue-600' : 'bg-amber-700'"
+              :class="isDarkMode ? 'bg-amber-600' : 'bg-amber-700'"
             >
               <span>{{ getInitials(getValue(contact, 'fullname') || 'NA') }}</span>
             </div>
@@ -118,8 +118,8 @@
                       v-if="getValue(contact, 'age')" 
                       class="border rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap"
                       :class="isDarkMode 
-                        ? 'border-gray-600 bg-gray-700 text-gray-300' 
-                        : 'border-gray-300 bg-gray-100 text-gray-700'"
+                        ? 'border-transparent bg-neutral-800 text-gray-300' 
+                        : 'border-transparent bg-gray-100 text-gray-700'"
                     >
                       {{ getValue(contact, 'age') }}y
                     </span>
@@ -127,8 +127,8 @@
                       v-if="getValue(contact, 'sex')" 
                       class="border rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap"
                       :class="isDarkMode 
-                        ? 'border-gray-600 bg-gray-700 text-gray-300' 
-                        : 'border-gray-300 bg-gray-100 text-gray-700'"
+                        ? 'border-transparent bg-neutral-800 text-gray-300' 
+                        : 'border-transparent bg-gray-100 text-gray-700'"
                     >
                       {{ getValue(contact, 'sex') }}
                     </span>
@@ -136,7 +136,7 @@
                       v-if="getValue(contact, 'location')" 
                       class="border rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap flex items-center gap-1"
                       :class="isDarkMode 
-                        ? 'bg-blue-600/20 text-blue-400 border-blue-600/30' 
+                        ? 'bg-amber-600/20 text-amber-500 border-amber-600/30' 
                         : 'bg-amber-100 text-amber-700 border-amber-300'"
                     >
                       <i-mdi-map-marker class="w-3 h-3" />
@@ -151,7 +151,7 @@
               <i-mdi-check-circle 
                 v-if="isSelected(contact)" 
                 class="w-5 h-5"
-                :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+                :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
               />
               <i-mdi-chevron-right 
                 v-else 
@@ -166,8 +166,8 @@
           v-else-if="shouldShowResults && !filteredContacts.length" 
           class="text-center p-10 rounded-lg border"
           :class="isDarkMode 
-            ? 'text-gray-400 bg-gray-800 border-gray-700' 
-            : 'text-gray-500 bg-white border-gray-200'"
+            ? 'text-gray-400 bg-neutral-900 border-transparent' 
+            : 'text-gray-500 bg-white border-transparent'"
         >
           <i-mdi-account-search class="mx-auto text-5xl mb-3 opacity-50" />
           <div class="text-base font-medium mb-1">No reporters found</div>
@@ -179,8 +179,8 @@
           v-else-if="!searchQuery.trim() && !showCreateForm" 
           class="text-center p-10 rounded-lg border"
           :class="isDarkMode 
-            ? 'text-gray-400 bg-gray-800 border-gray-700' 
-            : 'text-gray-500 bg-white border-gray-200'"
+            ? 'text-gray-400 bg-neutral-900 border-transparent' 
+            : 'text-gray-500 bg-white border-transparent'"
         >
           <i-mdi-account-group class="mx-auto text-5xl mb-3 opacity-50" />
           <div class="text-base font-medium mb-1">Start typing to search for existing reporters</div>
@@ -192,13 +192,13 @@
           v-if="(selectedReporter || (extractedReporterId && extractedContactId)) && !showCreateForm" 
           class="mt-5 p-4 border rounded-lg"
           :class="isDarkMode 
-            ? 'bg-blue-900/20 border-blue-600/30' 
+            ? 'bg-amber-900/20 border-amber-600/30' 
             : 'bg-amber-50 border-amber-300'"
         >
           <div class="flex items-start justify-between mb-3">
             <div 
               class="text-sm font-semibold"
-              :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+              :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
             >
               Selected Reporter:
             </div>
@@ -207,8 +207,8 @@
               @click="clearSelection" 
               class="p-1.5 rounded-md border transition-colors"
               :class="isDarkMode 
-                ? 'border-gray-600 hover:bg-gray-700 hover:border-red-500 text-gray-400 hover:text-red-400' 
-                : 'border-gray-300 hover:bg-gray-100 hover:border-red-500 text-gray-600 hover:text-red-600'"
+                ? 'border-transparent hover:bg-neutral-800 hover:border-red-500 text-gray-400 hover:text-red-400' 
+                : 'border-transparent hover:bg-gray-100 hover:border-red-500 text-gray-600 hover:text-red-600'"
             >
               <i-mdi-close class="w-4 h-4" />
             </button>
@@ -217,7 +217,7 @@
           <div class="flex items-start gap-3">
             <div 
               class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
-              :class="isDarkMode ? 'bg-blue-600' : 'bg-amber-700'"
+              :class="isDarkMode ? 'bg-amber-600' : 'bg-amber-700'"
             >
               <span>{{ getInitials(getValue(selectedReporter, 'fullname') || 'NR') }}</span>
             </div>
@@ -274,23 +274,23 @@
                   v-if="extractedContactId" 
                   class="flex items-center gap-2 p-2 border rounded-md"
                   :class="isDarkMode 
-                    ? 'bg-blue-900/30 border-blue-600/40' 
+                    ? 'bg-amber-900/30 border-amber-600/40' 
                     : 'bg-blue-50 border-blue-300'"
                 >
                   <i-mdi-check-circle 
                     class="w-5 h-5 flex-shrink-0"
-                    :class="isDarkMode ? 'text-blue-400' : 'text-blue-600'"
+                    :class="isDarkMode ? 'text-amber-500' : 'text-amber-600'"
                   />
                   <div class="flex-1">
                     <div 
                       class="text-xs font-medium"
-                      :class="isDarkMode ? 'text-blue-400' : 'text-blue-700'"
+                      :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
                     >
                       Contact ID (Index 5)
                     </div>
                     <div 
                       class="text-sm font-bold"
-                      :class="isDarkMode ? 'text-blue-300' : 'text-blue-800'"
+                      :class="isDarkMode ? 'text-amber-300' : 'text-blue-800'"
                     >
                       {{ extractedContactId }}
                     </div>
@@ -306,8 +306,8 @@
           v-if="showCreateForm" 
           class="mt-5 p-5 border rounded-lg"
           :class="isDarkMode 
-            ? 'bg-gray-800 border-gray-700' 
-            : 'bg-white border-gray-200'"
+            ? 'bg-neutral-900 border-transparent' 
+            : 'bg-white border-transparent'"
         >
           <div class="flex items-center justify-between mb-4">
             <h3 
@@ -332,7 +332,7 @@
             <!-- Basic Information -->
             <div 
               class="border-b pb-4"
-              :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+              :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
             >
               <h4 
                 class="text-md font-semibold mb-4"
@@ -353,8 +353,8 @@
                     type="text"
                     class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
                     :class="isDarkMode 
-                      ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
-                      : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
+                      ? 'bg-neutral-800 border-transparent text-gray-100 focus:ring-amber-500' 
+                      : 'bg-gray-50 border-transparent text-gray-900 focus:ring-amber-600'"
                     placeholder="Enter reporter's full name"
                   />
                 </div>
@@ -372,8 +372,8 @@
                     @change="handleDobChange"
                     class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
                     :class="isDarkMode 
-                      ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
-                      : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
+                      ? 'bg-neutral-800 border-transparent text-gray-100 focus:ring-amber-500' 
+                      : 'bg-gray-50 border-transparent text-gray-900 focus:ring-amber-600'"
                   />
                   <p 
                     v-if="reporterForm.dob" 
@@ -399,11 +399,11 @@
                       'w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all',
                       reporterForm.dob 
                         ? isDarkMode
-                          ? 'bg-gray-600 border-gray-600 text-gray-400 cursor-not-allowed'
-                          : 'bg-gray-200 border-gray-300 text-gray-500 cursor-not-allowed'
+                          ? 'bg-gray-600 border-transparent text-gray-400 cursor-not-allowed'
+                          : 'bg-gray-200 border-transparent text-gray-500 cursor-not-allowed'
                         : isDarkMode
-                          ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500'
-                          : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'
+                          ? 'bg-neutral-800 border-transparent text-gray-100 focus:ring-amber-500'
+                          : 'bg-gray-50 border-transparent text-gray-900 focus:ring-amber-600'
                     ]"
                     placeholder="Age"
                   />
@@ -452,7 +452,7 @@
             <!-- Contact Information -->
             <div 
               class="border-b pb-4"
-              :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+              :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
             >
               <h4 
                 class="text-md font-semibold mb-4"
@@ -473,8 +473,8 @@
                     type="tel"
                     class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
                     :class="isDarkMode 
-                      ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
-                      : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
+                      ? 'bg-neutral-800 border-transparent text-gray-100 focus:ring-amber-500' 
+                      : 'bg-gray-50 border-transparent text-gray-900 focus:ring-amber-600'"
                     placeholder="Enter phone number"
                   />
                 </div>
@@ -491,8 +491,8 @@
                     type="tel"
                     class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
                     :class="isDarkMode 
-                      ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
-                      : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
+                      ? 'bg-neutral-800 border-transparent text-gray-100 focus:ring-amber-500' 
+                      : 'bg-gray-50 border-transparent text-gray-900 focus:ring-amber-600'"
                     placeholder="Alternative phone"
                   />
                 </div>
@@ -509,8 +509,8 @@
                     type="email"
                     class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
                     :class="isDarkMode 
-                      ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
-                      : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
+                      ? 'bg-neutral-800 border-transparent text-gray-100 focus:ring-amber-500' 
+                      : 'bg-gray-50 border-transparent text-gray-900 focus:ring-amber-600'"
                     placeholder="Enter email address"
                   />
                 </div>
@@ -527,8 +527,8 @@
                     type="text"
                     class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
                     :class="isDarkMode 
-                      ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
-                      : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
+                      ? 'bg-neutral-800 border-transparent text-gray-100 focus:ring-amber-500' 
+                      : 'bg-gray-50 border-transparent text-gray-900 focus:ring-amber-600'"
                     placeholder="Enter landmark"
                   />
                 </div>
@@ -596,8 +596,8 @@
                     type="text"
                     class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
                     :class="isDarkMode 
-                      ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
-                      : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
+                      ? 'bg-neutral-800 border-transparent text-gray-100 focus:ring-amber-500' 
+                      : 'bg-gray-50 border-transparent text-gray-900 focus:ring-amber-600'"
                     placeholder="Enter ID number"
                   />
                 </div>
@@ -616,7 +616,7 @@
                         type="radio"
                         value="1"
                         class="w-4 h-4"
-                        :class="isDarkMode ? 'text-blue-600' : 'text-amber-700'"
+                        :class="isDarkMode ? 'text-amber-600' : 'text-amber-700'"
                       />
                       <span 
                         class="text-sm"
@@ -631,7 +631,7 @@
                         type="radio"
                         value="0"
                         class="w-4 h-4"
-                        :class="isDarkMode ? 'text-blue-600' : 'text-amber-700'"
+                        :class="isDarkMode ? 'text-amber-600' : 'text-amber-700'"
                       />
                       <span 
                         class="text-sm"
@@ -648,15 +648,15 @@
             <!-- Create Button -->
             <div 
               class="flex gap-3 justify-end pt-4 border-t"
-              :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+              :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
             >
               <button
                 type="button"
                 @click="closeCreateForm"
                 class="px-4 py-2 border rounded-lg transition-colors"
                 :class="isDarkMode 
-                  ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
-                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+                  ? 'bg-gray-700 text-gray-300 border-transparent hover:bg-gray-600' 
+                  : 'bg-white text-gray-700 border-transparent hover:bg-gray-50'"
               >
                 Cancel
               </button>
@@ -666,7 +666,7 @@
                 :disabled="isCreating"
                 class="px-4 py-2 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 :class="isDarkMode 
-                  ? 'bg-blue-600 hover:bg-blue-700' 
+                  ? 'bg-amber-600 hover:bg-amber-700' 
                   : 'bg-amber-700 hover:bg-amber-800'"
               >
                 <span v-if="isCreating" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
@@ -677,16 +677,13 @@
         </div>
       </div>
 
-      <div 
-        class="flex gap-3 justify-between mt-6 pt-5 border-t"
-        :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
-      >
+      <div class="flex gap-3 justify-between mt-6">
         <button 
           type="button" 
           class="px-4 py-2 bg-transparent border rounded-lg transition-colors"
           :class="isDarkMode 
-            ? 'text-gray-300 border-gray-600 hover:bg-gray-700 hover:border-red-500 hover:text-red-400' 
-            : 'text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-red-500 hover:text-red-600'"
+            ? 'text-gray-300 border-transparent hover:bg-gray-700 hover:border-red-500 hover:text-red-400' 
+            : 'text-gray-700 border-transparent hover:bg-gray-50 hover:border-red-500 hover:text-red-600'"
           @click="$emit('cancel-form')"
         >
           Cancel
@@ -696,7 +693,7 @@
             type="button" 
             class="px-4 py-2 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
             :class="isDarkMode 
-              ? 'bg-blue-600 hover:bg-blue-700' 
+              ? 'bg-amber-600 hover:bg-amber-700' 
               : 'bg-amber-700 hover:bg-amber-800'"
             :disabled="!extractedReporterId || !extractedContactId"
             @click="$emit('validate-and-proceed')"

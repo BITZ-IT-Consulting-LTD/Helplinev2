@@ -1,16 +1,16 @@
 <template>
   <div 
-    class="rounded-lg shadow-xl overflow-auto border"
+    class="rounded-xl shadow-xl overflow-auto border"
     :class="isDarkMode 
-      ? 'bg-gray-800 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-gray-800 border-transparent' 
+      : 'bg-white border-transparent'"
   >
     <table class="min-w-full text-sm text-left">
       <thead 
         class="border-b"
         :class="isDarkMode 
-          ? 'bg-gray-900/60 border-gray-700' 
-          : 'bg-gray-50 border-gray-200'"
+          ? 'bg-gray-900/60 border-transparent' 
+          : 'bg-gray-50 border-transparent'"
       >
         <tr>
           <th 
@@ -93,7 +93,7 @@
             'cursor-pointer transition-all duration-200',
             call[callsStore.calls_k?.uniqueid?.[0]] === selectedCallId 
               ? (isDarkMode 
-                  ? 'bg-blue-600/10 border-l-4 border-l-blue-500' 
+                  ? 'bg-amber-600/10 border-l-4 border-l-amber-500' 
                   : 'bg-amber-100 border-l-4 border-l-amber-600')
               : (isDarkMode
                   ? 'hover:bg-gray-700/30'
@@ -199,7 +199,7 @@
                 'p-2 rounded transition-all duration-200',
                 isAnswered(call) 
                   ? (isDarkMode 
-                      ? 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95' 
+                      ? 'bg-amber-600 text-white hover:bg-amber-700 active:scale-95' 
                       : 'bg-amber-700 text-white hover:bg-amber-800 active:scale-95')
                   : (isDarkMode
                       ? 'bg-gray-700 text-gray-500 cursor-not-allowed opacity-50'
@@ -324,8 +324,8 @@ function formatDuration(value) {
 function directionClass(direction) {
   if (!direction) {
     return isDarkMode.value 
-      ? 'bg-gray-700/50 text-gray-400 border-gray-600'
-      : 'bg-gray-100 text-gray-600 border-gray-300'
+      ? 'bg-gray-700/50 text-gray-400 border-transparent'
+      : 'bg-gray-100 text-gray-600 border-transparent'
   }
   const d = String(direction)
   if (d === '1') {
@@ -339,16 +339,16 @@ function directionClass(direction) {
       : 'bg-green-100 text-green-700 border-green-300'
   }
   return isDarkMode.value
-    ? 'bg-gray-700/50 text-gray-400 border-gray-600'
-    : 'bg-gray-100 text-gray-600 border-gray-300'
+    ? 'bg-gray-700/50 text-gray-400 border-transparent'
+    : 'bg-gray-100 text-gray-600 border-transparent'
 }
 
 // Status styling - theme aware
 function statusClass(status) {
   if (!status) {
     return isDarkMode.value
-      ? 'bg-gray-700/50 text-gray-400 border-gray-600'
-      : 'bg-gray-100 text-gray-600 border-gray-300'
+      ? 'bg-gray-700/50 text-gray-400 border-transparent'
+      : 'bg-gray-100 text-gray-600 border-transparent'
   }
   const s = String(status).toLowerCase()
   
@@ -389,7 +389,7 @@ function statusClass(status) {
   }
   
   return isDarkMode.value
-    ? 'bg-gray-700/50 text-gray-400 border-gray-600'
-    : 'bg-gray-100 text-gray-600 border-gray-300'
+    ? 'bg-gray-700/50 text-gray-400 border-transparent'
+    : 'bg-gray-100 text-gray-600 border-transparent'
 }
 </script>

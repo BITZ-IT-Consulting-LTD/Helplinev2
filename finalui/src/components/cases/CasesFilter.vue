@@ -1,9 +1,9 @@
 <template>
   <div 
-    class="w-full rounded-lg p-4 shadow-xl border mb-4"
+    class="w-full rounded-lg p-4 shadow-xl border border-transparent mb-4"
     :class="isDarkMode 
-      ? 'bg-gray-800 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-neutral-900' 
+      : 'bg-white'"
   >
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
@@ -21,8 +21,8 @@
           placeholder="Enter case ID"
           class="rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:border-transparent"
           :class="isDarkMode 
-            ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-            : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+            ? 'bg-neutral-800 border border-transparent text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+            : 'bg-gray-50 border border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
         />
       </div>
 
@@ -39,8 +39,8 @@
           v-model="filters.dateFrom" 
           class="rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:border-transparent"
           :class="isDarkMode 
-            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
-            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
+            ? 'bg-neutral-800 border border-transparent text-gray-100 focus:ring-amber-500' 
+            : 'bg-gray-50 border border-transparent text-gray-900 focus:ring-amber-600'"
         />
       </div>
 
@@ -57,8 +57,8 @@
           v-model="filters.dateTo" 
           class="rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:border-transparent"
           :class="isDarkMode 
-            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
-            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
+            ? 'bg-neutral-800 border border-transparent text-gray-100 focus:ring-amber-500' 
+            : 'bg-gray-50 border border-transparent text-gray-900 focus:ring-amber-600'"
         />
       </div>
 
@@ -76,8 +76,8 @@
           placeholder="Enter name"
           class="rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:border-transparent"
           :class="isDarkMode 
-            ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-            : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+            ? 'bg-neutral-800 border border-transparent text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+            : 'bg-gray-50 border border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
         />
       </div>
 
@@ -93,8 +93,8 @@
           v-model="filters.source" 
           class="rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:border-transparent"
           :class="isDarkMode 
-            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
-            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
+            ? 'bg-neutral-800 border border-transparent text-gray-100 focus:ring-amber-500' 
+            : 'bg-gray-50 border border-transparent text-gray-900 focus:ring-amber-600'"
         >
           <option value="">All</option>
           <option value="walkin">Walk-in</option>
@@ -124,8 +124,8 @@
           v-model="filters.priority" 
           class="rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:border-transparent"
           :class="isDarkMode 
-            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
-            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
+            ? 'bg-neutral-800 border border-transparent text-gray-100 focus:ring-amber-500' 
+            : 'bg-gray-50 border border-transparent text-gray-900 focus:ring-amber-600'"
         >
           <option value="">All</option>
           <option value="1">Low</option>
@@ -146,8 +146,8 @@
           v-model="filters.status" 
           class="rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:border-transparent"
           :class="isDarkMode 
-            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
-            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
+            ? 'bg-neutral-800 border border-transparent text-gray-100 focus:ring-amber-500' 
+            : 'bg-gray-50 border border-transparent text-gray-900 focus:ring-amber-600'"
         >
           <option value="">All</option>
           <option value="1">Open</option>
@@ -163,7 +163,7 @@
         @click="applyFilters"
         class="text-white px-4 py-2 rounded transition-all duration-200 text-sm shadow-lg flex items-center gap-2 active:scale-95 active:shadow-md"
         :class="isDarkMode 
-          ? 'bg-blue-600 hover:bg-blue-700' 
+          ? 'bg-amber-600 hover:bg-amber-700' 
           : 'bg-amber-700 hover:bg-amber-800'"
       >
         <i-mdi-filter class="w-4 h-4" />

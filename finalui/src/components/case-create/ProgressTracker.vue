@@ -90,9 +90,9 @@ const getStepCircleClass = (step) => {
   if (isDarkMode.value) {
     // Dark mode classes
     if (status === 'pending' && !isCurrent) {
-      return 'bg-gray-900 border-gray-600 text-gray-500'
+      return 'bg-gray-900 border-transparent text-gray-500'
     } else if (isCurrent && status !== 'completed') {
-      return 'bg-gray-900 border-blue-600 text-blue-400 ring-4 ring-blue-900/50'
+      return 'bg-gray-900 border-amber-600 text-amber-500 ring-4 ring-blue-900/50'
     } else if (status === 'completed') {
       return 'border-green-500 bg-green-500 text-white'
     } else if (status === 'error') {
@@ -101,7 +101,7 @@ const getStepCircleClass = (step) => {
   } else {
     // Light mode classes
     if (status === 'pending' && !isCurrent) {
-      return 'bg-white border-gray-300 text-gray-400'
+      return 'bg-white border-transparent text-gray-400'
     } else if (isCurrent && status !== 'completed') {
       return 'bg-white border-amber-600 text-amber-700 ring-4 ring-amber-100'
     } else if (status === 'completed') {
@@ -123,7 +123,7 @@ const getStepLabelClass = (step) => {
     if (status === 'pending' && !isCurrent) {
       return 'text-gray-500'
     } else if (isCurrent && status !== 'completed') {
-      return 'text-blue-400'
+      return 'text-amber-500'
     } else if (status === 'completed') {
       return 'text-green-400'
     } else if (status === 'error') {

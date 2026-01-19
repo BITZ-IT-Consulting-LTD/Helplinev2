@@ -16,13 +16,13 @@
         v-for="(item, index) in mockHistory"
         :key="index"
         class="relative pl-8 pb-6 border-l-2"
-        :class="isDarkMode ? 'border-gray-700' : 'border-gray-300'"
+        :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
       >
         <!-- Timeline Dot -->
         <div
           class="absolute -left-2 top-0 w-4 h-4 rounded-full border-2"
           :class="[
-            isDarkMode ? 'border-gray-900' : 'border-white',
+            isDarkMode ? 'border-transparent' : 'border-white',
             getTimelineDotColor(item.type)
           ]"
         ></div>
@@ -31,8 +31,8 @@
         <div
           class="rounded-lg border p-4"
           :class="isDarkMode
-            ? 'bg-gray-800 border-gray-700'
-            : 'bg-white border-gray-200'"
+            ? 'bg-gray-800 border-transparent'
+            : 'bg-white border-transparent'"
         >
           <div class="flex items-start justify-between mb-2">
             <div class="flex items-center gap-2">
@@ -96,7 +96,7 @@
           </div>
 
           <!-- User Info -->
-          <div class="flex items-center gap-2 mt-3 pt-3 border-t" :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'">
+          <div class="flex items-center gap-2 mt-3 pt-3 border-t" :class="isDarkMode ? 'border-transparent' : 'border-transparent'">
             <i-mdi-account-circle 
               class="w-4 h-4"
               :class="isDarkMode ? 'text-gray-500' : 'text-gray-400'"
@@ -116,13 +116,13 @@
     <div
       class="p-4 rounded-lg border"
       :class="isDarkMode
-        ? 'bg-gray-800 border-gray-700'
-        : 'bg-gray-100 border-gray-300'"
+        ? 'bg-gray-800 border-transparent'
+        : 'bg-gray-100 border-transparent'"
     >
       <div class="flex items-start gap-3">
         <i-mdi-information-outline 
           class="w-5 h-5 mt-0.5"
-          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
         />
         <div>
           <p 
@@ -146,8 +146,8 @@
       @click="$emit('back')"
       class="w-full px-6 py-3 rounded-lg font-medium transition-all duration-200 border flex items-center justify-center gap-2"
       :class="isDarkMode
-        ? 'bg-gray-800 text-gray-300 border-gray-700 hover:bg-gray-700'
-        : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+        ? 'bg-gray-800 text-gray-300 border-transparent hover:bg-gray-700'
+        : 'bg-white text-gray-700 border-transparent hover:bg-gray-50'"
     >
       <i-mdi-arrow-left class="w-5 h-5" />
       Back to Details
@@ -232,7 +232,7 @@ const mockHistory = [
 // Helper functions for styling
 const getTimelineDotColor = (type) => {
   const colors = {
-    update: isDarkMode.value ? 'bg-blue-500' : 'bg-amber-600',
+    update: isDarkMode.value ? 'bg-amber-500' : 'bg-amber-600',
     comment: isDarkMode.value ? 'bg-green-500' : 'bg-green-600',
     escalation: isDarkMode.value ? 'bg-orange-500' : 'bg-orange-600',
     client: isDarkMode.value ? 'bg-purple-500' : 'bg-purple-600',
@@ -254,7 +254,7 @@ const getHistoryIcon = (type) => {
 
 const getHistoryIconColor = (type) => {
   const colors = {
-    update: isDarkMode.value ? 'text-blue-400' : 'text-amber-700',
+    update: isDarkMode.value ? 'text-amber-500' : 'text-amber-700',
     comment: isDarkMode.value ? 'text-green-400' : 'text-green-600',
     escalation: isDarkMode.value ? 'text-orange-400' : 'text-orange-600',
     client: isDarkMode.value ? 'text-purple-400' : 'text-purple-600',

@@ -4,8 +4,8 @@
     <div 
       class="flex items-center justify-between mb-6 pb-4 border-b sticky top-0 z-10 -mx-6 px-6 -mt-6 pt-6"
       :class="isDarkMode 
-        ? 'bg-gray-900 border-gray-700' 
-        : 'bg-white border-gray-200'"
+        ? 'bg-gray-900 border-transparent' 
+        : 'bg-white border-transparent'"
     >
       <div>
         <h2 
@@ -27,8 +27,8 @@
           type="button"
           class="px-4 py-2 border rounded-lg transition-colors font-medium"
           :class="isDarkMode 
-            ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
-            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+            ? 'bg-gray-700 text-gray-300 border-transparent hover:bg-gray-600' 
+            : 'bg-white text-gray-700 border-transparent hover:bg-gray-50'"
         >
           Cancel
         </button>
@@ -38,7 +38,7 @@
           type="button"
           class="px-4 py-2 text-white rounded-lg transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           :class="isDarkMode 
-            ? 'bg-blue-600 hover:bg-blue-700' 
+            ? 'bg-amber-600 hover:bg-amber-700' 
             : 'bg-amber-700 hover:bg-amber-800'"
         >
           <span v-if="isSubmitting" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
@@ -70,8 +70,8 @@
               rows="6"
               class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent resize-vertical"
               :class="isDarkMode 
-                ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-                : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+                ? 'bg-gray-700 border-transparent text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+                : 'bg-gray-50 border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
               placeholder="Describe the case details..."
             ></textarea>
           </div>
@@ -89,8 +89,8 @@
               rows="4"
               class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent resize-vertical"
               :class="isDarkMode 
-                ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-                : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+                ? 'bg-gray-700 border-transparent text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+                : 'bg-gray-50 border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
               placeholder="Outline planned interventions..."
             ></textarea>
           </div>
@@ -129,8 +129,8 @@
                 v-model="formData.priority" 
                 class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
                 :class="isDarkMode 
-                  ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
-                  : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
+                  ? 'bg-gray-700 border-transparent text-gray-100 focus:ring-amber-500' 
+                  : 'bg-gray-50 border-transparent text-gray-900 focus:ring-amber-600'"
               >
                 <option value="">Select priority</option>
                 <option value="3">High</option>
@@ -150,8 +150,8 @@
                 v-model="formData.status" 
                 class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
                 :class="isDarkMode 
-                  ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
-                  : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
+                  ? 'bg-gray-700 border-transparent text-gray-100 focus:ring-amber-500' 
+                  : 'bg-gray-50 border-transparent text-gray-900 focus:ring-amber-600'"
               >
                 <option value="">Select status</option>
                 <option value="1">Open</option>
@@ -194,8 +194,8 @@
                 v-model="formData.escalated_to_id" 
                 class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
                 :class="isDarkMode 
-                  ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
-                  : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
+                  ? 'bg-gray-700 border-transparent text-gray-100 focus:ring-amber-500' 
+                  : 'bg-gray-50 border-transparent text-gray-900 focus:ring-amber-600'"
               >
                 <option value="0">None</option>
                 <!-- Users will be populated from store -->
@@ -229,8 +229,8 @@
               :key="index"
               class="flex items-center justify-between p-3 border rounded-lg"
               :class="isDarkMode 
-                ? 'bg-gray-800 border-gray-700' 
-                : 'bg-gray-50 border-gray-300'"
+                ? 'bg-gray-800 border-transparent' 
+                : 'bg-gray-50 border-transparent'"
             >
               <div class="flex-1">
                 <div 
@@ -252,7 +252,7 @@
                   @click="editClient(index)"
                   class="px-3 py-1.5 text-xs font-medium rounded transition-colors"
                   :class="isDarkMode 
-                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                    ? 'bg-amber-600 text-white hover:bg-amber-700' 
                     : 'bg-amber-700 text-white hover:bg-amber-800'"
                 >
                   Edit
@@ -273,8 +273,8 @@
             v-else
             class="text-center p-8 border border-dashed rounded-lg"
             :class="isDarkMode 
-              ? 'bg-gray-800 border-gray-600 text-gray-500' 
-              : 'bg-white border-gray-300 text-gray-500'"
+              ? 'bg-gray-800 border-transparent text-gray-500' 
+              : 'bg-white border-transparent text-gray-500'"
           >
             No clients added yet
           </div>
@@ -285,8 +285,8 @@
             @click="openClientModal"
             class="w-full px-4 py-2 border-2 border-dashed rounded-lg transition-colors font-medium flex items-center justify-center gap-2"
             :class="isDarkMode 
-              ? 'border-gray-600 text-gray-400 hover:border-blue-500 hover:text-blue-400 hover:bg-blue-900/20' 
-              : 'border-gray-300 text-gray-600 hover:border-amber-600 hover:text-amber-700 hover:bg-amber-50'"
+              ? 'border-transparent text-gray-400 hover:border-amber-500 hover:text-amber-500 hover:bg-amber-900/20' 
+              : 'border-transparent text-gray-600 hover:border-amber-600 hover:text-amber-700 hover:bg-amber-50'"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="12" y1="5" x2="12" y2="19"/>
@@ -312,8 +312,8 @@
               :key="index"
               class="flex items-center justify-between p-3 border rounded-lg"
               :class="isDarkMode 
-                ? 'bg-gray-800 border-gray-700' 
-                : 'bg-gray-50 border-gray-300'"
+                ? 'bg-gray-800 border-transparent' 
+                : 'bg-gray-50 border-transparent'"
             >
               <div class="flex-1">
                 <div 
@@ -335,7 +335,7 @@
                   @click="editPerpetrator(index)"
                   class="px-3 py-1.5 text-xs font-medium rounded transition-colors"
                   :class="isDarkMode 
-                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                    ? 'bg-amber-600 text-white hover:bg-amber-700' 
                     : 'bg-amber-700 text-white hover:bg-amber-800'"
                 >
                   Edit
@@ -356,8 +356,8 @@
             v-else
             class="text-center p-8 border border-dashed rounded-lg"
             :class="isDarkMode 
-              ? 'bg-gray-800 border-gray-600 text-gray-500' 
-              : 'bg-white border-gray-300 text-gray-500'"
+              ? 'bg-gray-800 border-transparent text-gray-500' 
+              : 'bg-white border-transparent text-gray-500'"
           >
             No perpetrators added yet
           </div>
@@ -368,8 +368,8 @@
             @click="openPerpetratorModal"
             class="w-full px-4 py-2 border-2 border-dashed rounded-lg transition-colors font-medium flex items-center justify-center gap-2"
             :class="isDarkMode 
-              ? 'border-gray-600 text-gray-400 hover:border-blue-500 hover:text-blue-400 hover:bg-blue-900/20' 
-              : 'border-gray-300 text-gray-600 hover:border-amber-600 hover:text-amber-700 hover:bg-amber-50'"
+              ? 'border-transparent text-gray-400 hover:border-amber-500 hover:text-amber-500 hover:bg-amber-900/20' 
+              : 'border-transparent text-gray-600 hover:border-amber-600 hover:text-amber-700 hover:bg-amber-50'"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="12" y1="5" x2="12" y2="19"/>
@@ -419,16 +419,16 @@
     <div 
       class="flex justify-end gap-3 mt-6 pt-6 border-t sticky bottom-0 -mx-6 px-6 -mb-6 pb-6"
       :class="isDarkMode 
-        ? 'bg-gray-900 border-gray-700' 
-        : 'bg-white border-gray-200'"
+        ? 'bg-gray-900 border-transparent' 
+        : 'bg-white border-transparent'"
     >
       <button
         @click="$emit('cancel')"
         type="button"
         class="px-4 py-2 border rounded-lg transition-colors font-medium"
         :class="isDarkMode 
-          ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
-          : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+          ? 'bg-gray-700 text-gray-300 border-transparent hover:bg-gray-600' 
+          : 'bg-white text-gray-700 border-transparent hover:bg-gray-50'"
       >
         Cancel
       </button>
@@ -438,7 +438,7 @@
         type="button"
         class="px-4 py-2 text-white rounded-lg transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
         :class="isDarkMode 
-          ? 'bg-blue-600 hover:bg-blue-700' 
+          ? 'bg-amber-600 hover:bg-amber-700' 
           : 'bg-amber-700 hover:bg-amber-800'"
       >
         <span v-if="isSubmitting" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>

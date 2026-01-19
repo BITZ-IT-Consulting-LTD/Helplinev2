@@ -12,7 +12,7 @@
     class="fixed top-0 right-0 h-full shadow-2xl z-50 transform transition-all duration-300 ease-out overflow-hidden"
     :class="[
       panelWidthClass,
-      isDarkMode ? 'bg-gray-900 border-l border-gray-700' : 'bg-white border-l border-gray-200'
+      isDarkMode ? 'bg-gray-900 border-l border-transparent' : 'bg-white border-l border-transparent'
     ]"
     @click.stop
   >
@@ -24,8 +24,8 @@
       <div 
         class="w-12 h-12 border-4 rounded-full animate-spin"
         :class="isDarkMode 
-          ? 'border-gray-700 border-t-blue-500' 
-          : 'border-gray-200 border-t-amber-700'"
+          ? 'border-transparent border-t-blue-500' 
+          : 'border-transparent border-t-amber-700'"
       ></div>
       <p 
         class="text-sm font-medium"
@@ -41,8 +41,8 @@
       <div 
         class="flex items-center justify-between px-6 py-4 border-b"
         :class="isDarkMode 
-          ? 'bg-gray-800/50 border-gray-700' 
-          : 'bg-gray-50 border-gray-200'"
+          ? 'bg-gray-800/50 border-transparent' 
+          : 'bg-gray-50 border-transparent'"
       >
         <!-- Breadcrumb -->
         <div class="flex items-center gap-2 text-sm">
@@ -74,21 +74,21 @@
           <span 
             v-if="currentView === 'update'"
             class="font-semibold"
-            :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+            :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
           >
             Update Case
           </span>
           <span 
             v-if="currentView === 'edit'"
             class="font-semibold"
-            :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+            :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
           >
             Edit Case
           </span>
           <span 
             v-if="currentView === 'history'"
             class="font-semibold"
-            :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+            :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
           >
             Case History
           </span>
@@ -152,8 +152,8 @@
           <div 
             class="border rounded-lg p-5"
             :class="isDarkMode 
-              ? 'bg-gray-800 border-gray-700' 
-              : 'bg-white border-gray-200'"
+              ? 'bg-gray-800 border-transparent' 
+              : 'bg-white border-transparent'"
           >
             <h3 
               class="text-lg font-bold mb-4"
@@ -226,7 +226,7 @@
               </div>
 
               <!-- Narrative -->
-              <div class="pt-3 border-t" :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'">
+              <div class="pt-3 border-t" :class="isDarkMode ? 'border-transparent' : 'border-transparent'">
                 <div 
                   class="text-xs font-semibold uppercase mb-2"
                   :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
@@ -242,7 +242,7 @@
               </div>
 
               <!-- Plan -->
-              <div class="pt-3 border-t" :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'">
+              <div class="pt-3 border-t" :class="isDarkMode ? 'border-transparent' : 'border-transparent'">
                 <div 
                   class="text-xs font-semibold uppercase mb-2"
                   :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
@@ -265,7 +265,7 @@
               @click="currentView = 'update'"
               class="px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 text-white"
               :class="isDarkMode 
-                ? 'bg-blue-600 hover:bg-blue-700' 
+                ? 'bg-amber-600 hover:bg-amber-700' 
                 : 'bg-amber-700 hover:bg-amber-800'"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -280,8 +280,8 @@
               @click="currentView = 'edit'"
               class="px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 border"
               :class="isDarkMode 
-                ? 'bg-gray-800 text-gray-300 border-gray-700 hover:border-blue-500 hover:text-blue-400' 
-                : 'bg-white text-gray-700 border-gray-300 hover:border-amber-600 hover:text-amber-700'"
+                ? 'bg-gray-800 text-gray-300 border-transparent hover:border-amber-500 hover:text-amber-500' 
+                : 'bg-white text-gray-700 border-transparent hover:border-amber-600 hover:text-amber-700'"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -294,8 +294,8 @@
               @click="currentView = 'history'"
               class="px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 border"
               :class="isDarkMode 
-                ? 'bg-gray-800 text-gray-300 border-gray-700 hover:border-purple-500 hover:text-purple-400' 
-                : 'bg-white text-gray-700 border-gray-300 hover:border-purple-600 hover:text-purple-700'"
+                ? 'bg-gray-800 text-gray-300 border-transparent hover:border-purple-500 hover:text-purple-400' 
+                : 'bg-white text-gray-700 border-transparent hover:border-purple-600 hover:text-purple-700'"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10"/>
@@ -447,8 +447,8 @@ const getPriorityCardClass = (priority) => {
         : 'bg-green-50 border-green-300 text-green-700'
     default:
       return isDarkMode.value
-        ? 'bg-gray-700 border-gray-600 text-gray-400'
-        : 'bg-gray-100 border-gray-300 text-gray-600'
+        ? 'bg-gray-700 border-transparent text-gray-400'
+        : 'bg-gray-100 border-transparent text-gray-600'
   }
 }
 
@@ -465,8 +465,8 @@ const getStatusCardClass = (status) => {
         : 'bg-green-50 border-green-300 text-green-700'
     default:
       return isDarkMode.value
-        ? 'bg-gray-700 border-gray-600 text-gray-400'
-        : 'bg-gray-100 border-gray-300 text-gray-600'
+        ? 'bg-gray-700 border-transparent text-gray-400'
+        : 'bg-gray-100 border-transparent text-gray-600'
   }
 }
 

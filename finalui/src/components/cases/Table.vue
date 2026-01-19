@@ -2,16 +2,16 @@
   <div 
     class="rounded-lg shadow-xl overflow-hidden border"
     :class="isDarkMode 
-      ? 'bg-gray-800 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-neutral-900 border-transparent' 
+      : 'bg-white border-transparent'"
   >
     <table class="w-full">
       <thead>
         <tr 
           class="border-b"
           :class="isDarkMode 
-            ? 'bg-gray-900/60 border-gray-700' 
-            : 'bg-gray-50 border-gray-200'"
+            ? 'bg-black/60 border-transparent' 
+            : 'bg-gray-50 border-transparent'"
         >
           <th 
             class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
@@ -62,7 +62,7 @@
           @click="selectCase(caseItem)"
           class="cursor-pointer transition-all duration-200"
           :class="isDarkMode 
-            ? 'hover:bg-gray-700/30' 
+            ? 'hover:bg-neutral-800' 
             : 'hover:bg-gray-50'"
         >
           <td 
@@ -201,8 +201,8 @@ const getPriorityClass = (priority) => {
         : 'bg-green-100 text-green-700 border-green-300'
     default:
       return isDarkMode.value
-        ? 'bg-gray-600/20 text-gray-400 border-gray-600/30'
-        : 'bg-gray-100 text-gray-600 border-gray-300'
+        ? 'bg-gray-600/20 text-gray-400 border-transparent/30'
+        : 'bg-gray-100 text-gray-600 border-transparent'
   }
 }
 
@@ -219,8 +219,8 @@ const getStatusClass = (status) => {
         : 'bg-green-100 text-green-700 border-green-300'
     default:
       return isDarkMode.value
-        ? 'bg-gray-600/20 text-gray-400 border-gray-600/30'
-        : 'bg-gray-100 text-gray-600 border-gray-300'
+        ? 'bg-gray-600/20 text-gray-400 border-transparent/30'
+        : 'bg-gray-100 text-gray-600 border-transparent'
   }
 }
 </script>

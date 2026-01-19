@@ -15,11 +15,11 @@
         isDarkMode ? 'bg-gray-700' : 'bg-gray-50',
         isOpen 
           ? isDarkMode 
-            ? 'border-blue-500 ring-2 ring-blue-500/50' 
+            ? 'border-amber-500 ring-2 ring-blue-500/50' 
             : 'border-amber-600 ring-2 ring-amber-600/50'
           : isDarkMode
-            ? 'border-gray-600 hover:border-blue-500'
-            : 'border-gray-300 hover:border-amber-600',
+            ? 'border-transparent hover:border-amber-500'
+            : 'border-transparent hover:border-amber-600',
         selectedOptions.length > 0 ? '' : ''
       ]"
     >
@@ -27,14 +27,14 @@
       <div 
         v-if="selectedOptions.length > 0" 
         class="flex flex-wrap gap-1.5 p-2 pb-1 border-b"
-        :class="isDarkMode ? 'border-gray-600' : 'border-gray-200'"
+        :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
       >
         <div 
           v-for="option in selectedOptions" 
           :key="option.value"
           class="inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium"
           :class="isDarkMode 
-            ? 'bg-blue-600 text-white' 
+            ? 'bg-amber-600 text-white' 
             : 'bg-amber-700 text-white'"
         >
           <span class="max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap">{{ option.text }}</span>
@@ -89,8 +89,8 @@
         v-if="isOpen" 
         class="absolute top-full left-0 right-0 z-50 border rounded-lg shadow-xl mt-0.5 max-h-[300px] overflow-hidden"
         :class="isDarkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'"
+          ? 'bg-gray-800 border-transparent' 
+          : 'bg-white border-transparent'"
       >
         <div 
           v-if="loading" 
@@ -100,8 +100,8 @@
           <div 
             class="w-4 h-4 border-2 rounded-full animate-spin"
             :class="isDarkMode 
-              ? 'border-gray-600 border-t-blue-500' 
-              : 'border-gray-300 border-t-amber-700'"
+              ? 'border-transparent border-t-blue-500' 
+              : 'border-transparent border-t-amber-700'"
           ></div>
           <span>Loading options...</span>
         </div>
@@ -117,7 +117,7 @@
             type="button" 
             class="px-3 py-1.5 text-white border-none rounded text-xs cursor-pointer transition-colors"
             :class="isDarkMode 
-              ? 'bg-blue-600 hover:bg-blue-700' 
+              ? 'bg-amber-600 hover:bg-amber-700' 
               : 'bg-amber-700 hover:bg-amber-800'"
             @click="fetchOptions"
           >
@@ -142,10 +142,10 @@
               :key="option.value"
               :class="[
                 'flex items-start gap-3 px-3 py-3 cursor-pointer transition-colors border-b last:border-b-0',
-                isDarkMode ? 'border-gray-700' : 'border-gray-200',
+                isDarkMode ? 'border-transparent' : 'border-transparent',
                 isSelected(option) 
                   ? isDarkMode 
-                    ? 'bg-blue-600/10 border-l-4 border-l-blue-500' 
+                    ? 'bg-amber-600/10 border-l-4 border-l-blue-500' 
                     : 'bg-amber-50 border-l-4 border-l-amber-600'
                   : isDarkMode
                     ? 'hover:bg-gray-700'

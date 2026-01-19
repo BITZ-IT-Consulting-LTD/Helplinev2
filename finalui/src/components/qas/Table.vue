@@ -2,8 +2,8 @@
   <div 
     class="rounded-lg shadow-xl border overflow-hidden"
     :class="isDarkMode 
-      ? 'bg-gray-800 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-neutral-900 border-transparent' 
+      : 'bg-white border-transparent'"
   >
     <div class="overflow-x-auto">
       <table class="w-full min-w-[1400px]">
@@ -11,8 +11,8 @@
           <tr 
             class="border-b"
             :class="isDarkMode 
-              ? 'bg-gray-900/60 border-gray-700' 
-              : 'bg-gray-50 border-gray-200'"
+              ? 'bg-black/60 border-transparent' 
+              : 'bg-gray-50 border-transparent'"
           >
             <th 
               class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
@@ -98,7 +98,7 @@
             :key="i"
             class="transition-all duration-200"
             :class="isDarkMode 
-              ? 'hover:bg-gray-700/30' 
+              ? 'hover:bg-neutral-800' 
               : 'hover:bg-gray-50'"
           >
             <!-- Call Date -->
@@ -130,7 +130,7 @@
               <span 
                 class="px-2 py-1 rounded font-medium"
                 :class="isDarkMode 
-                  ? 'bg-blue-600/20 text-blue-400' 
+                  ? 'bg-amber-600/20 text-amber-500' 
                   : 'bg-amber-100 text-amber-700'"
               >
                 {{ qa[qas_k.opening_phrase[0]] }}%
@@ -140,7 +140,7 @@
               <span 
                 class="px-2 py-1 rounded font-medium"
                 :class="isDarkMode 
-                  ? 'bg-blue-600/20 text-blue-400' 
+                  ? 'bg-amber-600/20 text-amber-500' 
                   : 'bg-amber-100 text-amber-700'"
               >
                 {{ qa[qas_k.listening_score_p[0]] }}%
@@ -150,7 +150,7 @@
               <span 
                 class="px-2 py-1 rounded font-medium"
                 :class="isDarkMode 
-                  ? 'bg-blue-600/20 text-blue-400' 
+                  ? 'bg-amber-600/20 text-amber-500' 
                   : 'bg-amber-100 text-amber-700'"
               >
                 {{ qa[qas_k.proactive_score_p[0]] }}%
@@ -160,7 +160,7 @@
               <span 
                 class="px-2 py-1 rounded font-medium"
                 :class="isDarkMode 
-                  ? 'bg-blue-600/20 text-blue-400' 
+                  ? 'bg-amber-600/20 text-amber-500' 
                   : 'bg-amber-100 text-amber-700'"
               >
                 {{ qa[qas_k.resolution_score_p[0]] }}%
@@ -170,7 +170,7 @@
               <span 
                 class="px-2 py-1 rounded font-medium"
                 :class="isDarkMode 
-                  ? 'bg-blue-600/20 text-blue-400' 
+                  ? 'bg-amber-600/20 text-amber-500' 
                   : 'bg-amber-100 text-amber-700'"
               >
                 {{ qa[qas_k.holding_score_p[0]] }}%
@@ -180,7 +180,7 @@
               <span 
                 class="px-2 py-1 rounded font-medium"
                 :class="isDarkMode 
-                  ? 'bg-blue-600/20 text-blue-400' 
+                  ? 'bg-amber-600/20 text-amber-500' 
                   : 'bg-amber-100 text-amber-700'"
               >
                 {{ qa[qas_k.closing_score_p[0]] }}%

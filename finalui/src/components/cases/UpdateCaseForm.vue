@@ -3,8 +3,8 @@
     <div
       class="p-4 rounded-lg border-l-4"
       :class="isDarkMode
-        ? 'bg-blue-900/20 border-blue-500 text-blue-300'
-        : 'bg-blue-50 border-blue-500 text-blue-800'"
+        ? 'bg-amber-900/20 border-amber-500 text-blue-300'
+        : 'bg-blue-50 border-amber-500 text-blue-800'"
     >
       <p class="text-sm">Update case status, priority, and other critical information</p>
     </div>
@@ -79,14 +79,14 @@
           v-if="userStore.loading" 
           class="flex items-center gap-2 p-3 border rounded-lg"
           :class="isDarkMode 
-            ? 'bg-gray-800 border-gray-700' 
-            : 'bg-white border-gray-200'"
+            ? 'bg-gray-800 border-transparent' 
+            : 'bg-white border-transparent'"
         >
           <div 
             class="w-4 h-4 border-2 rounded-full animate-spin"
             :class="isDarkMode 
-              ? 'border-gray-400 border-t-blue-500' 
-              : 'border-gray-300 border-t-amber-700'"
+              ? 'border-transparent border-t-blue-500' 
+              : 'border-transparent border-t-amber-700'"
           ></div>
           <span 
             class="text-sm"
@@ -102,8 +102,8 @@
           v-model="localForm.escalated_to_id" 
           class="w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-offset-0 transition-all"
           :class="isDarkMode
-            ? 'bg-gray-800 border-gray-700 text-gray-300 focus:ring-blue-500'
-            : 'bg-white border-gray-300 text-gray-900 focus:ring-amber-500'"
+            ? 'bg-gray-800 border-transparent text-gray-300 focus:ring-amber-500'
+            : 'bg-white border-transparent text-gray-900 focus:ring-amber-500'"
           @change="handleEscalationChange"
         >
           <option value="0">None</option>
@@ -136,7 +136,7 @@
           :disabled="isSubmitting"
           class="flex-1 px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           :class="isDarkMode
-            ? 'bg-blue-600 text-white hover:bg-blue-700'
+            ? 'bg-amber-600 text-white hover:bg-amber-700'
             : 'bg-amber-700 text-white hover:bg-amber-800'"
         >
           <i-mdi-loading v-if="isSubmitting" class="w-5 h-5 animate-spin" />
@@ -149,8 +149,8 @@
           :disabled="isSubmitting"
           class="px-6 py-3 rounded-lg font-medium transition-all duration-200 border disabled:opacity-50 disabled:cursor-not-allowed"
           :class="isDarkMode
-            ? 'bg-gray-800 text-gray-300 border-gray-700 hover:bg-gray-700'
-            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+            ? 'bg-gray-800 text-gray-300 border-transparent hover:bg-gray-700'
+            : 'bg-white text-gray-700 border-transparent hover:bg-gray-50'"
         >
           Cancel
         </button>

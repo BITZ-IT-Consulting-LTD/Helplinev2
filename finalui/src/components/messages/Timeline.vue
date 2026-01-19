@@ -4,8 +4,8 @@
       v-if="Object.keys(groupedMessagesByDate).length === 0" 
       class="text-center py-12 rounded-lg shadow-xl border"
       :class="isDarkMode 
-        ? 'bg-gray-800 border-gray-700' 
-        : 'bg-white border-gray-200'"
+        ? 'bg-neutral-900 border-transparent' 
+        : 'bg-white border-transparent'"
     >
       <p 
         :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'"
@@ -21,7 +21,7 @@
     >
       <h2 
         class="text-base font-semibold uppercase tracking-wide"
-        :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+        :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
       >
         {{ label }}
       </h2>
@@ -34,11 +34,11 @@
             'rounded-lg p-4 shadow-xl border transition-all duration-200 cursor-pointer',
             selectedMessageId === getValue(message, 'id') 
               ? isDarkMode
-                ? 'ring-2 ring-blue-500 border-blue-500 bg-blue-600/10' 
+                ? 'ring-2 ring-amber-600 border-amber-600 bg-amber-600/10' 
                 : 'ring-2 ring-amber-600 border-amber-600 bg-amber-100'
               : isDarkMode
-                ? 'bg-gray-800 border-gray-700 hover:border-blue-500/50 hover:shadow-2xl'
-                : 'bg-white border-gray-200 hover:border-amber-600/50 hover:shadow-2xl'
+                ? 'bg-neutral-900 border-transparent hover:border-amber-600/50 hover:shadow-2xl'
+                : 'bg-white border-transparent hover:border-amber-600/50 hover:shadow-2xl'
           ]"
           @click="openChatPanel(message)"
         >
@@ -72,7 +72,7 @@
                 <span 
                   class="px-2 py-0.5 rounded-full text-xs font-medium uppercase border"
                   :class="isDarkMode 
-                    ? 'bg-blue-600/20 text-blue-400 border-blue-600/30' 
+                    ? 'bg-amber-600/20 text-amber-500 border-amber-600/30' 
                     : 'bg-amber-100 text-amber-700 border-amber-300'"
                 >
                   {{ getValue(message, 'src') || 'Chat' }}
@@ -100,7 +100,7 @@
               @click.stop="openChatPanel(message)" 
               class="p-2 rounded transition-all duration-200 flex-shrink-0 text-white active:scale-95"
               :class="isDarkMode 
-                ? 'bg-blue-600 hover:bg-blue-700' 
+                ? 'bg-amber-600 hover:bg-amber-700' 
                 : 'bg-amber-700 hover:bg-amber-800'"
               title="Open Chat"
             >

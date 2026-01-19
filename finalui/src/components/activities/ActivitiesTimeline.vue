@@ -5,19 +5,19 @@
       :key="date" 
       class="shadow-xl rounded-lg overflow-hidden border"
       :class="isDarkMode 
-        ? 'bg-gray-800 border-gray-700' 
-        : 'bg-white border-gray-200'"
+        ? 'bg-neutral-900 border-transparent' 
+        : 'bg-white border-transparent'"
     >
       <!-- Date Header -->
       <div 
         class="px-6 py-3 border-b"
         :class="isDarkMode 
-          ? 'bg-gray-900/60 border-gray-700' 
-          : 'bg-gray-50 border-gray-200'"
+          ? 'bg-black/60 border-transparent' 
+          : 'bg-gray-50 border-transparent'"
       >
         <h3 
           class="text-sm font-semibold flex items-center gap-2"
-          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
         >
           <i-mdi-calendar class="w-4 h-4" />
           {{ date }}
@@ -42,12 +42,12 @@
             <div 
               class="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center border"
               :class="isDarkMode 
-                ? 'bg-blue-600/20 border-blue-600/30' 
+                ? 'bg-amber-600/20 border-amber-600/30' 
                 : 'bg-amber-100 border-amber-300'"
             >
               <i-mdi-bell 
                 class="w-5 h-5"
-                :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+                :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
               />
             </div>
 
@@ -71,7 +71,7 @@
                 <span 
                   class="px-3 py-1 rounded-full text-xs font-medium uppercase border whitespace-nowrap"
                   :class="isDarkMode 
-                    ? 'bg-blue-600/20 text-blue-400 border-blue-600/30' 
+                    ? 'bg-amber-600/20 text-amber-500 border-amber-600/30' 
                     : 'bg-amber-100 text-amber-700 border-amber-300'"
                 >
                   {{ activity.src }}
@@ -116,7 +116,7 @@
                   </p>
                   <p 
                     class="text-sm font-medium"
-                    :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+                    :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
                   >
                     {{ activity.case_id }}
                   </p>
@@ -140,7 +140,7 @@
               <div 
                 v-if="activity.action_detail" 
                 class="mt-3 pt-3 border-t"
-                :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+                :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
               >
                 <p 
                   class="text-xs mb-1"
@@ -166,8 +166,8 @@
       v-if="Object.keys(groupedActivities).length === 0" 
       class="shadow-xl rounded-lg border p-12 text-center"
       :class="isDarkMode 
-        ? 'bg-gray-800 border-gray-700' 
-        : 'bg-white border-gray-200'"
+        ? 'bg-neutral-900 border-transparent' 
+        : 'bg-white border-transparent'"
     >
       <i-mdi-bell-off-outline 
         class="w-16 h-16 mx-auto mb-4"

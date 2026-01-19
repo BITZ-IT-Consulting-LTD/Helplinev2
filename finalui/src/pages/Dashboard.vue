@@ -1,7 +1,7 @@
 <template>
   <div 
     class="p-6 space-y-6 min-h-screen"
-    :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'"
+    :class="isDarkMode ? 'bg-black' : 'bg-gray-50'"
   >
     <!-- Page Header -->
     <div class="mb-6">
@@ -11,7 +11,7 @@
       >
         <i-mdi-view-dashboard-outline 
           class="w-8 h-8"
-          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
         />
         Dashboard
       </h1>
@@ -32,8 +32,8 @@
       <div 
         class="shadow-xl rounded-lg p-4 border"
         :class="isDarkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'"
+          ? 'bg-neutral-900 border-transparent' 
+          : 'bg-white border-transparent'"
       >
         <CaseCategories :filters="filters" />
       </div>
@@ -42,8 +42,8 @@
       <div 
         class="shadow-xl rounded-lg p-4 border"
         :class="isDarkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'"
+          ? 'bg-neutral-900 border-transparent' 
+          : 'bg-white border-transparent'"
       >
         <CaseLocations :filters="filters" />
       </div>
@@ -52,8 +52,8 @@
       <div 
         class="shadow-xl rounded-lg p-4 md:col-span-2 border"
         :class="isDarkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'"
+          ? 'bg-neutral-900 border-transparent' 
+          : 'bg-white border-transparent'"
       >
         <CasesBySourceDaily :filters="filters" />
       </div>
@@ -62,8 +62,8 @@
       <div 
         class="shadow-xl rounded-lg p-4 md:col-span-2 border"
         :class="isDarkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'"
+          ? 'bg-neutral-900 border-transparent' 
+          : 'bg-white border-transparent'"
       >
         <CaseStatusPriority :filters="filters" />
       </div>

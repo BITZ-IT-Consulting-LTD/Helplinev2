@@ -2,8 +2,8 @@
   <div 
     class="w-full rounded-lg p-6 shadow-xl border"
     :class="isDarkMode 
-      ? 'bg-gray-800 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-neutral-900 border-transparent' 
+      : 'bg-white border-transparent'"
   >
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
 
@@ -21,8 +21,8 @@
           placeholder="Enter case ID"
           class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
           :class="isDarkMode 
-            ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-            : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+            ? 'bg-neutral-800 border border-transparent text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+            : 'bg-gray-50 border border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
         />
       </div>
 
@@ -39,8 +39,8 @@
           v-model="filters.dateFrom" 
           class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
           :class="isDarkMode 
-            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
-            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
+            ? 'bg-neutral-800 border border-transparent text-gray-100 focus:ring-amber-500' 
+            : 'bg-gray-50 border border-transparent text-gray-900 focus:ring-amber-600'"
         />
       </div>
 
@@ -57,8 +57,8 @@
           v-model="filters.dateTo" 
           class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
           :class="isDarkMode 
-            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
-            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
+            ? 'bg-neutral-800 border border-transparent text-gray-100 focus:ring-amber-500' 
+            : 'bg-gray-50 border border-transparent text-gray-900 focus:ring-amber-600'"
         />
       </div>
 
@@ -76,8 +76,8 @@
           placeholder="Enter name"
           class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
           :class="isDarkMode 
-            ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-            : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+            ? 'bg-neutral-800 border border-transparent text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+            : 'bg-gray-50 border border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
         />
       </div>
 
@@ -95,8 +95,8 @@
           placeholder="Enter name"
           class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
           :class="isDarkMode 
-            ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-            : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+            ? 'bg-neutral-800 border border-transparent text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+            : 'bg-gray-50 border border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
         />
       </div>
 
@@ -112,8 +112,8 @@
           v-model="filters.source" 
           class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
           :class="isDarkMode 
-            ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
-            : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
+            ? 'bg-neutral-800 border border-transparent text-gray-100 focus:ring-amber-500' 
+            : 'bg-gray-50 border border-transparent text-gray-900 focus:ring-amber-600'"
         >
           <option value="">All</option>
           <option value="whatsapp">WhatsApp</option>
@@ -132,7 +132,7 @@
         @click="applyFilters"
         class="px-6 py-3 text-white rounded-lg font-semibold transition-all duration-200 flex items-center gap-2 shadow-lg"
         :class="isDarkMode 
-          ? 'bg-blue-600 hover:bg-blue-700' 
+          ? 'bg-amber-600 hover:bg-amber-700' 
           : 'bg-amber-700 hover:bg-amber-800'"
       >
         <i-mdi-filter class="w-5 h-5" />
@@ -143,8 +143,8 @@
         @click="resetFilters"
         class="px-6 py-3 rounded-lg font-semibold transition-all duration-200 border"
         :class="isDarkMode 
-          ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
-          : 'bg-gray-200 text-gray-700 border-gray-300 hover:bg-gray-300'"
+          ? 'bg-gray-700 text-gray-300 border-transparent hover:bg-gray-600' 
+          : 'bg-gray-200 text-gray-700 border-transparent hover:bg-gray-300'"
       >
         Reset
       </button>

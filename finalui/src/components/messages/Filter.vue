@@ -60,12 +60,12 @@ const getFilterButtonClass = (isActive) => {
   
   if (isActive) {
     return isDarkMode.value
-      ? `${baseClasses} bg-blue-600 text-white shadow-lg shadow-blue-900/50`
+      ? `${baseClasses} bg-amber-600 text-white shadow-lg shadow-amber-900/50`
       : `${baseClasses} bg-amber-700 text-white shadow-lg shadow-amber-900/30`
   } else {
     return isDarkMode.value
-      ? `${baseClasses} bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400`
-      : `${baseClasses} bg-white text-gray-700 border border-gray-300 hover:border-amber-600 hover:text-amber-700`
+      ? `${baseClasses} bg-neutral-900 text-gray-300 border border-transparent hover:border-amber-600 hover:text-amber-500`
+      : `${baseClasses} bg-white text-gray-700 border border-transparent hover:border-amber-600 hover:text-amber-700`
   }
 }
 </script>

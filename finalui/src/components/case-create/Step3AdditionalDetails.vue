@@ -30,8 +30,8 @@
                 :key="`client-${index}`" 
                 class="flex items-center justify-between p-3 border rounded-lg"
                 :class="isDarkMode 
-                  ? 'bg-gray-700 border-gray-600' 
-                  : 'bg-gray-50 border-gray-300'"
+                  ? 'bg-gray-700 border-transparent' 
+                  : 'bg-gray-50 border-transparent'"
               >
                 <div>
                   <div 
@@ -62,8 +62,8 @@
               v-else 
               class="text-center p-5 border border-dashed rounded-lg"
               :class="isDarkMode 
-                ? 'text-gray-500 bg-gray-800 border-gray-600' 
-                : 'text-gray-500 bg-white border-gray-300'"
+                ? 'text-gray-500 bg-gray-800 border-transparent' 
+                : 'text-gray-500 bg-white border-transparent'"
             >
               <i-mdi-account-group class="mx-auto text-3xl mb-2 opacity-50" />
               <p class="text-sm font-medium m-0">No clients added yet</p>
@@ -99,8 +99,8 @@
                 :key="index" 
                 class="flex items-center justify-between p-3 border rounded-lg"
                 :class="isDarkMode 
-                  ? 'bg-gray-700 border-gray-600' 
-                  : 'bg-gray-50 border-gray-300'"
+                  ? 'bg-gray-700 border-transparent' 
+                  : 'bg-gray-50 border-transparent'"
               >
                 <div>
                   <div 
@@ -129,8 +129,8 @@
               v-else 
               class="p-5 text-center italic border border-dashed rounded-lg"
               :class="isDarkMode 
-                ? 'text-gray-500 bg-gray-800 border-gray-600' 
-                : 'text-gray-500 bg-white border-gray-300'"
+                ? 'text-gray-500 bg-gray-800 border-transparent' 
+                : 'text-gray-500 bg-white border-transparent'"
             >
               <p class="text-sm m-0">No perpetrators added yet</p>
             </div>
@@ -138,7 +138,7 @@
               type="button" 
               class="self-start mt-2 px-3 py-1.5 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
               :class="isDarkMode 
-                ? 'bg-blue-600 hover:bg-blue-700' 
+                ? 'bg-amber-600 hover:bg-amber-700' 
                 : 'bg-amber-700 hover:bg-amber-800'"
               @click="$emit('open-perpetrator-modal')"
             >
@@ -163,8 +163,8 @@
             v-if="showReferralsField" 
             class="mt-4 p-4 border rounded-lg animate-fadeIn"
             :class="isDarkMode 
-              ? 'bg-gray-800 border-gray-600' 
-              : 'bg-gray-50 border-gray-300'"
+              ? 'bg-gray-800 border-transparent' 
+              : 'bg-gray-50 border-transparent'"
           >
             <BaseOptions
               id="referrals-type"
@@ -180,8 +180,8 @@
             v-if="showPoliceField" 
             class="mt-4 p-4 border rounded-lg animate-fadeIn"
             :class="isDarkMode 
-              ? 'bg-gray-800 border-gray-600' 
-              : 'bg-gray-50 border-gray-300'"
+              ? 'bg-gray-800 border-transparent' 
+              : 'bg-gray-50 border-transparent'"
           >
             <label 
               for="police-details" 
@@ -195,8 +195,8 @@
               v-model="localForm.policeDetails" 
               class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent resize-vertical"
               :class="isDarkMode 
-                ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+                ? 'bg-gray-700 border-transparent text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+                : 'bg-white border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
               placeholder="Enter police report details, case number, station, etc." 
               rows="3" 
               @input="updateForm"
@@ -207,8 +207,8 @@
             v-if="showOthersField" 
             class="mt-4 p-4 border rounded-lg animate-fadeIn"
             :class="isDarkMode 
-              ? 'bg-gray-800 border-gray-600' 
-              : 'bg-gray-50 border-gray-300'"
+              ? 'bg-gray-800 border-transparent' 
+              : 'bg-gray-50 border-transparent'"
           >
             <label 
               for="other-services" 
@@ -222,8 +222,8 @@
               v-model="localForm.otherServicesDetails" 
               class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent resize-vertical"
               :class="isDarkMode 
-                ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+                ? 'bg-gray-700 border-transparent text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+                : 'bg-white border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
               placeholder="Please specify the other services provided" 
               rows="3" 
               @input="updateForm"
@@ -258,14 +258,14 @@
 
       <div 
         class="flex gap-3 justify-between mt-6 pt-5 border-t"
-        :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+        :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
       >
         <button 
           type="button" 
           class="px-4 py-2 border rounded-lg transition-colors"
           :class="isDarkMode 
-            ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
-            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+            ? 'bg-gray-700 text-gray-300 border-transparent hover:bg-gray-600' 
+            : 'bg-white text-gray-700 border-transparent hover:bg-gray-50'"
           @click="goToStep(2)"
         >
           Back
@@ -275,7 +275,7 @@
             type="submit" 
             class="px-4 py-2 text-white rounded-lg transition-colors"
             :class="isDarkMode 
-              ? 'bg-blue-600 hover:bg-blue-700' 
+              ? 'bg-amber-600 hover:bg-amber-700' 
               : 'bg-amber-700 hover:bg-amber-800'"
           >
             Continue to Review

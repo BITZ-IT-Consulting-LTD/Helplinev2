@@ -2,8 +2,8 @@
   <div 
     class="shadow-xl rounded-lg overflow-hidden border"
     :class="isDarkMode 
-      ? 'bg-gray-800 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-neutral-900 border-transparent' 
+      : 'bg-white border-transparent'"
   >
     <!-- Activities Table -->
     <div class="overflow-x-auto">
@@ -12,8 +12,8 @@
           <tr 
             class="border-b"
             :class="isDarkMode 
-              ? 'bg-gray-900/60 border-gray-700' 
-              : 'bg-gray-50 border-gray-200'"
+              ? 'bg-black/60 border-transparent' 
+              : 'bg-gray-50 border-transparent'"
           >
             <th 
               class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
@@ -74,7 +74,7 @@
             :key="activity.id" 
             class="transition-all duration-200"
             :class="isDarkMode 
-              ? 'hover:bg-gray-700/30' 
+              ? 'hover:bg-neutral-800' 
               : 'hover:bg-gray-50'"
           >
             <td 
@@ -97,7 +97,7 @@
             </td>
             <td 
               class="px-6 py-4 whitespace-nowrap text-sm font-medium"
-              :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+              :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
             >
               #{{ activity.case_id }}
             </td>
@@ -111,7 +111,7 @@
               <span 
                 class="px-3 py-1 rounded-full text-xs font-medium uppercase border"
                 :class="isDarkMode 
-                  ? 'bg-blue-600/20 text-blue-400 border-blue-600/30' 
+                  ? 'bg-amber-600/20 text-amber-500 border-amber-600/30' 
                   : 'bg-amber-100 text-amber-700 border-amber-300'"
               >
                 {{ activity.src }}

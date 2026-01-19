@@ -19,8 +19,8 @@
             ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
             : 'bg-gray-200 text-gray-400 cursor-not-allowed'
           : isDarkMode
-            ? 'bg-gray-700 border-gray-600 hover:border-blue-500 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/50'
-            : 'bg-gray-50 border-gray-300 hover:border-amber-600 focus-within:border-amber-600 focus-within:ring-2 focus-within:ring-amber-600/50'
+            ? 'bg-gray-700 border-transparent hover:border-amber-600 focus-within:border-amber-600 focus-within:ring-2 focus-within:ring-amber-500/50'
+            : 'bg-gray-50 border-transparent hover:border-amber-600 focus-within:border-amber-600 focus-within:ring-2 focus-within:ring-amber-600/50'
       ]"
     >
       <div 
@@ -51,16 +51,16 @@
       v-if="isOpen" 
       class="border rounded-lg mt-1 p-1.5 max-h-[300px] overflow-y-auto shadow-xl absolute w-full z-[1000]"
       :class="isDarkMode 
-        ? 'border-gray-700 bg-gray-800' 
-        : 'border-gray-200 bg-white'"
+        ? 'border-transparent bg-gray-800' 
+        : 'border-transparent bg-white'"
     >
       <!-- Breadcrumb navigation -->
       <div 
         v-if="breadcrumb.length" 
         class="px-3 py-2 text-sm border-b mb-1.5"
         :class="isDarkMode 
-          ? 'text-gray-400 border-gray-700' 
-          : 'text-gray-600 border-gray-200'"
+          ? 'text-gray-400 border-transparent' 
+          : 'text-gray-600 border-transparent'"
       >
         <span v-for="(name, i) in breadcrumb" :key="i">
           {{ name }}<span v-if="i < breadcrumb.length - 1"> > </span>
@@ -76,8 +76,8 @@
         <div 
           class="w-4 h-4 border-2 rounded-full animate-spin"
           :class="isDarkMode 
-            ? 'border-gray-600 border-t-blue-500' 
-            : 'border-gray-300 border-t-amber-700'"
+            ? 'border-transparent border-t-amber-500' 
+            : 'border-transparent border-t-amber-700'"
         ></div>
         <span>Loading options...</span>
       </div>
@@ -92,7 +92,7 @@
             'px-3 py-2.5 cursor-pointer rounded transition-colors',
             option.id === selectedOption?.id 
               ? isDarkMode 
-                ? 'bg-blue-600/20 text-blue-400 font-medium' 
+                ? 'bg-amber-600/20 text-amber-500 font-medium' 
                 : 'bg-amber-100 text-amber-800 font-medium'
               : isDarkMode
                 ? 'text-gray-100 hover:bg-gray-700'
@@ -123,15 +123,15 @@
       <div 
         v-if="navigationPath.length > 0 || selectedOption" 
         class="mt-2 flex justify-center border-t pt-2"
-        :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+        :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
       >
         <button 
           v-if="navigationPath.length > 0" 
           type="button" 
           class="px-3 py-1.5 rounded border cursor-pointer text-xs transition-all duration-200 flex items-center gap-1"
           :class="isDarkMode 
-            ? 'border-gray-600 bg-gray-800 text-gray-300 hover:bg-gray-700' 
-            : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'"
+            ? 'border-transparent bg-gray-800 text-gray-300 hover:bg-gray-700' 
+            : 'border-transparent bg-white text-gray-700 hover:bg-gray-50'"
           @click.stop="goBack"
         >
           <i-mdi-chevron-left class="w-4 h-4" />

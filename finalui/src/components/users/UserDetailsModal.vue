@@ -1,22 +1,22 @@
 <template>
   <div 
-    class="max-w-2xl w-full rounded-lg shadow-2xl border overflow-hidden"
+    class="max-w-2xl w-full rounded-xl shadow-2xl border overflow-hidden"
     :class="isDarkMode 
-      ? 'bg-gray-800 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-gray-800 border-transparent' 
+      : 'bg-white border-transparent'"
   >
     <!-- Header -->
     <div 
       class="px-8 py-5 border-b flex items-center justify-between"
       :class="isDarkMode 
-        ? 'border-gray-700 bg-gray-900/50' 
-        : 'border-gray-200 bg-gray-50'"
+        ? 'border-transparent bg-gray-900/50' 
+        : 'border-transparent bg-gray-50'"
     >
       <div class="flex items-center gap-3">
         <div 
           class="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold"
           :class="isDarkMode 
-            ? 'bg-blue-600 text-white' 
+            ? 'bg-amber-600 text-white' 
             : 'bg-amber-600 text-white'"
         >
           {{ getUserInitials() }}
@@ -40,7 +40,7 @@
       <button
         type="button"
        @click="$emit('close', false)" 
-        class="p-2 rounded-lg transition-colors duration-200"
+        class="p-2 rounded-xl transition-colors duration-200"
         :class="isDarkMode 
           ? 'hover:bg-gray-700 text-gray-400 hover:text-gray-200' 
           : 'hover:bg-gray-200 text-gray-600 hover:text-gray-900'"
@@ -55,7 +55,7 @@
         v-if="resetSuccess && newPassword"
         class="px-8 py-4 border-b"
         :class="isDarkMode 
-          ? 'bg-green-900/30 border-gray-700' 
+          ? 'bg-green-900/30 border-transparent' 
           : 'bg-green-50 border-green-200'"
       >
         <div class="flex items-start gap-3">
@@ -86,9 +86,9 @@
             
             <!-- New Password Display -->
             <div 
-              class="rounded-lg p-4 border"
+              class="rounded-xl p-4 border"
               :class="isDarkMode 
-                ? 'bg-gray-800 border-gray-600' 
+                ? 'bg-gray-800 border-transparent' 
                 : 'bg-white border-green-300'"
             >
               <label 
@@ -107,7 +107,7 @@
                 <button
                   type="button"
                   @click="copyPassword"
-                  class="px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm font-medium"
+                  class="px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 text-sm font-medium"
                   :class="passwordCopied
                     ? (isDarkMode 
                       ? 'bg-green-600 text-white' 
@@ -150,7 +150,7 @@
         <span
           class="inline-block px-4 py-2 rounded-full text-sm font-medium uppercase border"
           :class="isDarkMode 
-            ? 'bg-blue-600/20 text-blue-400 border-blue-600/30' 
+            ? 'bg-amber-600/20 text-amber-500 border-amber-600/30' 
             : 'bg-amber-100 text-amber-700 border-amber-300'"
         >
           {{ getRoleName(getValue('role')) }}
@@ -208,7 +208,7 @@
 
       <!-- Created Information -->
       <div class="grid grid-cols-2 gap-4 pt-4 border-t"
-        :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+        :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
       >
         <div>
           <label 
@@ -272,8 +272,8 @@
     <div 
       class="px-8 py-5 border-t flex gap-3"
       :class="isDarkMode 
-        ? 'border-gray-700 bg-gray-900/30' 
-        : 'border-gray-200 bg-gray-50'"
+        ? 'border-transparent bg-gray-900/30' 
+        : 'border-transparent bg-gray-50'"
     >
       <!-- Show different buttons based on reset state -->
       <template v-if="resetSuccess && newPassword">
@@ -281,7 +281,7 @@
         <button
           type="button"
           @click="handleDone"
-          class="flex-1 py-3 rounded-lg transition-all duration-200 font-medium flex items-center justify-center gap-2 border"
+          class="flex-1 py-3 rounded-xl transition-all duration-200 font-medium flex items-center justify-center gap-2 border"
           :class="isDarkMode 
             ? 'bg-green-600 hover:bg-green-700 text-white border-green-600' 
             : 'bg-green-600 hover:bg-green-700 text-white border-green-600'"
@@ -296,9 +296,9 @@
         <button
           type="button"
           @click="handleEdit"
-          class="flex-1 py-3 rounded-lg transition-all duration-200 font-medium flex items-center justify-center gap-2 border"
+          class="flex-1 py-3 rounded-xl transition-all duration-200 font-medium flex items-center justify-center gap-2 border"
           :class="isDarkMode 
-            ? 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600' 
+            ? 'bg-amber-600 hover:bg-amber-700 text-white border-amber-600' 
             : 'bg-amber-700 hover:bg-amber-800 text-white border-amber-700'"
         >
           <i-mdi-pencil class="w-5 h-5" />
@@ -309,7 +309,7 @@
   type="button"
   @click.prevent.stop="handleResetPassword"
   :disabled="resetting"
-  class="flex-1 py-3 rounded-lg transition-all duration-200 font-medium flex items-center justify-center gap-2 border disabled:opacity-50 disabled:cursor-not-allowed"
+  class="flex-1 py-3 rounded-xl transition-all duration-200 font-medium flex items-center justify-center gap-2 border disabled:opacity-50 disabled:cursor-not-allowed"
   :class="isDarkMode 
     ? 'bg-orange-600 hover:bg-orange-700 text-white border-orange-600' 
     : 'bg-orange-500 hover:bg-orange-600 text-white border-orange-500'"

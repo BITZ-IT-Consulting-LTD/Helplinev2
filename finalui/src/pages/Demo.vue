@@ -15,7 +15,7 @@
           v-model="userId"
           type="text"
           placeholder="Enter user ID (e.g., 1000031)"
-          class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          class="w-full px-4 py-2 border border-transparent dark:border-transparent rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
         />
       </div>
 
@@ -23,7 +23,7 @@
       <button
         @click="resetPassword"
         :disabled="loading || !userId"
-        class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
+        class="w-full bg-amber-600 hover:bg-amber-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
       >
         <span v-if="!loading">Reset Password</span>
         <span v-else class="flex items-center justify-center">
@@ -71,7 +71,7 @@
       </div>
 
       <!-- Request Details -->
-      <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+      <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-transparent dark:border-transparent">
         <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
           Endpoint Details
         </h3>

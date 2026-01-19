@@ -15,8 +15,8 @@
             ? 'bg-red-600/20 border-red-600/50 shadow-md' 
             : 'bg-red-100 border-red-300 shadow-md')
           : (isDarkMode 
-            ? 'bg-gray-700 border-gray-600' 
-            : 'bg-white border-gray-300')"
+            ? 'bg-gray-700 border-transparent' 
+            : 'bg-white border-transparent')"
       >
         <input 
           type="radio" 
@@ -42,8 +42,8 @@
             ? 'bg-amber-600/20 border-amber-600/50 shadow-md' 
             : 'bg-amber-100 border-amber-300 shadow-md')
           : (isDarkMode 
-            ? 'bg-gray-700 border-gray-600' 
-            : 'bg-white border-gray-300')"
+            ? 'bg-gray-700 border-transparent' 
+            : 'bg-white border-transparent')"
       >
         <input 
           type="radio" 
@@ -69,8 +69,8 @@
             ? 'bg-green-600/20 border-green-600/50 shadow-md' 
             : 'bg-green-100 border-green-300 shadow-md')
           : (isDarkMode 
-            ? 'bg-gray-700 border-gray-600' 
-            : 'bg-white border-gray-300')"
+            ? 'bg-gray-700 border-transparent' 
+            : 'bg-white border-transparent')"
       >
         <input 
           type="radio" 
