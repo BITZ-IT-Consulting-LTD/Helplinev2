@@ -61,7 +61,7 @@
             class="w-5 h-5 border-2 rounded-full animate-spin"
             :class="isDarkMode 
               ? 'border-transparent border-t-amber-500' 
-              : 'border-transparent border-t-amber-700'"
+              : 'border-transparent border-t-amber-600'"
           ></div>
           <span>Searching reporters...</span>
         </div>
@@ -134,10 +134,10 @@
                     </span>
                     <span 
                       v-if="getValue(contact, 'location')" 
-                      class="border rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap flex items-center gap-1"
+                      class="border rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap flex items-center gap-1 transition-colors"
                       :class="isDarkMode 
-                        ? 'bg-amber-600/20 text-amber-500 border-amber-600/30' 
-                        : 'bg-amber-100 text-amber-700 border-amber-300'"
+                        ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' 
+                        : 'bg-amber-600/10 text-amber-600 border-amber-600/20'"
                     >
                       <i-mdi-map-marker class="w-3 h-3" />
                       {{ getValue(contact, 'location') }}
@@ -151,7 +151,7 @@
               <i-mdi-check-circle 
                 v-if="isSelected(contact)" 
                 class="w-5 h-5"
-                :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
+                :class="isDarkMode ? 'text-amber-500' : 'text-amber-600'"
               />
               <i-mdi-chevron-right 
                 v-else 
@@ -197,8 +197,8 @@
         >
           <div class="flex items-start justify-between mb-3">
             <div 
-              class="text-sm font-semibold"
-              :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
+              class="text-sm font-bold uppercase tracking-tight transition-colors"
+              :class="isDarkMode ? 'text-amber-500' : 'text-amber-600'"
             >
               Selected Reporter:
             </div>
@@ -284,7 +284,7 @@
                   <div class="flex-1">
                     <div 
                       class="text-xs font-medium"
-                      :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
+                      :class="isDarkMode ? 'text-amber-500' : 'text-amber-600'"
                     >
                       Contact ID (Index 5)
                     </div>

@@ -18,14 +18,14 @@
       >
         <i-mdi-account-group 
           class="w-5 h-5"
-          :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
+          :class="isDarkMode ? 'text-amber-500' : 'text-amber-600'"
         />
         Counsellors Online
         <span 
           class="px-2 py-0.5 rounded-full text-xs font-semibold border"
           :class="isDarkMode 
             ? 'bg-amber-600/20 text-amber-500 border-amber-600/30' 
-            : 'bg-amber-100 text-amber-700 border-amber-300'"
+            : 'bg-amber-600/10 text-amber-600 border-amber-600/20'"
         >
           {{ onlineCount }}
         </span>
@@ -229,7 +229,7 @@ export default {
       if (s.includes('queue')) {
         return this.isDarkMode 
           ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-600/30'
-          : 'bg-blue-100 text-amber-700 border border-blue-300'
+          : 'bg-amber-600/10 text-amber-600 border border-amber-600/20'
       }
       if (s.includes('available')) {
         return this.isDarkMode 
