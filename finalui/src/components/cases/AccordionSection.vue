@@ -2,8 +2,8 @@
   <div 
     class="border rounded-lg overflow-hidden transition-all"
     :class="isDarkMode 
-      ? 'border-gray-700' 
-      : 'border-gray-200'"
+      ? 'border-transparent' 
+      : 'border-transparent'"
   >
     <!-- Header (always visible) -->
     <button
@@ -51,7 +51,7 @@
           class="px-2 py-0.5 rounded-full text-xs font-medium"
           :class="isDarkMode 
             ? badge > 0 
-              ? 'bg-blue-600 text-white' 
+              ? 'bg-amber-600 text-white' 
               : 'bg-gray-700 text-gray-400'
             : badge > 0
               ? 'bg-amber-100 text-amber-700'
@@ -71,7 +71,7 @@
       class="transition-all duration-200"
       :class="isDarkMode ? 'bg-gray-900' : 'bg-white'"
     >
-      <div class="p-4 border-t" :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'">
+      <div class="p-4 border-t" :class="isDarkMode ? 'border-transparent' : 'border-transparent'">
         <slot></slot>
       </div>
     </div>

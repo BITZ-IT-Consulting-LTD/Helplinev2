@@ -2,8 +2,8 @@
   <div 
     class="w-full rounded-lg p-4 shadow-xl border mb-4 flex flex-wrap gap-4"
     :class="isDarkMode 
-      ? 'bg-gray-800 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-neutral-900 border-transparent' 
+      : 'bg-white border-transparent'"
   >
 
     <!-- Duration Filter -->
@@ -18,8 +18,8 @@
         v-model="filters.period" 
         class="rounded px-3 py-2 text-sm focus:ring-1 outline-none"
         :class="isDarkMode 
-          ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:border-blue-500 focus:ring-blue-500' 
-          : 'bg-gray-50 border border-gray-300 text-gray-900 focus:border-amber-600 focus:ring-amber-600'"
+          ? 'bg-neutral-800 border border-transparent text-gray-100 focus:border-amber-600 focus:ring-amber-500' 
+          : 'bg-gray-50 border border-transparent text-gray-900 focus:border-amber-600 focus:ring-amber-600'"
       >
         <option value="all">All</option>
         <option value="today">Today</option>
@@ -44,8 +44,8 @@
         v-model="filters.gbv" 
         class="rounded px-3 py-2 text-sm focus:ring-1 outline-none"
         :class="isDarkMode 
-          ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:border-blue-500 focus:ring-blue-500' 
-          : 'bg-gray-50 border border-gray-300 text-gray-900 focus:border-amber-600 focus:ring-amber-600'"
+          ? 'bg-neutral-800 border border-transparent text-gray-100 focus:border-amber-600 focus:ring-amber-500' 
+          : 'bg-gray-50 border border-transparent text-gray-900 focus:border-amber-600 focus:ring-amber-600'"
       >
         <option value="both">Both</option>
         <option value="vac">VAC</option>
@@ -65,8 +65,8 @@
         v-model="filters.source" 
         class="rounded px-3 py-2 text-sm focus:ring-1 outline-none"
         :class="isDarkMode 
-          ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:border-blue-500 focus:ring-blue-500' 
-          : 'bg-gray-50 border border-gray-300 text-gray-900 focus:border-amber-600 focus:ring-amber-600'"
+          ? 'bg-neutral-800 border border-transparent text-gray-100 focus:border-amber-600 focus:ring-amber-500' 
+          : 'bg-gray-50 border border-transparent text-gray-900 focus:border-amber-600 focus:ring-amber-600'"
       >
         <option value="all">All</option>
         <option value="call">Call</option>
@@ -83,7 +83,7 @@
         @click="emitFilters"
         class="text-white px-4 py-2 rounded transition-all duration-200 text-sm shadow-lg flex items-center gap-2 active:scale-95 active:shadow-md"
         :class="isDarkMode 
-          ? 'bg-blue-600 hover:bg-blue-700' 
+          ? 'bg-amber-600 hover:bg-amber-700' 
           : 'bg-amber-700 hover:bg-amber-800'"
       >
         <i-mdi-filter class="w-4 h-4" />

@@ -6,15 +6,15 @@
     <div 
       class="border rounded-lg shadow-2xl max-w-[90%] max-h-[90%] overflow-y-auto w-[95%] max-w-[95vw]"
       :class="isDarkMode 
-        ? 'bg-gray-800 border-gray-700' 
-        : 'bg-white border-gray-200'"
+        ? 'bg-gray-800 border-transparent' 
+        : 'bg-white border-transparent'"
     >
       <!-- Header -->
       <div 
         class="flex justify-between items-center p-5 border-b"
         :class="isDarkMode 
-          ? 'border-gray-700 bg-gray-900/60' 
-          : 'border-gray-200 bg-gray-50'"
+          ? 'border-transparent bg-gray-900/60' 
+          : 'border-transparent bg-gray-50'"
       >
         <h3 
           class="m-0 text-lg font-bold"
@@ -42,8 +42,8 @@
           v-if="perpetrators.length > 0" 
           class="mb-5 p-4 border rounded-lg"
           :class="isDarkMode 
-            ? 'bg-gray-800 border-gray-700' 
-            : 'bg-white border-gray-300'"
+            ? 'bg-gray-800 border-transparent' 
+            : 'bg-white border-transparent'"
         >
           <h4 
             class="m-0 mb-3 text-base font-semibold"
@@ -56,8 +56,8 @@
             :key="index"
             class="flex justify-between items-center p-3 border rounded-md mb-2 last:mb-0"
             :class="isDarkMode 
-              ? 'bg-gray-700/50 border-gray-600' 
-              : 'bg-gray-50 border-gray-300'"
+              ? 'bg-gray-700/50 border-transparent' 
+              : 'bg-gray-50 border-transparent'"
           >
             <span 
               class="text-sm font-medium"
@@ -89,7 +89,7 @@
           <!-- Progress Steps -->
           <div 
             class="mb-6 py-5 border-t border-b"
-            :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+            :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
           >
             <div class="flex justify-between items-center mb-0">
               <div
@@ -138,8 +138,8 @@
                     placeholder="Enter Perpetrator's Names"
                     class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
                     :class="isDarkMode 
-                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+                      ? 'border-transparent bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+                      : 'border-transparent bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm"
                   />
                 </div>
@@ -157,8 +157,8 @@
                     placeholder="Enter age"
                     class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
                     :class="isDarkMode 
-                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+                      ? 'border-transparent bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+                      : 'border-transparent bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm" 
                   />
                 </div>
@@ -175,8 +175,8 @@
                     type="date"
                     class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
                     :class="isDarkMode 
-                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+                      ? 'border-transparent bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+                      : 'border-transparent bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @change="handleDobChange" 
                   />
                 </div>
@@ -232,8 +232,8 @@
                     placeholder="Enter Nearest Landmark"
                     class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
                     :class="isDarkMode 
-                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+                      ? 'border-transparent bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+                      : 'border-transparent bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm"
                   />
                 </div>
@@ -273,8 +273,8 @@
                     placeholder="Enter ID Number"
                     class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
                     :class="isDarkMode 
-                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+                      ? 'border-transparent bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+                      : 'border-transparent bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm"
                   />
                 </div>
@@ -304,7 +304,7 @@
                         v-model="localPerpetratorForm.isRefugee" 
                         value="yes"
                         class="w-4 h-4"
-                        :class="isDarkMode ? 'text-blue-600' : 'text-amber-700'"
+                        :class="isDarkMode ? 'text-amber-600' : 'text-amber-700'"
                         @change="updatePerpetratorForm" 
                       />
                       <span 
@@ -320,7 +320,7 @@
                         v-model="localPerpetratorForm.isRefugee" 
                         value="no"
                         class="w-4 h-4"
-                        :class="isDarkMode ? 'text-blue-600' : 'text-amber-700'"
+                        :class="isDarkMode ? 'text-amber-600' : 'text-amber-700'"
                         @change="updatePerpetratorForm" 
                       />
                       <span 
@@ -336,7 +336,7 @@
                         v-model="localPerpetratorForm.isRefugee"
                         value="unknown"
                         class="w-4 h-4"
-                        :class="isDarkMode ? 'text-blue-600' : 'text-amber-700'"
+                        :class="isDarkMode ? 'text-amber-600' : 'text-amber-700'"
                         @change="updatePerpetratorForm"
                       />
                       <span 
@@ -378,8 +378,8 @@
                     placeholder="Enter Phone Number"
                     class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
                     :class="isDarkMode 
-                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+                      ? 'border-transparent bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+                      : 'border-transparent bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm"
                   />
                 </div>
@@ -397,8 +397,8 @@
                     placeholder="Enter Alternate Phone Number"
                     class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
                     :class="isDarkMode 
-                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+                      ? 'border-transparent bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+                      : 'border-transparent bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm"
                   />
                 </div>
@@ -416,8 +416,8 @@
                     placeholder="Enter Email Address"
                     class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
                     :class="isDarkMode 
-                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+                      ? 'border-transparent bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+                      : 'border-transparent bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm"
                   />
                 </div>
@@ -486,8 +486,8 @@
                     v-if="showSpouseFields" 
                     class="mt-4 p-4 border rounded-lg"
                     :class="isDarkMode 
-                      ? 'bg-gray-800 border-gray-600' 
-                      : 'bg-gray-50 border-gray-300'"
+                      ? 'bg-gray-800 border-transparent' 
+                      : 'bg-gray-50 border-transparent'"
                   >
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div class="flex flex-col gap-2">
@@ -503,8 +503,8 @@
                           placeholder="Enter spouse's name"
                           class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
                           :class="isDarkMode 
-                            ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-                            : 'border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+                            ? 'border-transparent bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+                            : 'border-transparent bg-white text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                           @input="updatePerpetratorForm"
                         />
                       </div>
@@ -536,8 +536,8 @@
                     placeholder="Enter Perpetrator's Guardian Name"
                     class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
                     :class="isDarkMode 
-                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+                      ? 'border-transparent bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+                      : 'border-transparent bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm"
                   />
                 </div>
@@ -555,8 +555,8 @@
                     rows="4"
                     class="px-4 py-3 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
                     :class="isDarkMode 
-                      ? 'border-gray-600 bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-                      : 'border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+                      ? 'border-transparent bg-gray-700 text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+                      : 'border-transparent bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
                     @input="updatePerpetratorForm"
                   ></textarea>
                 </div>
@@ -567,7 +567,7 @@
           <!-- Step Navigation -->
           <div 
             class="flex justify-between items-center mt-6 pt-5 border-t"
-            :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+            :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
           >
             <button
               v-if="currentPerpetratorStep > 0"
@@ -576,7 +576,7 @@
               class="px-5 py-2.5 border-none rounded-lg font-medium cursor-pointer transition-all duration-200 flex items-center gap-2"
               :class="isDarkMode 
                 ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
-                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'"
+                : 'bg-white text-gray-700 border border-transparent hover:bg-gray-50'"
             >
               <i-mdi-chevron-left class="w-5 h-5" />
               Previous
@@ -589,7 +589,7 @@
               type="button"
               class="px-5 py-2.5 border-none rounded-lg font-medium cursor-pointer transition-all duration-200 text-white flex items-center gap-2"
               :class="isDarkMode 
-                ? 'bg-blue-600 hover:bg-blue-700' 
+                ? 'bg-amber-600 hover:bg-amber-700' 
                 : 'bg-amber-700 hover:bg-amber-800'"
             >
               Next
@@ -768,9 +768,9 @@ const getStepCircleClass = (index) => {
   if (props.currentPerpetratorStep > index) {
     return `${baseClasses} ${isDarkMode.value ? 'bg-green-600 text-white' : 'bg-green-600 text-white'}`
   } else if (props.currentPerpetratorStep === index) {
-    return `${baseClasses} ${isDarkMode.value ? 'bg-blue-600 text-white ring-4 ring-blue-900/50' : 'bg-amber-700 text-white ring-4 ring-amber-100'}`
+    return `${baseClasses} ${isDarkMode.value ? 'bg-amber-600 text-white ring-4 ring-blue-900/50' : 'bg-amber-700 text-white ring-4 ring-amber-100'}`
   } else {
-    return `${baseClasses} ${isDarkMode.value ? 'bg-gray-700 text-gray-500 border-2 border-gray-600' : 'bg-white text-gray-400 border-2 border-gray-300'}`
+    return `${baseClasses} ${isDarkMode.value ? 'bg-gray-700 text-gray-500 border-2 border-transparent' : 'bg-white text-gray-400 border-2 border-transparent'}`
   }
 }
 
@@ -781,7 +781,7 @@ const getStepLabelClass = (index) => {
   if (props.currentPerpetratorStep > index) {
     return `${baseClasses} ${isDarkMode.value ? 'text-green-400 font-semibold' : 'text-green-600 font-semibold'}`
   } else if (props.currentPerpetratorStep === index) {
-    return `${baseClasses} ${isDarkMode.value ? 'text-blue-400 font-semibold' : 'text-amber-700 font-semibold'}`
+    return `${baseClasses} ${isDarkMode.value ? 'text-amber-500 font-semibold' : 'text-amber-700 font-semibold'}`
   } else {
     return `${baseClasses} ${isDarkMode.value ? 'text-gray-500' : 'text-gray-500'}`
   }

@@ -2,8 +2,8 @@
   <div 
     class="rounded-lg shadow-xl border p-4"
     :class="isDarkMode 
-      ? 'bg-gray-800 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-neutral-900 border-transparent' 
+      : 'bg-white border-transparent'"
   >
     <h3 
       class="text-lg font-bold mb-4 flex items-center gap-2"
@@ -11,7 +11,7 @@
     >
       <i-mdi-chart-box 
         class="w-5 h-5"
-        :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+        :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
       />
       Cases Overview
     </h3>
@@ -89,7 +89,7 @@ export default {
   methods: {
     getBgClass(variant) {
       const darkBgMap = {
-        'blue': 'bg-blue-600/10 border-blue-600/20',
+        'blue': 'bg-amber-600/10 border-amber-600/20',
         'amber': 'bg-amber-600/10 border-amber-600/20',
         'red': 'bg-red-600/10 border-red-600/20',
         'green': 'bg-emerald-600/10 border-emerald-600/20',
@@ -112,7 +112,7 @@ export default {
     },
     getTextClass(variant) {
       const darkTextMap = {
-        'blue': 'text-blue-400',
+        'blue': 'text-amber-500',
         'amber': 'text-amber-400',
         'red': 'text-red-400',
         'green': 'text-emerald-400',
@@ -121,7 +121,7 @@ export default {
       }
       
       const lightTextMap = {
-        'blue': 'text-blue-700',
+        'blue': 'text-amber-700',
         'amber': 'text-amber-700',
         'red': 'text-red-700',
         'green': 'text-emerald-700',
@@ -146,7 +146,7 @@ export default {
     },
     getIconBgClass(variant) {
       const darkIconBgMap = {
-        'blue': 'bg-blue-600/20 text-blue-400',
+        'blue': 'bg-amber-600/20 text-amber-500',
         'amber': 'bg-amber-600/20 text-amber-400',
         'red': 'bg-red-600/20 text-red-400',
         'green': 'bg-emerald-600/20 text-emerald-400',
@@ -155,7 +155,7 @@ export default {
       }
       
       const lightIconBgMap = {
-        'blue': 'bg-blue-100 text-blue-700',
+        'blue': 'bg-blue-100 text-amber-700',
         'amber': 'bg-amber-100 text-amber-700',
         'red': 'bg-red-100 text-red-700',
         'green': 'bg-emerald-100 text-emerald-700',

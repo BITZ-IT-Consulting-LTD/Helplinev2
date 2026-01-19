@@ -5,19 +5,19 @@
       :key="date" 
       class="rounded-lg shadow-xl border overflow-hidden"
       :class="isDarkMode 
-        ? 'bg-gray-800 border-gray-700' 
-        : 'bg-white border-gray-200'"
+        ? 'bg-neutral-900 border-transparent' 
+        : 'bg-white border-transparent'"
     >
       <!-- Date Header -->
       <div 
         class="px-6 py-3 border-b"
         :class="isDarkMode 
-          ? 'bg-gray-900/60 border-gray-700' 
-          : 'bg-gray-50 border-gray-200'"
+          ? 'bg-black/60 border-transparent' 
+          : 'bg-gray-50 border-transparent'"
       >
         <h3 
           class="text-sm font-semibold flex items-center gap-2"
-          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
         >
           <i-mdi-calendar class="w-4 h-4" />
           {{ date }}
@@ -34,7 +34,7 @@
           :key="getFieldValue(qa, 'id')"
           class="p-6 transition-all duration-200 cursor-pointer"
           :class="isDarkMode 
-            ? 'hover:bg-gray-700/30' 
+            ? 'hover:bg-neutral-800' 
             : 'hover:bg-gray-50'"
           @click="viewQADetails(qa)"
         >
@@ -43,12 +43,12 @@
             <div 
               class="flex-shrink-0 w-16 h-16 rounded-lg flex flex-col items-center justify-center border"
               :class="isDarkMode 
-                ? 'bg-gradient-to-br from-blue-600/20 to-purple-600/20 border-blue-600/30' 
+                ? 'bg-gradient-to-br from-amber-600/20 to-purple-600/20 border-amber-600/30' 
                 : 'bg-gradient-to-br from-amber-100 to-orange-100 border-amber-300'"
             >
               <span 
                 class="text-2xl font-bold"
-                :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+                :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
               >
                 {{ calculateScore(qa) }}%
               </span>
@@ -135,7 +135,7 @@
               <div 
                 v-if="getFieldValue(qa, 'feedback')" 
                 class="mt-3 pt-3 border-t"
-                :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+                :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
               >
                 <p 
                   class="text-xs mb-1"
@@ -161,8 +161,8 @@
       v-if="Object.keys(groupedQAs).length === 0" 
       class="rounded-lg shadow-xl border p-12 text-center"
       :class="isDarkMode 
-        ? 'bg-gray-800 border-gray-700' 
-        : 'bg-white border-gray-200'"
+        ? 'bg-neutral-900 border-transparent' 
+        : 'bg-white border-transparent'"
     >
       <i-mdi-clipboard-check-outline 
         class="w-16 h-16 mx-auto mb-4"

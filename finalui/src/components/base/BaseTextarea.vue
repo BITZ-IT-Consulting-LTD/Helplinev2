@@ -16,8 +16,8 @@
         error 
           ? 'border-red-600 focus:border-red-600 focus:ring-red-600/50' 
           : (isDarkMode
-            ? 'border-gray-600 focus:border-blue-500 focus:ring-blue-500/50 hover:border-blue-500'
-            : 'border-gray-300 focus:border-amber-600 focus:ring-amber-600/50 hover:border-amber-600'),
+            ? 'border-transparent focus:border-amber-500 focus:ring-amber-500/50 hover:border-amber-500'
+            : 'border-transparent focus:border-amber-600 focus:ring-amber-600/50 hover:border-amber-600'),
         disabled 
           ? (isDarkMode 
             ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 

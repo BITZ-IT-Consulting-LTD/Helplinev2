@@ -22,15 +22,15 @@
           'border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all duration-200',
           isDragOver 
             ? isDarkMode 
-              ? 'border-blue-500 bg-blue-600/10 scale-[1.02]' 
+              ? 'border-amber-500 bg-amber-600/10 scale-[1.02]' 
               : 'border-amber-600 bg-amber-50 scale-[1.02]'
             : isDarkMode
-              ? 'border-gray-600 bg-gray-800/50'
-              : 'border-gray-300 bg-gray-50',
+              ? 'border-transparent bg-gray-800/50'
+              : 'border-transparent bg-gray-50',
           filesStore.loading 
             ? 'opacity-60 cursor-not-allowed' 
             : isDarkMode
-              ? 'hover:border-blue-500 hover:bg-blue-600/5'
+              ? 'hover:border-amber-500 hover:bg-amber-600/5'
               : 'hover:border-amber-600 hover:bg-amber-50'
         ]"
         @dragover.prevent="handleDragOver"
@@ -54,7 +54,7 @@
               'opacity-70',
               isDarkMode ? 'text-gray-500' : 'text-gray-400',
               !filesStore.loading && 'group-hover:opacity-100',
-              !filesStore.loading && (isDarkMode ? 'group-hover:text-blue-400' : 'group-hover:text-amber-700')
+              !filesStore.loading && (isDarkMode ? 'group-hover:text-amber-500' : 'group-hover:text-amber-700')
             ]"
           >
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
@@ -85,8 +85,8 @@
         v-if="attachments && attachments.length > 0" 
         class="border rounded-lg p-4"
         :class="isDarkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'"
+          ? 'bg-gray-800 border-transparent' 
+          : 'bg-white border-transparent'"
       >
         <h4 
           class="text-sm font-semibold mb-3"
@@ -100,8 +100,8 @@
             :key="index"
             class="flex items-center justify-between p-3 border rounded-md transition-all duration-200"
             :class="isDarkMode 
-              ? 'bg-gray-700/50 border-gray-600 hover:border-blue-500' 
-              : 'bg-gray-50 border-gray-300 hover:border-amber-600'"
+              ? 'bg-gray-700/50 border-transparent hover:border-amber-500' 
+              : 'bg-gray-50 border-transparent hover:border-amber-600'"
           >
             <div class="flex items-center gap-3 flex-1 min-w-0">
               <div 
@@ -135,8 +135,8 @@
                 type="button"
                 class="bg-transparent border rounded px-1.5 py-1.5 cursor-pointer transition-all duration-200 flex items-center justify-center hover:bg-red-600 hover:border-red-600 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 :class="isDarkMode 
-                  ? 'border-gray-600 text-gray-400' 
-                  : 'border-gray-300 text-gray-500'"
+                  ? 'border-transparent text-gray-400' 
+                  : 'border-transparent text-gray-500'"
                 @click="removeFile(index)"
                 title="Remove file"
                 :disabled="filesStore.loading"
@@ -156,8 +156,8 @@
         v-if="uploadProgress > 0 && uploadProgress < 100" 
         class="border rounded-lg p-4"
         :class="isDarkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'"
+          ? 'bg-gray-800 border-transparent' 
+          : 'bg-white border-transparent'"
       >
         <div 
           class="w-full h-2 rounded overflow-hidden mb-2"
@@ -165,7 +165,7 @@
         >
           <div 
             class="h-full transition-all duration-300"
-            :class="isDarkMode ? 'bg-blue-600' : 'bg-amber-700'"
+            :class="isDarkMode ? 'bg-amber-600' : 'bg-amber-700'"
             :style="{ width: uploadProgress + '%' }"
           ></div>
         </div>
@@ -182,8 +182,8 @@
         v-if="filesStore.loading" 
         class="border rounded-lg p-4"
         :class="isDarkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'"
+          ? 'bg-gray-800 border-transparent' 
+          : 'bg-white border-transparent'"
       >
         <div 
           class="flex items-center justify-center gap-3 text-sm"

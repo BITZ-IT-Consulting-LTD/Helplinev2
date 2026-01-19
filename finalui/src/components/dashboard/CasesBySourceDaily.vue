@@ -126,7 +126,7 @@ watch(() => props.filters, () => {
       </h2>
       <div 
         class="text-3xl font-bold"
-        :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+        :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
       >
         {{ totalCases }} 
         <span 

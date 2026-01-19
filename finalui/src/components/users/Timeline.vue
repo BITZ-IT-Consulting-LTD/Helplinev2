@@ -1,7 +1,7 @@
 <template>
   <div 
     class="relative border-l-2 pl-6 space-y-6"
-    :class="isDarkMode ? 'border-gray-700' : 'border-gray-300'"
+    :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
   >
 
     <div
@@ -9,16 +9,16 @@
       :key="getValue(user, 'id')"
       class="relative shadow-xl rounded-lg p-6 border cursor-pointer transition-all duration-200"
       :class="isDarkMode 
-        ? 'bg-gray-800 border-gray-700 hover:border-blue-600' 
-        : 'bg-white border-gray-200 hover:border-amber-600'"
+        ? 'bg-neutral-900 border-transparent hover:border-amber-600' 
+        : 'bg-white border-transparent hover:border-amber-600'"
       @click="selectUser(user)"
     >
       <!-- Timeline Dot -->
       <div 
         class="absolute -left-[1.875rem] top-6 w-6 h-6 rounded-full border-4"
         :class="isDarkMode 
-          ? 'bg-blue-500 border-gray-900' 
-          : 'bg-amber-600 border-gray-50'"
+          ? 'bg-amber-600 border-transparent' 
+          : 'bg-amber-600 border-transparent'"
       ></div>
 
       <!-- User Info -->
@@ -59,7 +59,7 @@
       <span
         class="inline-block mt-3 px-3 py-1 rounded-full text-xs font-medium uppercase border"
         :class="isDarkMode 
-          ? 'bg-blue-600/20 text-blue-400 border-blue-600/30' 
+          ? 'bg-amber-600/20 text-amber-500 border-amber-600/30' 
           : 'bg-amber-100 text-amber-700 border-amber-300'"
       >
         {{ getRoleName(getValue(user, 'role')) }}
@@ -91,15 +91,15 @@
         <div 
           class="rounded-lg shadow-2xl p-8 border"
           :class="isDarkMode 
-            ? 'bg-gray-800 border-gray-700' 
-            : 'bg-white border-gray-200'"
+            ? 'bg-neutral-900 border-transparent' 
+            : 'bg-white border-transparent'"
         >
           <div class="flex flex-col items-center gap-4">
             <div 
               class="w-12 h-12 border-4 rounded-full animate-spin"
               :class="isDarkMode 
-                ? 'border-gray-600 border-t-blue-500' 
-                : 'border-gray-300 border-t-amber-700'"
+                ? 'border-transparent border-t-amber-500' 
+                : 'border-transparent border-t-amber-700'"
             ></div>
             <p 
               class="text-sm font-medium"

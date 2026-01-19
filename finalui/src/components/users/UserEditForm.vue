@@ -2,15 +2,15 @@
   <div 
     class="max-w-3xl w-full rounded-lg shadow-2xl border max-h-[90vh] flex flex-col"
     :class="isDarkMode 
-      ? 'bg-gray-800 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-gray-800 border-transparent' 
+      : 'bg-white border-transparent'"
   >
     <!-- Header -->
     <div 
       class="px-8 py-5 border-b"
       :class="isDarkMode 
-        ? 'border-gray-700' 
-        : 'border-gray-200'"
+        ? 'border-transparent' 
+        : 'border-transparent'"
     >
       <h2 
         class="text-xl font-bold"
@@ -38,8 +38,8 @@
             required 
             class="w-full rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
             :class="isDarkMode 
-              ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-              : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+              ? 'bg-gray-700 border border-transparent text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+              : 'bg-gray-50 border border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
           />
         </div>
 
@@ -57,8 +57,8 @@
             required 
             class="w-full rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
             :class="isDarkMode 
-              ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-              : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+              ? 'bg-gray-700 border border-transparent text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+              : 'bg-gray-50 border border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
           />
         </div>
 
@@ -76,8 +76,8 @@
             required 
             class="w-full rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
             :class="isDarkMode 
-              ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-              : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+              ? 'bg-gray-700 border border-transparent text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+              : 'bg-gray-50 border border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
           />
         </div>
 
@@ -94,8 +94,8 @@
             required 
             class="w-full rounded-lg px-4 py-3 focus:outline-none focus:ring-2"
             :class="isDarkMode 
-              ? 'bg-gray-700 border border-gray-600 text-gray-100 focus:ring-blue-500' 
-              : 'bg-gray-50 border border-gray-300 text-gray-900 focus:ring-amber-600'"
+              ? 'bg-gray-700 border border-transparent text-gray-100 focus:ring-blue-500' 
+              : 'bg-gray-50 border border-transparent text-gray-900 focus:ring-amber-600'"
           >
             <option disabled value="">Select Role</option>
             <option v-for="r in roles" :key="r.id" :value="r.id">
@@ -117,8 +117,8 @@
             type="text" 
             class="w-full rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
             :class="isDarkMode 
-              ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-              : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+              ? 'bg-gray-700 border border-transparent text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+              : 'bg-gray-50 border border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
           />
         </div>
 
@@ -135,8 +135,8 @@
             type="email" 
             class="w-full rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent"
             :class="isDarkMode 
-              ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-              : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+              ? 'bg-gray-700 border border-transparent text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
+              : 'bg-gray-50 border border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
           />
         </div>
 
@@ -147,8 +147,8 @@
             v-model="isActive" 
             class="h-4 w-4 rounded text-blue-600 focus:ring-blue-500"
             :class="isDarkMode 
-              ? 'border-gray-600 bg-gray-700' 
-              : 'border-gray-300 bg-white'"
+              ? 'border-transparent bg-gray-700' 
+              : 'border-transparent bg-white'"
           />
           <label 
             class="text-sm"
@@ -164,14 +164,14 @@
     <div 
       class="px-8 py-5 border-t flex gap-3"
       :class="isDarkMode 
-        ? 'border-gray-700' 
-        : 'border-gray-200'"
+        ? 'border-transparent' 
+        : 'border-transparent'"
     >
       <button
         @click="submitForm"
         class="flex-1 text-white py-3 rounded-lg transition-all duration-200 font-medium flex items-center justify-center gap-2"
         :class="isDarkMode 
-          ? 'bg-blue-600 hover:bg-blue-700' 
+          ? 'bg-amber-600 hover:bg-amber-700' 
           : 'bg-amber-700 hover:bg-amber-800'"
       >
         <i-mdi-content-save class="w-5 h-5" />
@@ -183,8 +183,8 @@
         @click="emit('cancel')"
         class="px-8 py-3 rounded-lg transition-all duration-200 font-medium border"
         :class="isDarkMode 
-          ? 'bg-gray-700 hover:bg-gray-600 text-gray-300 border-gray-600' 
-          : 'bg-gray-200 hover:bg-gray-300 text-gray-700 border-gray-300'"
+          ? 'bg-gray-700 hover:bg-gray-600 text-gray-300 border-transparent' 
+          : 'bg-gray-200 hover:bg-gray-300 text-gray-700 border-transparent'"
       >
         Cancel
       </button>

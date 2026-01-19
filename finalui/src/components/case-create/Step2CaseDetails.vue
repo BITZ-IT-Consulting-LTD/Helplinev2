@@ -69,8 +69,8 @@
             id="case-plan" 
             class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent resize-vertical"
             :class="isDarkMode 
-              ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-              : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+              ? 'bg-gray-700 border-transparent text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+              : 'bg-gray-50 border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
             placeholder="Outline the planned interventions and support services..." 
             rows="4" 
             @input="updateForm"
@@ -91,8 +91,8 @@
               v-model="localForm.priority" 
               class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
               :class="isDarkMode 
-                ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
-                : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
+                ? 'bg-gray-700 border-transparent text-gray-100 focus:ring-amber-500' 
+                : 'bg-gray-50 border-transparent text-gray-900 focus:ring-amber-600'"
               @change="handlePriorityChange"
             >
               <option value="">Select priority</option>
@@ -114,8 +114,8 @@
               v-model="localForm.status" 
               class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
               :class="isDarkMode 
-                ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
-                : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
+                ? 'bg-gray-700 border-transparent text-gray-100 focus:ring-amber-500' 
+                : 'bg-gray-50 border-transparent text-gray-900 focus:ring-amber-600'"
               @change="handleStatusChange"
             >
               <option value="">Select status</option>
@@ -141,7 +141,7 @@
                 value="116" 
                 @change="handleDepartmentChange" 
                 class="w-4 h-4"
-                :class="isDarkMode ? 'text-blue-600' : 'text-amber-700'"
+                :class="isDarkMode ? 'text-amber-600' : 'text-amber-700'"
               />
               <span 
                 class="text-sm"
@@ -157,7 +157,7 @@
                 value="labor" 
                 @change="handleDepartmentChange" 
                 class="w-4 h-4"
-                :class="isDarkMode ? 'text-blue-600' : 'text-amber-700'"
+                :class="isDarkMode ? 'text-amber-600' : 'text-amber-700'"
               />
               <span 
                 class="text-sm"
@@ -173,8 +173,8 @@
             v-if="showPassportField" 
             class="mt-4 p-4 border rounded-lg animate-fadeIn"
             :class="isDarkMode 
-              ? 'bg-gray-800 border-gray-600' 
-              : 'bg-gray-50 border-gray-300'"
+              ? 'bg-gray-800 border-transparent' 
+              : 'bg-gray-50 border-transparent'"
           >
             <label 
               for="client-passport" 
@@ -189,8 +189,8 @@
               type="text" 
               class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
               :class="isDarkMode 
-                ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-500 focus:ring-blue-500' 
-                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+                ? 'bg-gray-700 border-transparent text-gray-100 placeholder-gray-500 focus:ring-amber-500' 
+                : 'bg-white border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
               placeholder="Enter client's passport number" 
               @input="updateForm" 
             />
@@ -235,14 +235,14 @@
             v-if="userStore.loading" 
             class="flex items-center gap-2 p-3 border rounded-lg"
             :class="isDarkMode 
-              ? 'bg-gray-700 border-gray-600' 
-              : 'bg-gray-50 border-gray-300'"
+              ? 'bg-gray-700 border-transparent' 
+              : 'bg-gray-50 border-transparent'"
           >
             <div 
               class="w-4 h-4 border-2 rounded-full animate-spin"
               :class="isDarkMode 
-                ? 'border-gray-400 border-t-blue-500' 
-                : 'border-gray-300 border-t-amber-700'"
+                ? 'border-transparent border-t-blue-500' 
+                : 'border-transparent border-t-amber-700'"
             ></div>
             <span 
               class="text-sm"
@@ -258,8 +258,8 @@
             v-model="localForm.escalatedTo" 
             class="w-full px-3 py-2 border rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:border-transparent"
             :class="isDarkMode 
-              ? 'bg-gray-700 border-gray-600 text-gray-100 focus:ring-blue-500' 
-              : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-amber-600'"
+              ? 'bg-gray-700 border-transparent text-gray-100 focus:ring-amber-500' 
+              : 'bg-gray-50 border-transparent text-gray-900 focus:ring-amber-600'"
             @change="handleEscalationChange"
           >
             <option value="0">None</option>
@@ -285,14 +285,14 @@
 
       <div 
         class="flex gap-3 justify-between mt-6 pt-5 border-t"
-        :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+        :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
       >
         <button 
           type="button" 
           class="px-4 py-2 border rounded-lg transition-colors"
           :class="isDarkMode 
-            ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
-            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+            ? 'bg-gray-700 text-gray-300 border-transparent hover:bg-gray-600' 
+            : 'bg-white text-gray-700 border-transparent hover:bg-gray-50'"
           @click="goToStep(1)"
         >
           Back
@@ -302,7 +302,7 @@
             type="submit" 
             class="px-4 py-2 text-white rounded-lg transition-colors"
             :class="isDarkMode 
-              ? 'bg-blue-600 hover:bg-blue-700' 
+              ? 'bg-amber-600 hover:bg-amber-700' 
               : 'bg-amber-700 hover:bg-amber-800'"
           >
             Continue

@@ -1,7 +1,7 @@
 <template>
   <div 
     class="p-6 space-y-6 min-h-screen"
-    :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'"
+    :class="isDarkMode ? 'bg-black' : 'bg-gray-50'"
   >
     <!-- Page Header -->
     <div class="mb-6">
@@ -11,7 +11,7 @@
       >
         <i-mdi-folder-account-outline 
           class="w-8 h-8"
-          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
         />
         Cases
       </h1>
@@ -31,8 +31,8 @@
       v-if="casesStore.loading" 
       class="flex justify-center items-center py-12 rounded-lg shadow-xl border"
       :class="isDarkMode 
-        ? 'bg-gray-800 border-gray-700' 
-        : 'bg-white border-gray-200'"
+        ? 'bg-neutral-900 border-transparent' 
+        : 'bg-white border-transparent'"
     >
       <div 
         :class="isDarkMode ? 'text-gray-400' : 'text-gray-600'"
@@ -52,12 +52,12 @@
         >
           <i-mdi-folder-outline 
             class="w-5 h-5"
-            :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+            :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
           />
           <span class="text-sm">Total Cases:</span>
           <span 
             class="text-lg font-bold"
-            :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+            :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
           >
             {{ casesStore.caseCount }}
           </span>
@@ -94,8 +94,8 @@
             :disabled="casesStore.loading"
             class="px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm border disabled:opacity-50 disabled:cursor-not-allowed"
             :class="isDarkMode 
-              ? 'bg-gray-800 text-gray-300 border-gray-700 hover:border-green-500 hover:text-green-400' 
-              : 'bg-white text-gray-700 border-gray-300 hover:border-green-600 hover:text-green-700'"
+              ? 'bg-neutral-900 text-gray-300 border-transparent hover:border-green-500 hover:text-green-400' 
+              : 'bg-white text-gray-700 border-transparent hover:border-green-600 hover:text-green-700'"
           >
             <i-mdi-refresh class="w-5 h-5" />
             Refresh
@@ -188,12 +188,12 @@ const getViewButtonClass = (isActive) => {
   
   if (isActive) {
     return isDarkMode.value
-      ? `${baseClasses} bg-blue-600 text-white shadow-lg shadow-blue-900/50`
+      ? `${baseClasses} bg-amber-600 text-white shadow-lg shadow-amber-900/50`
       : `${baseClasses} bg-amber-700 text-white shadow-lg shadow-amber-900/30`
   } else {
     return isDarkMode.value
-      ? `${baseClasses} bg-gray-800 text-gray-300 border border-gray-700 hover:border-blue-500 hover:text-blue-400`
-      : `${baseClasses} bg-white text-gray-700 border border-gray-300 hover:border-amber-600 hover:text-amber-700`
+      ? `${baseClasses} bg-gray-800 text-gray-300 border border-transparent hover:border-amber-600 hover:text-amber-500`
+      : `${baseClasses} bg-white text-gray-700 border border-transparent hover:border-amber-600 hover:text-amber-700`
   }
 }
 

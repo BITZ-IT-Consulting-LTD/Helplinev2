@@ -1,83 +1,95 @@
 <template>
   <div 
     class="min-h-screen py-8 px-4 sm:px-6 lg:px-8"
-    :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'"
+    :class="isDarkMode ? 'bg-black' : 'bg-gray-50'"
   >
-    <div class="max-w-5xl mx-auto">
-      <!-- Header Section -->
-      <div class="mb-8">
-        <CaseHeader 
-          :currentStep="currentStep"
-          :stepDescriptions="stepDescriptions"
-          class="mb-6"
-        />
-        
-        <ProgressTracker 
-          :currentStep="currentStep"
-          :totalSteps="totalSteps"
-          :stepStatus="stepStatus"
-          :stepLabels="stepLabels"
-          @step-change="navigateToStep"
-        />
-      </div>
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
       
-      <!-- Step Content Area -->
-      <div 
-        class="rounded-lg shadow-xl border p-6 sm:p-8 mb-6"
-        :class="isDarkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'"
-      >
-        <!-- Step 1: Reporter Selection -->
-        <Step1ReporterSelection
-          v-if="currentStep === 1"
-          :currentStep="currentStep"
-          :searchQuery="formData.step1.searchQuery"
-          :filteredContacts="formData.step1.filteredContacts"
-          :selectedReporter="formData.step1.selectedReporter"
-          :reporterId="reporterId"
-          @search-change="handleSearchChange"
-          @select-reporter="selectExistingReporter"
-          @create-new-reporter="createNewReporter"
-          @reporter-created="handleReporterCreated"
-          @validate-and-proceed="validateAndProceed(1)"
-          @cancel-form="cancelForm"
-        />
+      <!-- Left Column: Case Wizard (2/3 width) -->
+      <div class="lg:col-span-2 space-y-8">
+        <!-- Header Section -->
+        <div>
+          <CaseHeader 
+            :currentStep="currentStep"
+            :stepDescriptions="stepDescriptions"
+            class="mb-6"
+          />
+          
+          <ProgressTracker 
+            :currentStep="currentStep"
+            :totalSteps="totalSteps"
+            :stepStatus="stepStatus"
+            :stepLabels="stepLabels"
+            @step-change="navigateToStep"
+          />
+        </div>
         
-        <!-- Step 2: Case Details -->
-        <Step2CaseDetails
-          v-if="currentStep === 2"
-          :currentStep="currentStep"
-          :formData="formData.step2"
-          @form-update="updateFormData('step2', $event)"
-          @save-and-proceed="saveAndProceed(2)"
-          @step-change="goToStep"            
-        />
-        
-        <!-- Step 3: Additional Details -->
-        <Step3AdditionalDetails
-          v-if="currentStep === 3"
-          :currentStep="currentStep"
-          :formData="formData.step3"
-          @form-update="updateFormData('step3', $event)"
-          @open-client-modal="openClientModal"
-          @open-perpetrator-modal="openPerpetratorModal"
-          @remove-client="removeClient"
-          @remove-perpetrator="removePerpetrator"
-          @save-and-proceed="saveAndProceed(3)"
-          @step-change="goToStep"
-        />
-        
-        <!-- Step 4: Review -->
-        <Step4Review
-          v-if="currentStep === 4"
-          :currentStep="currentStep"
-          :formData="formData"
-          :reporterId="reporterId"
-          @go-to-step="goToStep"
-          @submit-case="submitCase"
-        />
+        <!-- Step Content Area -->
+        <div 
+          class="rounded-xl shadow-xl border p-6 sm:p-8"
+          :class="isDarkMode 
+            ? 'bg-neutral-900 border-transparent' 
+            : 'bg-white border-transparent'"
+        >
+          <!-- Step 1: Reporter Selection -->
+          <Step1ReporterSelection
+            v-if="currentStep === 1"
+            :currentStep="currentStep"
+            :searchQuery="formData.step1.searchQuery"
+            :filteredContacts="formData.step1.filteredContacts"
+            :selectedReporter="formData.step1.selectedReporter"
+            :reporterId="reporterId"
+            @search-change="handleSearchChange"
+            @select-reporter="selectExistingReporter"
+            @create-new-reporter="createNewReporter"
+            @reporter-created="handleReporterCreated"
+            @validate-and-proceed="validateAndProceed(1)"
+            @cancel-form="cancelForm"
+          />
+          
+          <!-- Step 2: Case Details -->
+          <Step2CaseDetails
+            v-if="currentStep === 2"
+            :currentStep="currentStep"
+            :formData="formData.step2"
+            @form-update="updateFormData('step2', $event)"
+            @save-and-proceed="saveAndProceed(2)"
+            @step-change="goToStep"            
+          />
+          
+          <!-- Step 3: Additional Details -->
+          <Step3AdditionalDetails
+            v-if="currentStep === 3"
+            :currentStep="currentStep"
+            :formData="formData.step3"
+            @form-update="updateFormData('step3', $event)"
+            @open-client-modal="openClientModal"
+            @open-perpetrator-modal="openPerpetratorModal"
+            @remove-client="removeClient"
+            @remove-perpetrator="removePerpetrator"
+            @save-and-proceed="saveAndProceed(3)"
+            @step-change="goToStep"
+          />
+          
+          <!-- Step 4: Review -->
+          <Step4Review
+            v-if="currentStep === 4"
+            :currentStep="currentStep"
+            :formData="formData"
+            :reporterId="reporterId"
+            @go-to-step="goToStep"
+            @submit-case="submitCase"
+          />
+        </div>
       </div>
+
+      <!-- Right Column: Insights Panel (1/3 width) -->
+      <div class="lg:col-span-1">
+        <div class="sticky top-6">
+          <CaseInsightsPanel />
+        </div>
+      </div>
+
     </div>
     
     <!-- Modals -->
@@ -129,6 +141,7 @@ import Step3AdditionalDetails from '@/components/case-create/Step3AdditionalDeta
 import Step4Review from '@/components/case-create/Step4Review.vue';
 import ClientModal from '@/components/case-create/ClientModal.vue';
 import PerpetratorModal from '@/components/case-create/PerpetratorModal.vue';
+import CaseInsightsPanel from '@/components/case-create/CaseInsightsPanel.vue';
 
 export default {
   name: 'CaseCreation',
@@ -140,7 +153,8 @@ export default {
     Step3AdditionalDetails,
     Step4Review,
     ClientModal,
-    PerpetratorModal
+    PerpetratorModal,
+    CaseInsightsPanel
   },
   setup() {
     const router = useRouter();

@@ -8,7 +8,7 @@
       <div 
         class="rounded-lg shadow-xl p-6 border-l-4"
         :class="isDarkMode 
-          ? 'bg-gray-800 border-blue-500' 
+          ? 'bg-gray-800 border-amber-500' 
           : 'bg-white border-amber-600'"
       >
         <div class="flex items-center gap-4 mb-2">
@@ -21,13 +21,13 @@
           >
             <i-mdi-arrow-left 
               class="w-6 h-6"
-              :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+              :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
             />
           </button>
           <div>
             <h1 
               class="text-3xl font-bold flex items-center gap-3"
-              :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+              :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
             >
               <i-mdi-clipboard-check class="w-8 h-8" />
               Quality Assurance Evaluation

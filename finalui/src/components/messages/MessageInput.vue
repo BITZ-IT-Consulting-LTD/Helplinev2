@@ -2,8 +2,8 @@
   <div 
     class="p-4 border-t"
     :class="isDarkMode 
-      ? 'border-gray-700 bg-gray-800' 
-      : 'border-gray-200 bg-white'"
+      ? 'border-transparent bg-gray-800' 
+      : 'border-transparent bg-white'"
   >
     <div class="flex gap-3">
       <textarea
@@ -12,15 +12,15 @@
         placeholder="Type your message..."
         class="flex-1 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent resize-none text-sm"
         :class="isDarkMode 
-          ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-400 focus:ring-blue-500' 
-          : 'bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
+          ? 'bg-neutral-800 border border-transparent text-gray-100 placeholder-gray-400 focus:ring-amber-500' 
+          : 'bg-gray-50 border border-transparent text-gray-900 placeholder-gray-400 focus:ring-amber-600'"
         @keydown.enter.exact.prevent="sendMessage"
       />
       <button 
         @click="sendMessage"
         class="text-white px-6 rounded-lg transition-all duration-200 shadow-lg font-medium flex items-center gap-2 active:scale-95"
         :class="isDarkMode 
-          ? 'bg-blue-600 hover:bg-blue-700' 
+          ? 'bg-amber-600 hover:bg-amber-700' 
           : 'bg-amber-700 hover:bg-amber-800'"
       >
         <i-mdi-send class="w-5 h-5" />

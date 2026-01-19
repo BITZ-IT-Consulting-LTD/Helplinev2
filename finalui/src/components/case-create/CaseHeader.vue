@@ -8,7 +8,7 @@
         Create New Case
         <span 
           class="block w-12 h-0.5 rounded-full mt-1.5"
-          :class="isDarkMode ? 'bg-blue-600' : 'bg-amber-700'"
+          :class="isDarkMode ? 'bg-amber-600' : 'bg-amber-700'"
         ></span>
       </h1>
       <p 

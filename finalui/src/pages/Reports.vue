@@ -1,7 +1,7 @@
 <template>
   <div 
     class="min-h-screen p-6"
-    :class="isDarkMode ? 'bg-gray-900' : 'bg-gray-50'"
+    :class="isDarkMode ? 'bg-black' : 'bg-gray-50'"
   >
     <div class="max-w-7xl mx-auto">
       <!-- Page Header -->
@@ -12,7 +12,7 @@
         >
           <i-mdi-chart-bar 
             class="w-8 h-8"
-            :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+            :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
           />
           Reports & Analytics
         </h1>
@@ -28,8 +28,8 @@
       <div 
         class="rounded-lg shadow-xl p-6 mb-6 border"
         :class="isDarkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'"
+          ? 'bg-neutral-900 border-transparent' 
+          : 'bg-white border-transparent'"
       >
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
          <!-- Endpoint Selection -->
@@ -44,8 +44,8 @@
     v-model="selectedEndpoint" 
     class="w-full px-4 py-3 rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:border-transparent"
     :class="isDarkMode 
-      ? 'bg-gray-700 border border-gray-600 text-gray-100 hover:border-blue-500 focus:ring-blue-500' 
-      : 'bg-gray-50 border border-gray-300 text-gray-900 hover:border-amber-600 focus:ring-amber-600'"
+      ? 'bg-gray-700 border border-transparent text-gray-100 hover:border-amber-600 focus:ring-amber-500' 
+      : 'bg-gray-50 border border-transparent text-gray-900 hover:border-amber-600 focus:ring-amber-600'"
   >
     <option value="qa">QA Results</option>
     <option value="cases">Cases</option>
@@ -88,8 +88,8 @@
           <div 
             class="rounded-lg p-4 mb-4 border"
             :class="isDarkMode 
-              ? 'bg-gray-900/60 border-gray-700' 
-              : 'bg-gray-100 border-gray-200'"
+              ? 'bg-black/60 border-transparent' 
+              : 'bg-gray-100 border-transparent'"
           >
             <div class="flex flex-wrap gap-2">
               <button
@@ -109,13 +109,13 @@
             v-if="selectedYAxis.length > 0" 
             class="rounded-lg p-4 border"
             :class="isDarkMode 
-              ? 'bg-blue-900/20 border-blue-600/30' 
+              ? 'bg-amber-900/20 border-amber-600/30' 
               : 'bg-amber-50 border-amber-300'"
           >
             <div class="flex items-center justify-between mb-2">
               <span 
                 class="text-sm font-semibold"
-                :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+                :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
               >
                 Selected Filters
               </span>
@@ -123,7 +123,7 @@
                 @click="clearAllFilters"
                 class="text-xs font-medium flex items-center gap-1"
                 :class="isDarkMode 
-                  ? 'text-blue-400 hover:text-blue-300' 
+                  ? 'text-amber-500 hover:text-blue-300' 
                   : 'text-amber-700 hover:text-amber-600'"
               >
                 <i-mdi-close class="w-3 h-3" />
@@ -135,14 +135,14 @@
                 v-for="(field, index) in selectedYAxis"
                 :key="field"
                 class="flex items-center gap-2 px-3 py-2 text-white rounded-lg text-sm font-medium shadow-sm"
-                :class="isDarkMode ? 'bg-blue-600' : 'bg-amber-700'"
+                :class="isDarkMode ? 'bg-amber-600' : 'bg-amber-700'"
               >
                 <span>{{ formatFieldName(field) }}</span>
                 <button
                   @click="removeYAxis(index)"
                   class="rounded p-0.5 transition-colors"
                   :class="isDarkMode 
-                    ? 'hover:bg-blue-700' 
+                    ? 'hover:bg-amber-700' 
                     : 'hover:bg-amber-800'"
                 >
                   <i-mdi-close class="w-4 h-4" />
@@ -165,8 +165,8 @@
       <div 
         class="rounded-lg shadow-xl p-6 mb-6 border"
         :class="isDarkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'"
+          ? 'bg-neutral-900 border-transparent' 
+          : 'bg-white border-transparent'"
       >
         <div class="flex items-center justify-between mb-6">
           <h2 
@@ -175,14 +175,14 @@
           >
             <i-mdi-chart-line 
               class="w-6 h-6"
-              :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+              :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
             />
             {{ formatFieldName(selectedEndpoint) }} Analytics
           </h2>
           <div 
             class="px-4 py-2 rounded-lg text-sm font-medium border"
             :class="isDarkMode 
-              ? 'bg-blue-600/20 text-blue-400 border-blue-600/30' 
+              ? 'bg-amber-600/20 text-amber-500 border-amber-600/30' 
               : 'bg-amber-100 text-amber-700 border-amber-300'"
           >
             {{ formatFieldName(currentMetric) }}
@@ -197,7 +197,7 @@
             <div 
               class="animate-spin rounded-full h-12 w-12 border-4"
               :class="isDarkMode 
-                ? 'border-blue-900/30 border-t-blue-500' 
+                ? 'border-amber-900/30 border-t-amber-500' 
                 : 'border-amber-900/30 border-t-amber-600'"
             ></div>
             <div 
@@ -238,8 +238,8 @@
           v-else 
           class="overflow-x-auto rounded-lg p-4 border"
           :class="isDarkMode 
-            ? 'bg-gray-900/40 border-gray-700' 
-            : 'bg-gray-50 border-gray-200'"
+            ? 'bg-gray-900/40 border-transparent' 
+            : 'bg-gray-50 border-transparent'"
         >
           <div class="inline-block min-w-full">
             <svg :width="svgWidth" :height="svgHeight">
@@ -274,7 +274,7 @@
                   text-anchor="middle"
                   font-size="11"
                   font-weight="600"
-                  :class="isDarkMode ? 'fill-blue-400' : 'fill-amber-700'"
+                  :class="isDarkMode ? 'fill-amber-500' : 'fill-amber-700'"
                 >
                   {{ bar.value }}
                 </text>
@@ -329,8 +329,8 @@
               <defs>
                 <!-- Dark mode gradient -->
                 <linearGradient id="barGradientDark" x1="0" y1="1" x2="0" y2="0">
-                  <stop offset="0%" stop-color="#2563eb" />
-                  <stop offset="100%" stop-color="#60a5fa" />
+                  <stop offset="0%" stop-color="#d97706" />
+                  <stop offset="100%" stop-color="#fbbf24" />
                 </linearGradient>
                 <!-- Light mode gradient -->
                 <linearGradient id="barGradientLight" x1="0" y1="1" x2="0" y2="0">
@@ -347,8 +347,8 @@
       <div 
         class="rounded-lg shadow-xl p-6 border"
         :class="isDarkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'"
+          ? 'bg-neutral-900 border-transparent' 
+          : 'bg-white border-transparent'"
       >
         <h2 
           class="text-2xl font-bold mb-6 flex items-center gap-2"
@@ -356,7 +356,7 @@
         >
           <i-mdi-table 
             class="w-6 h-6"
-            :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+            :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
           />
           Data Table
         </h2>
@@ -369,7 +369,7 @@
             <div 
               class="animate-spin rounded-full h-12 w-12 border-4"
               :class="isDarkMode 
-                ? 'border-blue-900/30 border-t-blue-500' 
+                ? 'border-amber-900/30 border-t-amber-500' 
                 : 'border-amber-900/30 border-t-amber-600'"
             ></div>
             <div 
@@ -408,7 +408,7 @@
         <div 
           v-else 
           class="overflow-x-auto rounded-lg border"
-          :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+          :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
         >
           <table 
             class="min-w-full divide-y"
@@ -433,7 +433,7 @@
                   :key="'period-' + period"
                   class="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider"
                   :class="isDarkMode 
-                    ? 'text-gray-300 bg-blue-900/20' 
+                    ? 'text-gray-300 bg-amber-900/20' 
                     : 'text-gray-700 bg-amber-50'"
                 >
                   {{ period }}
@@ -441,7 +441,7 @@
                 <th 
                   class="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider"
                   :class="isDarkMode 
-                    ? 'text-blue-400 bg-blue-900/30' 
+                    ? 'text-amber-500 bg-amber-900/30' 
                     : 'text-amber-700 bg-amber-100'"
                 >
                   Total
@@ -490,7 +490,7 @@
                 <td 
                   class="px-6 py-4 whitespace-nowrap text-sm text-center font-bold"
                   :class="isDarkMode 
-                    ? 'text-blue-400 bg-blue-900/20' 
+                    ? 'text-amber-500 bg-amber-900/20' 
                     : 'text-amber-700 bg-amber-50'"
                 >
                   {{ row.total }}
@@ -519,7 +519,7 @@
                 <td 
                   class="px-6 py-4 whitespace-nowrap text-sm text-center"
                   :class="isDarkMode 
-                    ? 'text-blue-400 bg-blue-900/30' 
+                    ? 'text-amber-500 bg-amber-900/30' 
                     : 'text-amber-700 bg-amber-100'"
                 >
                   {{ grandTotal }}
@@ -549,12 +549,12 @@ const getTimePeriodButtonClass = (isActive) => {
   
   if (isActive) {
     return isDarkMode.value
-      ? `${baseClasses} bg-blue-600 text-white shadow-lg shadow-blue-900/50`
+      ? `${baseClasses} bg-amber-600 text-white shadow-lg shadow-amber-900/50`
       : `${baseClasses} bg-amber-700 text-white shadow-lg shadow-amber-900/30`
   } else {
     return isDarkMode.value
-      ? `${baseClasses} bg-gray-700 text-gray-300 border border-gray-600 hover:border-blue-500 hover:text-blue-400`
-      : `${baseClasses} bg-gray-100 text-gray-700 border border-gray-300 hover:border-amber-600 hover:text-amber-700`
+      ? `${baseClasses} bg-gray-700 text-gray-300 border border-transparent hover:border-amber-600 hover:text-amber-500`
+      : `${baseClasses} bg-gray-100 text-gray-700 border border-transparent hover:border-amber-600 hover:text-amber-700`
   }
 }
 
@@ -568,8 +568,8 @@ const getYAxisButtonClass = (isDisabled) => {
       : `${baseClasses} bg-gray-200 text-gray-400 cursor-not-allowed`
   } else {
     return isDarkMode.value
-      ? `${baseClasses} bg-gray-800 text-gray-300 border border-gray-600 hover:border-blue-500 hover:bg-blue-900/20 cursor-pointer`
-      : `${baseClasses} bg-white text-gray-700 border border-gray-300 hover:border-amber-600 hover:bg-amber-50 cursor-pointer`
+      ? `${baseClasses} bg-gray-800 text-gray-300 border border-transparent hover:border-amber-600 hover:bg-amber-900/20 cursor-pointer`
+      : `${baseClasses} bg-white text-gray-700 border border-transparent hover:border-amber-600 hover:bg-amber-50 cursor-pointer`
   }
 }
 

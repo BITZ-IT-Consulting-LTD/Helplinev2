@@ -2,13 +2,13 @@
   <div 
     class="rounded-lg shadow-xl p-6 sticky top-4 border"
     :class="isDarkMode 
-      ? 'bg-gray-800 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-gray-800 border-transparent' 
+      : 'bg-white border-transparent'"
   >
     <!-- Header -->
     <div 
       class="flex items-center justify-between mb-6 pb-4 border-b"
-      :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+      :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
     >
       <h2 
         class="text-xl font-bold flex items-center gap-2"
@@ -16,7 +16,7 @@
       >
         <i-mdi-phone 
           class="w-5 h-5"
-          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
         />
         Call Details
       </h2>
@@ -34,7 +34,7 @@
         <span 
           class="px-3 py-1 text-xs font-bold rounded-full border"
           :class="isDarkMode 
-            ? 'bg-blue-600/20 text-blue-400 border-blue-600/30' 
+            ? 'bg-amber-600/20 text-amber-500 border-amber-600/30' 
             : 'bg-amber-100 text-amber-700 border-amber-300'"
         >
           {{ callData.reporter || 'N/A' }}
@@ -50,7 +50,7 @@
       >
         <span 
           class="text-sm font-semibold"
-          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
         >
           Direction:
         </span>
@@ -68,7 +68,7 @@
       >
         <span 
           class="text-sm font-semibold"
-          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
         >
           Phone:
         </span>
@@ -86,7 +86,7 @@
       >
         <span 
           class="text-sm font-semibold"
-          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
         >
           Extension:
         </span>
@@ -104,7 +104,7 @@
       >
         <span 
           class="text-sm font-semibold"
-          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
         >
           Wait Time:
         </span>
@@ -122,7 +122,7 @@
       >
         <span 
           class="text-sm font-semibold"
-          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
         >
           Hangup Status:
         </span>
@@ -140,7 +140,7 @@
       >
         <span 
           class="text-sm font-semibold"
-          :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+          :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
         >
           Talk Time:
         </span>
@@ -149,7 +149,7 @@
             @click="togglePlayback"
             class="w-7 h-7 flex items-center justify-center rounded-full transition-all shadow-lg"
             :class="isDarkMode 
-              ? 'bg-blue-600 hover:bg-blue-700' 
+              ? 'bg-amber-600 hover:bg-amber-700' 
               : 'bg-amber-700 hover:bg-amber-800'"
           >
             <i-mdi-play v-if="!isPlaying" class="w-4 h-4 text-white" />

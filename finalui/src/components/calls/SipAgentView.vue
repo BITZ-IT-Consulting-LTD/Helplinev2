@@ -6,8 +6,8 @@
         v-if="loadingExtension" 
         class="p-6 border rounded-lg shadow-xl"
         :class="isDarkMode 
-          ? 'border-gray-700 bg-gray-800' 
-          : 'border-gray-200 bg-white'"
+          ? 'border-transparent bg-gray-800' 
+          : 'border-transparent bg-white'"
       >
         <div class="flex items-center justify-center py-8">
           <div 
@@ -44,8 +44,8 @@
         v-else 
         class="p-6 border rounded-lg shadow-xl"
         :class="isDarkMode 
-          ? 'border-gray-700 bg-gray-800' 
-          : 'border-gray-200 bg-white'"
+          ? 'border-transparent bg-gray-800' 
+          : 'border-transparent bg-white'"
       >
         <h3 
           class="mb-4 text-xl font-semibold text-center"
@@ -58,8 +58,8 @@
           <div 
             class="flex justify-between items-center p-3 rounded border"
             :class="isDarkMode 
-              ? 'bg-gray-900/40 border-gray-700' 
-              : 'bg-gray-50 border-gray-200'"
+              ? 'bg-gray-900/40 border-transparent' 
+              : 'bg-gray-50 border-transparent'"
           >
             <span 
               class="font-medium"
@@ -80,8 +80,8 @@
           <div 
             class="flex justify-between items-center p-3 rounded border"
             :class="isDarkMode 
-              ? 'bg-gray-900/40 border-gray-700' 
-              : 'bg-gray-50 border-gray-200'"
+              ? 'bg-gray-900/40 border-transparent' 
+              : 'bg-gray-50 border-transparent'"
           >
             <span 
               class="font-medium"
@@ -103,12 +103,12 @@
             v-if="agent.callStatus" 
             class="p-3 rounded border"
             :class="isDarkMode 
-              ? 'bg-blue-600/20 border-blue-600/50' 
-              : 'bg-blue-50 border-blue-300'"
+              ? 'bg-amber-600/20 border-amber-600/50' 
+              : 'bg-amber-50 border-amber-300'"
           >
             <p 
               class="text-sm font-medium"
-              :class="isDarkMode ? 'text-blue-400' : 'text-blue-700'"
+              :class="isDarkMode ? 'text-amber-500' : 'text-blue-700'"
             >
               {{ agent.callStatus }}
             </p>
@@ -122,7 +122,7 @@
             class="px-6 py-3 text-white rounded-lg transition font-medium flex items-center justify-center gap-2 disabled:cursor-not-allowed"
             :class="agent.registered || agent.starting
               ? (isDarkMode ? 'bg-gray-700' : 'bg-gray-300')
-              : (isDarkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-amber-700 hover:bg-amber-800')"
+              : (isDarkMode ? 'bg-amber-600 hover:bg-amber-700' : 'bg-amber-700 hover:bg-amber-800')"
           >
             <i-mdi-play class="w-5 h-5" />
             {{ agent.starting ? 'Starting...' : 'Start (Register)' }}

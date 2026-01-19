@@ -18,12 +18,12 @@
       <div 
         class="border rounded-lg"
         :class="isDarkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'"
+          ? 'bg-gray-800 border-transparent' 
+          : 'bg-white border-transparent'"
       >
         <div 
           class="flex items-center justify-between p-3 px-4 border-b"
-          :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+          :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
         >
           <div 
             class="text-xl font-semibold flex items-center gap-2"
@@ -31,15 +31,15 @@
           >
             <i-mdi-account 
               class="w-5 h-5"
-              :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+              :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
             />
             Reporter Information
           </div>
           <button 
             class="flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm transition-colors"
             :class="isDarkMode 
-              ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
-              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+              ? 'bg-gray-700 text-gray-300 border-transparent hover:bg-gray-600' 
+              : 'bg-white text-gray-700 border-transparent hover:bg-gray-50'"
             @click="goToStep(1)"
           >
             <i-mdi-pencil class="w-4 h-4" />
@@ -51,13 +51,13 @@
             v-if="formData.step1.selectedReporter || reporterId" 
             class="p-4 border rounded-lg"
             :class="isDarkMode 
-              ? 'bg-blue-900/20 border-blue-600/30' 
+              ? 'bg-amber-900/20 border-amber-600/30' 
               : 'bg-amber-50 border-amber-300'"
           >
             <div class="flex items-start gap-3">
               <div 
                 class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
-                :class="isDarkMode ? 'bg-blue-600' : 'bg-amber-700'"
+                :class="isDarkMode ? 'bg-amber-600' : 'bg-amber-700'"
               >
                 <span>{{ getReporterInitials() }}</span>
               </div>
@@ -123,8 +123,8 @@
             v-else 
             class="p-4 border rounded-lg text-center"
             :class="isDarkMode 
-              ? 'bg-gray-700/50 border-gray-600 text-gray-400' 
-              : 'bg-gray-50 border-gray-300 text-gray-500'"
+              ? 'bg-gray-700/50 border-transparent text-gray-400' 
+              : 'bg-gray-50 border-transparent text-gray-500'"
           >
             <i-mdi-account-alert class="w-8 h-8 mx-auto mb-2 opacity-50" />
             <div class="text-sm">No reporter information available</div>
@@ -136,12 +136,12 @@
       <div 
         class="border rounded-lg"
         :class="isDarkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'"
+          ? 'bg-gray-800 border-transparent' 
+          : 'bg-white border-transparent'"
       >
         <div 
           class="flex items-center justify-between p-3 px-4 border-b"
-          :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+          :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
         >
           <div 
             class="text-xl font-semibold flex items-center gap-2"
@@ -149,15 +149,15 @@
           >
             <i-mdi-folder 
               class="w-5 h-5"
-              :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+              :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
             />
             Case Details
           </div>
           <button 
             class="flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm transition-colors"
             :class="isDarkMode 
-              ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
-              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+              ? 'bg-gray-700 text-gray-300 border-transparent hover:bg-gray-600' 
+              : 'bg-white text-gray-700 border-transparent hover:bg-gray-50'"
             @click="goToStep(2)"
           >
             <i-mdi-pencil class="w-4 h-4" />
@@ -264,12 +264,12 @@
       <div 
         class="border rounded-lg"
         :class="isDarkMode 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'"
+          ? 'bg-gray-800 border-transparent' 
+          : 'bg-white border-transparent'"
       >
         <div 
           class="flex items-center justify-between p-3 px-4 border-b"
-          :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+          :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
         >
           <div 
             class="text-xl font-semibold flex items-center gap-2"
@@ -277,15 +277,15 @@
           >
             <i-mdi-information 
               class="w-5 h-5"
-              :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+              :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
             />
             Additional Information
           </div>
           <button 
             class="flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm transition-colors"
             :class="isDarkMode 
-              ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
-              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+              ? 'bg-gray-700 text-gray-300 border-transparent hover:bg-gray-600' 
+              : 'bg-white text-gray-700 border-transparent hover:bg-gray-50'"
             @click="goToStep(3)"
           >
             <i-mdi-pencil class="w-4 h-4" />
@@ -307,8 +307,8 @@
                 :key="index" 
                 class="p-2 rounded border"
                 :class="isDarkMode 
-                  ? 'bg-gray-700/50 border-gray-600' 
-                  : 'bg-gray-50 border-gray-300'"
+                  ? 'bg-gray-700/50 border-transparent' 
+                  : 'bg-gray-50 border-transparent'"
               >
                 <div 
                   class="font-medium text-sm"
@@ -347,8 +347,8 @@
                 :key="index" 
                 class="p-2 rounded border"
                 :class="isDarkMode 
-                  ? 'bg-gray-700/50 border-gray-600' 
-                  : 'bg-gray-50 border-gray-300'"
+                  ? 'bg-gray-700/50 border-transparent' 
+                  : 'bg-gray-50 border-transparent'"
               >
                 <div 
                   class="font-medium text-sm"
@@ -413,8 +413,8 @@
                 :key="index" 
                 class="p-2 rounded border text-sm"
                 :class="isDarkMode 
-                  ? 'bg-gray-700/50 border-gray-600' 
-                  : 'bg-gray-50 border-gray-300'"
+                  ? 'bg-gray-700/50 border-transparent' 
+                  : 'bg-gray-50 border-transparent'"
               >
                 <div :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'">
                   {{ attachment.name }}
@@ -435,14 +435,14 @@
 
     <div 
       class="flex gap-3 justify-end mt-6 pt-5 border-t"
-      :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+      :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
     >
       <button 
         type="button" 
         class="px-4 py-2 border rounded-lg transition-colors"
         :class="isDarkMode 
-          ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
-          : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+          ? 'bg-gray-700 text-gray-300 border-transparent hover:bg-gray-600' 
+          : 'bg-white text-gray-700 border-transparent hover:bg-gray-50'"
         @click="goToStep(3)"
       >
         Back
@@ -586,8 +586,8 @@ function getPriorityClass(priority) {
         : `${baseClasses} bg-green-100 text-green-700 border-green-300`
     default:
       return isDarkMode.value
-        ? `${baseClasses} bg-gray-600/20 text-gray-400 border-gray-600/30`
-        : `${baseClasses} bg-gray-200 text-gray-600 border-gray-300`
+        ? `${baseClasses} bg-gray-600/20 text-gray-400 border-transparent/30`
+        : `${baseClasses} bg-gray-200 text-gray-600 border-transparent`
   }
 }
 
@@ -608,16 +608,16 @@ function getStatusClass(status) {
   switch (Number(status)) {
     case 1:
       return isDarkMode.value
-        ? `${baseClasses} bg-blue-600/20 text-blue-400 border-blue-600/30`
+        ? `${baseClasses} bg-amber-600/20 text-amber-500 border-amber-600/30`
         : `${baseClasses} bg-amber-100 text-amber-700 border-amber-300`
     case 2:
       return isDarkMode.value
-        ? `${baseClasses} bg-gray-600/20 text-gray-400 border-gray-600/30`
-        : `${baseClasses} bg-gray-200 text-gray-600 border-gray-300`
+        ? `${baseClasses} bg-gray-600/20 text-gray-400 border-transparent/30`
+        : `${baseClasses} bg-gray-200 text-gray-600 border-transparent`
     default:
       return isDarkMode.value
-        ? `${baseClasses} bg-gray-600/20 text-gray-400 border-gray-600/30`
-        : `${baseClasses} bg-gray-200 text-gray-600 border-gray-300`
+        ? `${baseClasses} bg-gray-600/20 text-gray-400 border-transparent/30`
+        : `${baseClasses} bg-gray-200 text-gray-600 border-transparent`
   }
 }
 

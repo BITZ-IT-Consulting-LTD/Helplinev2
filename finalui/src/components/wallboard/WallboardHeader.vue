@@ -2,8 +2,8 @@
   <div 
     class="rounded-lg shadow-xl border px-6 py-4"
     :class="isDarkMode 
-      ? 'bg-gray-800 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-neutral-900 border-transparent' 
+      : 'bg-white border-transparent'"
   >
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <!-- Title Section -->
@@ -14,7 +14,7 @@
         >
           <i-mdi-monitor-dashboard 
             class="w-7 h-7"
-            :class="isDarkMode ? 'text-blue-400' : 'text-amber-700'"
+            :class="isDarkMode ? 'text-amber-500' : 'text-amber-700'"
           />
           Helpline Wallboard
         </h1>
@@ -30,8 +30,8 @@
       <div 
         class="flex items-center gap-2 px-3 py-2 rounded-lg border"
         :class="isDarkMode 
-          ? 'bg-gray-900/60 border-gray-700' 
-          : 'bg-gray-50 border-gray-300'"
+          ? 'bg-black/60 border-transparent' 
+          : 'bg-gray-50 border-transparent'"
       >
         <span :class="['w-2 h-2 rounded-full flex-shrink-0', dotClass]"></span>
         <div class="flex flex-col">

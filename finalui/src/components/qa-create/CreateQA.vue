@@ -2,8 +2,8 @@
   <div 
     class="rounded-lg shadow-xl p-6 border"
     :class="isDarkMode 
-      ? 'bg-gray-800 border-gray-700' 
-      : 'bg-white border-gray-200'"
+      ? 'bg-gray-800 border-transparent' 
+      : 'bg-white border-transparent'"
   >
     <form @submit.prevent="handleSubmit">
       <!-- Active Section Display -->
@@ -45,7 +45,7 @@
       <!-- Navigation Buttons -->
       <div 
         class="flex items-center justify-between pt-6 border-t mt-6"
-        :class="isDarkMode ? 'border-gray-700' : 'border-gray-200'"
+        :class="isDarkMode ? 'border-transparent' : 'border-transparent'"
       >
         <button
           v-if="activeSection > 0"
@@ -53,8 +53,8 @@
           @click="previousSection"
           class="px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 border"
           :class="isDarkMode 
-            ? 'bg-gray-700 text-gray-300 border-gray-600 hover:bg-gray-600' 
-            : 'bg-white text-gray-700 border-gray-300 hover:border-amber-600 hover:text-amber-700'"
+            ? 'bg-gray-700 text-gray-300 border-transparent hover:bg-gray-600' 
+            : 'bg-white text-gray-700 border-transparent hover:border-amber-600 hover:text-amber-700'"
         >
           <i-mdi-chevron-left class="w-5 h-5" />
           Previous
@@ -68,7 +68,7 @@
           @click="nextSection"
           class="px-6 py-3 text-white rounded-lg font-semibold transition-all shadow-lg flex items-center gap-2"
           :class="isDarkMode 
-            ? 'bg-blue-600 hover:bg-blue-700' 
+            ? 'bg-amber-600 hover:bg-amber-700' 
             : 'bg-amber-700 hover:bg-amber-800'"
         >
           Next
