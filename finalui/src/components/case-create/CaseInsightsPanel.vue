@@ -1,25 +1,48 @@
 <template>
   <div class="space-y-6">
-    <!-- Audio Upload & Player Section -->
+    <!-- AI Title Badge (Shown when expanded) -->
     <div 
+      class="rounded-xl shadow-lg border p-5 transition-all duration-200"
+      :class="isDarkMode ? 'bg-neutral-900 border-transparent' : 'bg-white border-transparent'"
+    >
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-amber-500/10 text-amber-500">
+          <i-mdi-robot class="w-5 h-5" />
+        </div>
+        <div>
+          <h3 
+            class="text-sm font-bold leading-none mb-1"
+            :class="isDarkMode ? 'text-amber-500' : 'text-amber-600'"
+          >
+            Insights Active
+          </h3>
+          <p class="text-[10px] font-medium text-gray-500 leading-none">
+            Processing real-time analytics
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audio Upload Section - Shows when AI is enabled -->
+    <div 
+      v-if="aiEnabled"
       class="rounded-xl shadow-lg border p-6 transition-all duration-200"
       :class="isDarkMode ? 'bg-neutral-900 border-transparent' : 'bg-white border-transparent'"
     >
       <h3 
-        class="text-lg font-bold mb-4 flex items-center gap-2"
+        class="text-sm font-bold mb-4"
         :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
       >
-        <i-mdi-microphone class="w-5 h-5 text-amber-500" />
         Call Recording
       </h3>
 
       <!-- Upload State -->
       <div 
         v-if="!audioFile"
-        class="border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors"
+        class="border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition-all duration-300"
         :class="isDarkMode 
-          ? 'border-transparent hover:border-blue-500 hover:bg-neutral-800' 
-          : 'border-transparent hover:border-blue-500 hover:bg-gray-50'"
+          ? 'border-neutral-800 hover:border-amber-500/50 hover:bg-neutral-800/50' 
+          : 'border-gray-100 hover:border-amber-600/50 hover:bg-gray-50'"
         @click="triggerFileInput"
         @dragover.prevent
         @drop.prevent="handleDrop"
@@ -31,15 +54,12 @@
           accept="audio/*"
           @change="handleFileSelect"
         />
-        <div class="flex flex-col items-center gap-2">
-          <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
-            <i-mdi-cloud-upload class="w-6 h-6" />
-          </div>
-          <p class="font-medium" :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'">
-            Click to upload or drag audio
+        <div class="flex flex-col items-center gap-1">
+          <p class="text-sm font-bold" :class="isDarkMode ? 'text-white' : 'text-gray-900'">
+            Upload Audio
           </p>
-          <p class="text-xs" :class="isDarkMode ? 'text-gray-500' : 'text-gray-500'">
-            MP3, WAV, M4A up to 50MB
+          <p class="text-xs text-gray-500 font-medium">
+            Drag files or click to browse
           </p>
         </div>
       </div>
@@ -47,170 +67,288 @@
       <!-- Player State -->
       <div v-else class="space-y-4">
         <div 
-          class="flex items-center gap-3 p-3 rounded-xl border"
-          :class="isDarkMode ? 'bg-gray-900 border-transparent' : 'bg-gray-50 border-transparent'"
+          class="flex items-center gap-4 p-4 rounded-xl border"
+          :class="isDarkMode ? 'bg-black/40 border-neutral-800' : 'bg-gray-50 border-gray-100'"
         >
-          <div class="p-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
-            <i-mdi-music-note class="w-5 h-5" />
-          </div>
           <div class="flex-1 min-w-0">
-            <p class="text-sm font-medium truncate" :class="isDarkMode ? 'text-gray-200' : 'text-gray-800'">
+            <p 
+              class="text-sm font-bold truncate mb-0.5"
+              :class="isDarkMode ? 'text-white' : 'text-gray-900'"
+            >
               {{ audioFile.name }}
             </p>
-            <p class="text-xs" :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+            <p class="text-[11px] font-medium text-gray-500">
               {{ formatFileSize(audioFile.size) }}
             </p>
           </div>
           <button 
             @click="removeAudio"
-            class="p-1 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-500 rounded-lg transition-colors"
+            class="px-3 py-1.5 text-[11px] font-bold border border-red-500/30 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all shadow-sm"
           >
-            <i-mdi-close class="w-5 h-5" />
+            Remove
           </button>
         </div>
         
-        <audio controls class="w-full" :src="audioUrl"></audio>
+        <audio controls class="w-full h-8 opacity-90 custom-audio-player" :src="audioUrl"></audio>
       </div>
     </div>
 
-    <!-- AI Insights Panel -->
+    <!-- Results Section (Insights & Feedback) -->
     <div 
-      class="rounded-xl shadow-lg border overflow-hidden transition-all duration-200"
+      v-if="aiEnabled && audioFile"
+      class="rounded-xl shadow-lg border overflow-hidden transition-all duration-500 animate-in fade-in slide-in-from-bottom-8"
       :class="isDarkMode ? 'bg-neutral-900 border-transparent' : 'bg-white border-transparent'"
     >
-      <div class="p-4 border-b" :class="isDarkMode ? 'border-transparent bg-gray-900/50' : 'border-transparent bg-gray-50'">
-        <div class="flex items-center justify-between mb-1">
-          <h3 
-            class="text-lg font-bold flex items-center gap-2"
-            :class="isDarkMode ? 'text-gray-100' : 'text-gray-900'"
+      <!-- Mode Selector Tabs (Segmented Control Layout) -->
+      <div class="p-1 px-5 pt-5">
+        <div class="flex p-1 rounded-xl" :class="isDarkMode ? 'bg-black/40' : 'bg-gray-100/50'">
+          <button 
+            @click="activeMode = 'insights'"
+            class="flex-1 py-2 text-sm font-semibold transition-all duration-300 rounded-lg"
+            :class="activeMode === 'insights' 
+              ? (isDarkMode ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/20' : 'bg-amber-600 text-white shadow-md shadow-amber-600/20')
+              : (isDarkMode ? 'text-gray-400 hover:text-gray-200' : 'text-gray-500 hover:text-gray-700')"
           >
-            <i-mdi-auto-fix class="w-5 h-5 text-purple-500" />
-            AI Insights
-          </h3>
-          <span 
-            class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800"
+            Insights
+          </button>
+          <button 
+            @click="activeMode = 'feedback'"
+            class="flex-1 py-2 text-sm font-semibold transition-all duration-300 rounded-lg"
+            :class="activeMode === 'feedback' 
+              ? (isDarkMode ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/20' : 'bg-amber-600 text-white shadow-md shadow-amber-600/20')
+              : (isDarkMode ? 'text-gray-400 hover:text-gray-200' : 'text-gray-500 hover:text-gray-700')"
           >
-            Confidence: {{ (mockData.classification.confidence.overall * 100).toFixed(1) }}%
-          </span>
+            Feedback
+          </button>
         </div>
-        <p class="text-xs" :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
-          Processed in {{ mockData.timestamps.processing_time_seconds.toFixed(2) }}s
-        </p>
       </div>
 
-      <div class="p-6 space-y-6">
-        <!-- Summary Section -->
-        <div>
-          <h4 class="text-xs font-semibold uppercase tracking-wider mb-2 flex items-center gap-2" :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
-            <i-mdi-text-short class="w-4 h-4" /> Summary
-          </h4>
-          <p class="text-sm leading-relaxed" :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'">
-            {{ mockData.summary.short_summary }}
+      <!-- Content Area -->
+      <div class="p-6">
+        <!-- AI Insights View -->
+        <div v-if="activeMode === 'insights'" class="space-y-6 animate-in fade-in transition-all duration-300">
+          <div class="flex items-center justify-between">
+            <h4 
+              class="text-sm font-bold flex items-center gap-2"
+              :class="isDarkMode ? 'text-white' : 'text-gray-900'"
+            >
+              Summary
+            </h4>
+            <div class="px-2.5 py-1 rounded-md text-[10px] font-bold"
+              :class="isDarkMode ? 'bg-amber-600/20 text-amber-500 border border-amber-600/30' : 'bg-amber-50 text-amber-700 border border-amber-200'">
+              Confidence {{ (mockData.classification.confidence * 100).toFixed(0) }}%
+            </div>
+          </div>
+
+          <p 
+            class="text-xs leading-relaxed font-semibold"
+            :class="isDarkMode ? 'text-white' : 'text-gray-900'"
+          >
+            {{ mockData.case_summary.narrative }}
           </p>
-          <div class="flex gap-2 mt-3">
-             <span class="px-2 py-1 rounded-md text-xs font-medium border" :class="isDarkMode ? 'bg-blue-900/20 text-blue-300 border-blue-800' : 'bg-blue-50 text-blue-700 border-blue-200'">
-               Complexity: {{ mockData.summary.case_complexity }}
-             </span>
-             <span class="px-2 py-1 rounded-md text-xs font-medium border" :class="isDarkMode ? 'bg-purple-900/20 text-purple-300 border-purple-800' : 'bg-purple-50 text-purple-700 border-purple-200'">
-               Lang: {{ mockData.summary.primary_language }}
-             </span>
-          </div>
-        </div>
 
-        <!-- Classification -->
-        <div>
-           <h4 class="text-xs font-semibold uppercase tracking-wider mb-2 flex items-center gap-2" :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
-            <i-mdi-shape class="w-4 h-4" /> Classification
-          </h4>
-          <div class="space-y-2">
-            <div class="p-3 rounded-xl border bg-gradient-to-r" 
-              :class="isDarkMode ? 'from-gray-800 to-gray-750 border-transparent' : 'from-gray-50 to-white border-transparent'">
-              <span class="text-xs text-gray-500 block mb-1">Main Category</span>
-              <span class="font-semibold block" :class="isDarkMode ? 'text-gray-200' : 'text-gray-800'">
-                {{ mockData.classification.main_category }}
-              </span>
-            </div>
-            <div class="p-3 rounded-xl border bg-gradient-to-r" 
-               :class="isDarkMode ? 'from-gray-800 to-gray-750 border-transparent' : 'from-gray-50 to-white border-transparent'">
-               <span class="text-xs text-gray-500 block mb-1">Sub Category</span>
-               <span class="font-semibold block" :class="isDarkMode ? 'text-gray-200' : 'text-gray-800'">
-                {{ mockData.classification.sub_category }}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Transcription & Translation -->
-        <div>
-          <h4 class="text-xs font-semibold uppercase tracking-wider mb-2 flex items-center gap-2" :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
-            <i-mdi-translate class="w-4 h-4" /> Content ({{ mockData.call_content.language_detected.toUpperCase() }} → EN)
-          </h4>
-          
-          <div class="space-y-3">
-             <div class="p-3 rounded-xl rounded-tl-none border relative ml-2" :class="isDarkMode ? 'bg-neutral-800 border-transparent text-gray-300' : 'bg-gray-100 border-transparent text-gray-600'">
-                <span class="absolute -top-2 -left-2 text-xs px-1 rounded bg-gray-200 text-gray-600 dark:bg-gray-600 dark:text-gray-300">Original</span>
-                <p class="text-xs italic">"{{ mockData.call_content.transcription.text }}"</p>
-             </div>
-             
-             <div class="p-3 rounded-xl rounded-tr-none border relative mr-2" :class="isDarkMode ? 'bg-blue-900/20 border-blue-800 text-blue-200' : 'bg-blue-50 border-blue-200 text-blue-800'">
-                <span class="absolute -top-2 -right-2 text-xs px-1 rounded bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-200">En Translation</span>
-                <p class="text-sm">"{{ mockData.call_content.translation.text }}"</p>
-             </div>
-          </div>
-        </div>
-
-        <!-- Risk Assessment -->
-        <div>
-           <h4 class="text-xs font-semibold uppercase tracking-wider mb-2 flex items-center gap-2" :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
-            <i-mdi-alert-circle class="w-4 h-4" /> Risk Assessment
-          </h4>
-          <div class="flex items-center gap-3 p-3 rounded-xl border" :class="isDarkMode ? 'bg-gray-900 border-transparent' : 'bg-gray-50 border-transparent'">
-             <div class="h-10 w-10 rounded-full flex items-center justify-center font-bold text-lg"
-               :class="{
-                 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400': mockData.risk_assessment.risk_level === 'low',
-                 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400': mockData.risk_assessment.risk_level === 'medium',
-                 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400': mockData.risk_assessment.risk_level === 'high'
-               }">
-               {{ mockData.risk_assessment.priority }}
-             </div>
-             <div>
-                <p class="font-bold text-sm uppercase" :class="isDarkMode ? 'text-gray-200' : 'text-gray-800'">
-                  {{ mockData.risk_assessment.risk_level }} Risk
-                </p>
-                <p class="text-xs text-gray-500">
-                  Indicators found: {{ mockData.risk_assessment.risk_indicators_found }}
-                </p>
-             </div>
-          </div>
-        </div>
-
-        <!-- QA Scores -->
-        <div>
-          <h4 class="text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2" :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
-            <i-mdi-clipboard-check class="w-4 h-4" /> QA Metrics (Auto)
-          </h4>
-          
-          <div class="space-y-3">
-             <div v-for="(metricGroup, groupName) in mockData.quality_assurance.scores" :key="groupName">
-                <p class="text-[10px] uppercase font-bold text-gray-400 mb-1">{{ groupName }}</p>
-                <div class="space-y-2">
-                   <div v-for="(item, idx) in metricGroup" :key="idx" class="flex items-center justify-between text-xs">
-                      <span :class="isDarkMode ? 'text-gray-300' : 'text-gray-700'">{{ item.metric }}</span>
-                      <div class="flex items-center gap-2">
-                         <div class="w-16 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                            <div class="h-full rounded-full" 
-                                 :class="item.passed ? 'bg-green-500' : 'bg-red-500'"
-                                 :style="{ width: (item.probability * 100) + '%' }"></div>
-                         </div>
-                         <i-mdi-check-circle v-if="item.passed" class="w-3 h-3 text-green-500" />
-                         <i-mdi-close-circle v-else class="w-3 h-3 text-red-500" />
-                      </div>
-                   </div>
+          <!-- Key Entities -->
+          <div class="grid grid-cols-1 gap-4">
+            <div class="p-4 rounded-xl border" :class="isDarkMode ? 'bg-black/20 border-neutral-800' : 'bg-gray-50 border-gray-100'">
+              <span class="text-[11px] font-bold text-amber-600 block mb-3">Participants</span>
+              <div class="flex flex-wrap gap-x-6 gap-y-2">
+                <div class="flex flex-col gap-0.5">
+                  <span class="text-[10px] font-bold text-gray-500 tracking-tight">Counsellor</span>
+                  <span class="text-sm font-semibold" :class="isDarkMode ? 'text-white' : 'text-gray-900'">{{ mockData.participants.counsellor.join(', ') }}</span>
                 </div>
-             </div>
+                <div class="flex flex-col gap-0.5">
+                  <span class="text-[10px] font-bold text-gray-500 tracking-tight">Victim</span>
+                  <span class="text-sm font-semibold" :class="isDarkMode ? 'text-white' : 'text-gray-900'">{{ mockData.participants.victim.join(', ') }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Transcript Section -->
+          <div>
+            <h4 class="text-[11px] font-bold text-gray-500 mb-3">Translation</h4>
+            <div class="p-5 rounded-2xl border italic text-xs leading-relaxed font-medium" 
+              :class="isDarkMode ? 'bg-neutral-800 border-neutral-700 text-white' : 'bg-white border-gray-100 text-gray-900 shadow-sm'">
+              "{{ mockData.caller_interaction.translation.text }}"
+            </div>
           </div>
         </div>
 
+        <!-- AI Feedback View -->
+        <div v-if="activeMode === 'feedback'" class="space-y-6 animate-in fade-in transition-all duration-300">
+          <!-- Rating Section -->
+          <div class="p-6 rounded-2xl border border-dashed text-center">
+            <h4 class="text-sm font-bold mb-4" :class="isDarkMode ? 'text-white' : 'text-gray-900'">Review AI Accuracy</h4>
+            
+            <!-- Rating Dots -->
+            <div class="flex items-center justify-center gap-3 mb-6">
+              <button 
+                v-for="star in 5" 
+                :key="star"
+                @click="rating = star"
+                @mouseenter="hoverRating = star"
+                @mouseleave="hoverRating = 0"
+                class="transition-all duration-200 transform hover:scale-110 focus:outline-none"
+              >
+                <div 
+                  class="w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold"
+                  :class="(hoverRating || rating) >= star 
+                    ? 'bg-amber-500 border-amber-500 text-black shadow-lg shadow-amber-500/20' 
+                    : (isDarkMode ? 'border-neutral-700 text-neutral-500' : 'border-gray-200 text-gray-300')"
+                >
+                  {{ star }}
+                </div>
+              </button>
+            </div>
+
+            <!-- Conditional Feedback Input & Actions -->
+            <div v-if="rating > 0" class="space-y-4 animate-in fade-in zoom-in-95 duration-300">
+              <textarea 
+                v-if="rating < 4"
+                v-model="feedbackComment"
+                rows="2"
+                placeholder="What was incorrect?"
+                class="w-full rounded-xl p-3 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-amber-500/50 transition-all border"
+                :class="isDarkMode ? 'bg-black border-neutral-800 text-white' : 'bg-white border-gray-100 text-gray-900 shadow-sm'"
+              ></textarea>
+              
+              <div v-if="!feedbackSubmitted" class="flex justify-center">
+                <button 
+                  @click="submitFeedback"
+                  :disabled="isSubmittingFeedback || (rating < 4 && !feedbackComment.trim())"
+                  class="px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-amber-600/20"
+                >
+                  <span v-if="isSubmittingFeedback" class="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                  {{ rating >= 4 ? 'Confirm Accuracy' : 'Submit Feedback' }}
+                </button>
+              </div>
+
+              <div v-else class="text-amber-500 text-xs font-bold animate-in zoom-in-95 flex items-center justify-center gap-2">
+                <i-mdi-check-circle class="w-4 h-4" />
+                Feedback Recorded
+              </div>
+            </div>
+          </div>
+
+          <!-- Analysis Detail Section -->
+          <div class="space-y-4">
+            <!-- Classification & Risk -->
+            <div class="grid grid-cols-2 gap-3">
+              <div class="p-4 rounded-xl border flex flex-col" :class="isDarkMode ? 'bg-black/20 border-neutral-800' : 'bg-white border-gray-100 shadow-sm'">
+                <span class="text-[11px] font-bold text-amber-600 block mb-3">Classification</span>
+                <div class="space-y-3">
+                  <div class="flex flex-col border-b border-dashed pb-2" :class="isDarkMode ? 'border-neutral-800' : 'border-gray-100'">
+                    <span class="text-[8px] text-gray-500 uppercase font-bold tracking-tighter mb-0.5">Main Category</span>
+                    <span class="text-[11px] font-bold leading-tight" :class="isDarkMode ? 'text-white' : 'text-gray-900'">{{ mockData.classification.main_category }}</span>
+                  </div>
+                  <div class="flex flex-col border-b border-dashed pb-2" :class="isDarkMode ? 'border-neutral-800' : 'border-gray-100'">
+                    <span class="text-[8px] text-gray-500 uppercase font-bold tracking-tighter mb-0.5">Sub Category</span>
+                    <span class="text-[11px] font-bold leading-tight" :class="isDarkMode ? 'text-white' : 'text-gray-900'">{{ mockData.classification.sub_category }}</span>
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="text-[9px] text-gray-500 font-bold mb-0.5">Intervention</span>
+                    <span class="text-[11px] font-bold leading-tight" :class="isDarkMode ? 'text-white' : 'text-gray-900'">{{ mockData.classification.intervention }}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="p-4 rounded-xl border flex flex-col" :class="isDarkMode ? 'bg-black/20 border-neutral-800' : 'bg-white border-gray-100 shadow-sm'">
+                <span class="text-[11px] font-bold text-amber-600 block mb-3">Risk Factor</span>
+                <div class="flex-1 flex flex-col justify-center items-center text-center">
+                  <div 
+                    class="px-3 py-1.5 rounded-lg mb-2 border"
+                    :class="mockData.risk_assessment.risk_level === 'high' 
+                      ? 'bg-red-500/10 border-red-500/20 text-red-500' 
+                      : 'bg-amber-500/10 border-amber-500/20 text-amber-500'"
+                  >
+                    <span class="text-xs font-bold">{{ mockData.risk_assessment.risk_level }}</span>
+                  </div>
+                  <span class="text-[10px] font-bold text-gray-400 capitalize">{{ mockData.risk_assessment.risk_indicators_found }} Indicators</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Entities Captured -->
+            <div class="p-4 rounded-xl border" :class="isDarkMode ? 'bg-black/20 border-neutral-800' : 'bg-white border-gray-100 shadow-sm'">
+              <span class="text-[11px] font-bold text-amber-600 block mb-4">Entities Captured</span>
+              <div class="grid grid-cols-2 gap-6">
+                <div>
+                  <span class="text-[8px] text-gray-400 block uppercase font-bold tracking-tighter mb-2">People</span>
+                  <div class="flex flex-wrap gap-1.5">
+                    <span v-for="person in mockData.entities.persons" :key="person" 
+                      class="px-2 py-1 rounded-md text-[10px] font-bold border"
+                      :class="isDarkMode ? 'bg-neutral-800 border-neutral-700 text-white' : 'bg-gray-50 border-gray-200 text-gray-600'">
+                      {{ person }}
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <span class="text-[8px] text-gray-400 block uppercase font-bold tracking-tighter mb-2">Locations</span>
+                  <div class="flex flex-wrap gap-1.5">
+                    <span v-for="loc in mockData.entities.locations" :key="loc" 
+                      class="px-2 py-1 rounded-md text-[10px] font-bold border"
+                      :class="isDarkMode ? 'bg-neutral-800 border-neutral-700 text-white' : 'bg-gray-50 border-gray-200 text-gray-600'">
+                      {{ loc }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quality Stats -->
+            <div class="space-y-3">
+              <h4 class="text-[11px] font-bold text-gray-500 ml-1">Compliance Check</h4>
+              <div class="grid grid-cols-2 gap-2">
+                <div v-for="(status, metric) in mockData.qa_scoring" :key="metric"
+                  class="p-2 px-3 rounded-xl border flex items-center justify-between"
+                  :class="isDarkMode ? 'bg-black/20 border-neutral-800' : 'bg-white border-gray-50 shadow-sm'">
+                  <span class="text-[10px] font-medium text-gray-500 capitalize tracking-tight">{{ metric.replace('_', ' ') }}</span>
+                  <span 
+                    class="text-[9px] font-bold uppercase" 
+                    :class="status === 'pass' ? 'text-green-500' : 'text-red-500'"
+                  >
+                    {{ status }}
+                  </span>
+                </div>
+              </div>
+              
+              <div class="p-3 rounded-xl border border-dashed flex justify-between items-center bg-gray-50/30 dark:bg-black/10" :class="isDarkMode ? 'border-neutral-800' : 'border-gray-100'">
+                <span class="text-[10px] font-bold text-gray-400">Overall Score</span>
+                <span class="text-xs font-bold" :class="isDarkMode ? 'text-amber-500' : 'text-amber-600'">
+                  {{ (mockData.quality_assurance.metrics.pass_rate * 100).toFixed(0) }}% Success Rate
+                </span>
+              </div>
+            </div>
+
+            <!-- Audit Trail -->
+            <div class="pt-6 border-t border-dashed" :class="isDarkMode ? 'border-neutral-800' : 'border-gray-100'">
+              <div class="grid grid-cols-2 gap-4 text-[8px] font-bold uppercase tracking-wider">
+                <div class="space-y-1">
+                  <span class="text-gray-400 block mb-1">Engines Involved</span>
+                  <p :class="isDarkMode ? 'text-gray-300' : 'text-gray-600'" class="leading-relaxed normal-case font-medium text-[9px]">
+                    {{ mockData.ai_processing.models_used.join(', ') }}
+                  </p>
+                  <div class="flex gap-2 pt-1">
+                    <span class="px-1.5 py-0.5 rounded border border-amber-500/20 text-amber-500 font-bold tracking-tight">{{ mockData.status }}</span>
+                    <span class="px-1.5 py-0.5 rounded border border-gray-500/20 text-gray-500 font-bold tracking-tight">{{ mockData.site_id }}</span>
+                  </div>
+                </div>
+                <div class="text-right space-y-1">
+                  <span class="text-gray-400 block mb-1">System Trace</span>
+                  <p :class="isDarkMode ? 'text-gray-300' : 'text-gray-600'" class="font-medium tracking-tighter text-[9px]">
+                    #{{ mockData.case_id }}
+                  </p>
+                  <p class="text-gray-500">
+                    {{ mockData.audit.source }} / {{ mockData.audit.direction }}
+                  </p>
+                  <p class="text-[7px] text-gray-400 mt-2 font-medium">
+                    Processing: {{ mockData.ai_processing.processing_time_seconds.toFixed(1) }}s • {{ new Date(mockData.completed_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -219,7 +357,36 @@
 <script setup>
 import { ref, inject } from 'vue'
 
+const props = defineProps({
+  aiEnabled: {
+    type: Boolean,
+    default: false
+  }
+})
+
 const isDarkMode = inject('isDarkMode')
+const activeMode = ref('insights')
+const rating = ref(0)
+const hoverRating = ref(0)
+const feedbackComment = ref('')
+const isSubmittingFeedback = ref(false)
+const feedbackSubmitted = ref(false)
+
+const submitFeedback = () => {
+  if (isSubmittingFeedback.value) return
+  
+  isSubmittingFeedback.value = true
+  
+  // Simulate API call
+  setTimeout(() => {
+    isSubmittingFeedback.value = false
+    feedbackSubmitted.value = true
+    import('vue-sonner').then(({ toast }) => {
+      toast.success('Thank you for your feedback!')
+    })
+  }, 800)
+}
+
 const fileInput = ref(null)
 const audioFile = ref(null)
 const audioUrl = ref(null)
@@ -251,6 +418,8 @@ const removeAudio = () => {
   audioFile.value = null
   audioUrl.value = null
   if (fileInput.value) fileInput.value.value = ''
+  rating.value = 0
+  feedbackComment.value = ''
 }
 
 const formatFileSize = (bytes) => {
@@ -261,101 +430,102 @@ const formatFileSize = (bytes) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 
-// Mock Data from User Request
+// Data from User Request
 const mockData = {
-  "case_id": "1768572302.54",
-  "version": "2.0",
+  "case_id": "1768420272.211",
   "site_id": "dev-site-001",
   "processing_mode": "post_call",
-  "timestamps": {
-    "call_received": "2026-01-16T14:00:23.937174+00:00",
-    "processing_completed": "2026-01-16T14:00:24.992370+00:00",
-    "processing_time_seconds": 14.21545
-  },
-  "call_content": {
-    "language_detected": "sw",
-    "transcription": {
-      "text": "eeh kuna eeh kwa kifupi mzamo nakupigia simu kutoka moja moja sita kwa huduma kwa watoto kuripoti kuhusu mtoto anapapate shule nini kutokana na nyumba ambayo hajatoka kwenda shule kwa wiki mbili sasa aah wikimbili kwani aah na nyinyi ndio maana yeye ni shule aah wazazi wako wanafaa wakimfukuza nyumbani na haja hajaripo haria shule kwa hiyo si katika ofisi za watoto iliwe ndio kwa ripoti hii isi",
-      "length": 408
+  "status": "completed",
+  "created_at": "2026-01-14T19:16:13.451Z",
+  "completed_at": "2026-01-14T19:16:15.583Z",
+
+  "caller_interaction": {
+    "primary_language": "sw",
+    "translated_language": "en",
+    "transcript": {
+      "language": "sw",
+      "text": "Hello. Hello. Yes, how are you? Good evening... (full transcript omitted for brevity)"
     },
     "translation": {
-      "source_language": "sw",
-      "target_language": "en",
-      "text": "Eeh there is an eeh for almost all time I'm calling you from one six to the child helpline to report what a child gets from school that hasn't been going to school for two weeks now aah is the same idea as school aaah your parents are working on at home and there are no schools available for that not in the children's offices but for this report.",
-      "length": 348
+      "language": "en",
+      "text": "Hello, hello, yes, how are you speaking to Amira from Child Healthline about a case of child abuse involving a child in Ngarongwe. The situation is urgent and requires immediate attention from the child protection services. We are coordinating with local authorities to ensure the child is safe and the perpetrators are handled according to the law.",
+      "length": 2501
     }
   },
+
+  "participants": {
+    "counsellor": ["Amira"],
+    "victim": ["Ivan Sumo"],
+    "other_mentions": ["Na"]
+  },
+
+  "location": {
+    "mentioned_locations": ["Asedia", "Ngarongwe", "Nganongwe"],
+    "country_context": "Kenya"
+  },
+
+  "case_summary": {
+    "narrative": "Ivan Sumo is speaking to Amira from Child Healthline about a case of child abuse involving a child in Ngarongwe, in Nganongwe. The caller expressed deep concern about the safety of the minor and requested guidance on legal steps to report the abuse to the regional child protection office.",
+    "complexity": "low"
+  },
+
+  "classification": {
+    "main_category": "Advice and Counselling",
+    "sub_category": "Drug/Alcohol Abuse",
+    "sub_category_2": "Feeding & Food Preparation",
+    "intervention": "Counselling",
+    "priority": 2,
+    "confidence": 0.637
+  },
+
+  "risk_assessment": {
+    "risk_level": "medium",
+    "risk_indicators_found": 1,
+    "confidence": 0.637
+  },
+
   "entities": {
-    "caller_expressions": ["##eh", "##eh", "##ah"],
-    "entities_count": 1,
-    "persons": [],
-    "locations": [],
+    "persons": ["Ivan Sumo", "Amira"],
+    "locations": ["Asedia"],
     "organizations": [],
     "dates": []
   },
-  "classification": {
-    "main_category": "Advice and Counselling",
-    "sub_category": "School Related Issues",
-    "sub_category_secondary": "School related issues",
-    "intervention_required": "Referral",
-    "priority": "2",
-    "confidence": {
-      "overall": 0.506,
-      "breakdown": {
-        "main_category": 0.31,
-        "sub_category": 0.223,
-        "secondary_sub_category": 0.185,
-        "intervention": 0.645,
-        "priority": 0.845
-      }
-    }
-  },
-  "summary": {
-    "short_summary": "Caller reports a child who has not attended school for two weeks.",
-    "case_complexity": "low",
-    "primary_language": "multilingual"
-  },
-  "risk_assessment": {
-    "risk_level": "low",
-    "risk_indicators_found": 0,
-    "priority": "2",
-    "confidence": 0.506
-  },
+
   "quality_assurance": {
     "overall_quality": "needs_improvement",
     "metrics": {
       "total_evaluated": 17,
       "passed": 0,
       "failed": 17,
-      "pass_rate_percentage": 0.0
-    },
-    "scores": {
-      "opening": [
-        { "metric": "Use of call opening phrase", "passed": false, "probability": 0.4944 }
-      ],
-      "listening": [
-        { "metric": "Caller was not interrupted", "passed": false, "probability": 0.8209 },
-        { "metric": "Empathizes with the caller", "passed": false, "probability": 0.8151 }
-      ],
-      "proactiveness": [
-        { "metric": "Willing to solve extra issues", "passed": false, "probability": 0.5875 }
-      ],
-      "resolution": [
-        { "metric": "Explains solution process clearly", "passed": false, "probability": 0.7682 }
-      ],
-      "closing": [
-        { "metric": "Proper call closing phrase used", "passed": false, "probability": 0.3675 }
-      ]
+      "pass_rate": 0.0
     }
   },
-  "ai_pipeline": {
-    "models_used": ["whisper", "translator", "ner", "classifier", "summarizer", "all_qa_distilbert_v1"],
-    "status": "completed"
+
+  "qa_scoring": {
+    "opening": "pass",
+    "listening": "pass",
+    "proactiveness": "pass",
+    "resolution": "pass",
+    "hold_procedure": "pass",
+    "closing": "pass"
   },
-  "system_metadata": {
-    "status": "success",
-    "error": null,
-    "ui_metadata": null
+
+  "ai_processing": {
+    "models_used": [
+      "whisper",
+      "translator",
+      "ner",
+      "classifier",
+      "summarizer",
+      "all-qa-distilbert-v1"
+    ],
+    "processing_time_seconds": 63.47
+  },
+
+  "audit": {
+    "source": "gateway",
+    "direction": "inbound",
+    "mime_type": "application/json"
   }
 }
 </script>

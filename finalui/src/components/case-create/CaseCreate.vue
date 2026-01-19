@@ -3,15 +3,19 @@
     class="min-h-screen py-8 px-4 sm:px-6 lg:px-8"
     :class="isDarkMode ? 'bg-black' : 'bg-gray-50'"
   >
-    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
       
-      <!-- Left Column: Case Wizard (2/3 width) -->
-      <div class="lg:col-span-2 space-y-8">
+      <!-- Left Column: Case Wizard -->
+      <div 
+        class="space-y-8 transition-all duration-500"
+        :class="aiEnabled ? 'lg:col-span-2' : 'lg:col-span-3'"
+      >
         <!-- Header Section -->
         <div>
           <CaseHeader 
             :currentStep="currentStep"
             :stepDescriptions="stepDescriptions"
+            v-model:aiEnabled="aiEnabled"
             class="mb-6"
           />
           
@@ -84,9 +88,9 @@
       </div>
 
       <!-- Right Column: Insights Panel (1/3 width) -->
-      <div class="lg:col-span-1">
+      <div v-if="aiEnabled" class="lg:col-span-1 animate-in fade-in slide-in-from-right-8 duration-500">
         <div class="sticky top-6">
-          <CaseInsightsPanel />
+          <CaseInsightsPanel :aiEnabled="aiEnabled" />
         </div>
       </div>
 
@@ -169,6 +173,7 @@ export default {
     const currentStep = ref(1);
     const totalSteps = 4;
     const isSubmittingCase = ref(false);
+    const aiEnabled = ref(false);
     
     // ✅ Store BOTH reporter IDs separately
     const reporterRecordId = ref(null);  // Index 0 - for reporter_uuid_id
@@ -839,6 +844,7 @@ export default {
       perpetratorStore,
       isSubmittingCase,
       updateFormData,
+      aiEnabled,
       navigateToStep,
       goToStep,
       validateAndProceed,

@@ -28,7 +28,7 @@
       >
         <!-- Step Circle -->
         <div
-          class="relative flex items-center justify-center w-9 h-9 text-sm font-extrabold leading-none transition-all rounded-full border-2"
+          class="relative flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 text-[10px] sm:text-sm font-extrabold leading-none transition-all rounded-full border-2"
           :class="getStepCircleClass(step)"
         >
           <span v-if="stepStatus[step] === 'completed'">✓</span>
@@ -37,7 +37,7 @@
 
         <!-- Step Label -->
         <div
-          class="text-xs font-bold text-center transition-colors max-w-[100px]"
+          class="text-[9px] sm:text-xs font-bold text-center transition-colors max-w-[60px] sm:max-w-[100px]"
           :class="getStepLabelClass(step)"
         >
           {{ stepLabels[step - 1] }}
@@ -92,7 +92,7 @@ const getStepCircleClass = (step) => {
     if (status === 'pending' && !isCurrent) {
       return 'bg-gray-900 border-transparent text-gray-500'
     } else if (isCurrent && status !== 'completed') {
-      return 'bg-gray-900 border-amber-600 text-amber-500 ring-4 ring-blue-900/50'
+      return 'bg-gray-900 border-amber-600 text-amber-500'
     } else if (status === 'completed') {
       return 'border-green-500 bg-green-500 text-white'
     } else if (status === 'error') {
@@ -103,7 +103,7 @@ const getStepCircleClass = (step) => {
     if (status === 'pending' && !isCurrent) {
       return 'bg-white border-transparent text-gray-400'
     } else if (isCurrent && status !== 'completed') {
-      return 'bg-white border-amber-600 text-amber-700 ring-4 ring-amber-100'
+      return 'bg-white border-amber-600 text-amber-700'
     } else if (status === 'completed') {
       return 'border-green-600 bg-green-600 text-white'
     } else if (status === 'error') {
