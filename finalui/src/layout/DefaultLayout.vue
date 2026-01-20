@@ -16,8 +16,9 @@
       </div>
     </main>
 
-    <!-- Global Softphone Widget -->
-    <Softphone v-if="showSidebar" />
+    <!-- Global WebRTC Softphone Components -->
+    <Softphone />
+    <IncomingCallPopup />
   </div>
 </template>
 
@@ -27,6 +28,7 @@ import { useRoute } from 'vue-router'
 import { useTheme } from '@/composables/useTheme'
 import Sidebar from '@/components/layout/Sidebar.vue'
 import Softphone from '@/components/calls/Softphone.vue'
+import IncomingCallPopup from '@/components/calls/IncomingCallPopup.vue'
 
 const route = useRoute()
 const { isDarkMode, toggleTheme } = useTheme()
